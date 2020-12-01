@@ -1,0 +1,15 @@
+{
+  "name": "ocean-memory",
+  "version": "0.0.1",
+  "description": "Ocean Memory Sonification Project",
+  "repository": "https://github.com/Kizjkre/ocean-memory.git",
+  "author": "Tristan Peng <tristan.peng@stanford.edu>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "concurrently": "^5.3.0"
+  },
+  "scripts": {
+    "start": "concurrently \"cd frontend && yarn start\" \"cd backend && yarn start\""
+  }
+}
