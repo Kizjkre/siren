@@ -10,7 +10,7 @@
     "concurrently": "^5.3.0"
   },
   "scripts": {
-    "start": "concurrently \"cd frontend && yarn start\" \"cd backend && yarn start\"",
+    "start": "concurrently \"yarn run frontend:start\" \"yarn run backend:start\"",
     "frontend:start": "cd frontend && yarn start",
     "backend:start": "cd backend && yarn start"
   }
