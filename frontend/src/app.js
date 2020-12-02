@@ -1,6 +1,13 @@
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Index from './components/Index';
+
 const App = () => {
   return (
-    <h1>Hello World!</h1>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/" component={ Index } />
+      </Switch>
+    </BrowserRouter>
   );
 };
 
