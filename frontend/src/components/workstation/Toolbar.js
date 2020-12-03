@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { uploadFile } from '../../actions';
 
-const handleUpload = action => async e => {
+const handleUpload = (action, ref) => async e => {
   if (e.target.files.length) {
     const url = URL.createObjectURL(e.target.files[0]);
     const csv = await d3.csv(url);
     action(csv);
     e.target.value = '';
+    ref.current.click();
   }
 };
 
@@ -24,8 +25,8 @@ const Toolbar = ({ uploadFile }) => {
         <li className="nav-item dropdown">
           <a className="nav-link" data-toggle="dropdown" id="nav-dropdown-file" href="#!" ref={ file }>File</a>
           <div className="dropdown-menu" aria-labelledby="nav-dropdown-file">
-            <label htmlFor="upload" className="dropdown-item" onClick={ () => file.current.click() }>
-              <input type="file" id="upload" className="d-none" accept="text/csv" onChange={ handleUpload(uploadFile) } />
+            <label htmlFor="upload" className="dropdown-item">
+              <input type="file" id="upload" className="d-none" accept="text/csv" onChange={ handleUpload(uploadFile, file) } />
               <i className="fa fa-folder-open"/>
               &emsp;Open
             </label>
