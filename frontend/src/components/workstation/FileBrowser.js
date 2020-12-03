@@ -11,11 +11,11 @@ const FileBrowser = ({ files }) => {
         <hr className="sidebar-divider"/>
         {
           !files.length ? null : files.map(file =>
-            <a href="#!" key={ file.filename } className="sidebar-link sidebar-link-with-icon">
+            <a href="#!" key={ file.name } className="sidebar-link sidebar-link-with-icon">
               <span className="sidebar-icon">
                 <i className="fa fa-file-csv" />
               </span>
-              { file.filename }
+              { file.name }
             </a>
           )
         }

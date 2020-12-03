@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as d3 from 'd3';
+import halfmoon from 'halfmoon';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { uploadFile } from '../../actions';
@@ -8,7 +9,7 @@ const handleUpload = (action, ref) => async e => {
   if (e.target.files.length) {
     const url = URL.createObjectURL(e.target.files[0]);
     const csv = await d3.csv(url);
-    action({ filename: e.target.files[0].name, csv });
+    action({ name: e.target.files[0].name, csv });
     e.target.value = '';
     ref.current.click();
   }
@@ -18,6 +19,7 @@ const Toolbar = ({ uploadFile }) => {
   const file = React.createRef();
   const edit = React.createRef();
   const view = React.createRef();
+  const [state, setState] = useState({ sidebar: true, dark: halfmoon.darkModeOn });
   return (
     <nav className="navbar">
       <a href="#!" className="navbar-brand">Workstation</a>
@@ -48,9 +50,29 @@ const Toolbar = ({ uploadFile }) => {
         <li className="nav-item dropdown">
           <a className="nav-link" data-toggle="dropdown" id="nav-dropdown-file" href="#!" ref={ view }>View</a>
           <div className="dropdown-menu" aria-labelledby="nav-dropdown-file">
-            <a href="#!" className="dropdown-item" onClick={ () => view.current.click() }>
-              <i className="fa fa-folder-open"/>
-              &emsp;Open
+            <a
+              href="#!"
+              className="dropdown-item"
+              onClick={ () => {
+                view.current.click();
+                halfmoon.toggleSidebar();
+                setState({ ...state, sidebar: !state.sidebar });
+              } }
+            >
+              <i className={ `fa fa-toggle-${ state.sidebar ? 'off' : 'on' }` } />
+              &emsp;{ state.sidebar ? 'Close' : 'Open' } file browser
+            </a>
+            <a
+              href="#!"
+              className="dropdown-item"
+              onClick={ () => {
+                view.current.click();
+                halfmoon.toggleDarkMode();
+                setState({ ...state, dark: !state.dark });
+              } }
+            >
+              <i className={ `fa fa-${ state.dark ? 'sun' : 'moon' }` } />
+              &emsp;Toggle { state.dark ? 'light' : 'dark' } mode
             </a>
           </div>
         </li>
