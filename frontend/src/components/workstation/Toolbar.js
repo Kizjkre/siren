@@ -8,7 +8,7 @@ const handleUpload = (action, ref) => async e => {
   if (e.target.files.length) {
     const url = URL.createObjectURL(e.target.files[0]);
     const csv = await d3.csv(url);
-    action(csv);
+    action({ filename: e.target.files[0].name, csv });
     e.target.value = '';
     ref.current.click();
   }

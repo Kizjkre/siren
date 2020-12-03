@@ -9,14 +9,12 @@ const Main = ({ files }) => {
         <div className="row row-eq-spacing">
           <div className={ `col-${ TRACK_CONTROLS_WIDTH }` }>
             <div className="card track">
-              <select className="form-control" multiple>
-                { files.length ? files[0].columns.map(column => <option value={ column }>{ column }</option>) : null }
-              </select>
+              Track 1
             </div>
           </div>
           <div className={ `col-${ TRACK_WIDTH }` }>
             <div className="card track overflow-scroll">
-              { files.length ? <Table file={ files[0] } /> : null }
+              {/*{ files.length ? <Table file={ files[0] } /> : null }*/}
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import Toolbar from './workstation/Toolbar';
-import Controls from './workstation/Controls';
+import FileBrowser from './workstation/FileBrowser';
 import Main from './workstation/Main';
 
 const Workstation = () => {
@@ -7,7 +7,7 @@ const Workstation = () => {
     <div className="page-wrapper with-navbar with-sidebar with-navbar-fixed-bottom">
       <div className="sticky-alerts"></div>
       <Toolbar />
-      <Controls />
+      <FileBrowser />
       <Main />
       <nav className="navbar navbar-fixed-bottom">
       </nav>
