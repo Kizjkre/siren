@@ -10,7 +10,7 @@ const Index = () => {
             <span className="sr-only">Toggle sidebar</span>
           </button>
         </div>
-        <a href="#" className="navbar-brand">
+        <a href="#!" className="navbar-brand">
           Ocean Memory Sonification
         </a>
         <ul className="navbar-nav d-none d-md-flex">

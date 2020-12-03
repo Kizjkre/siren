@@ -10,8 +10,9 @@ const rootReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         files: [...state.files, action.payload]
       });
+    default:
+      return state;
   }
-  return state;
 };
 
 export default rootReducer;
