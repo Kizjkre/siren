@@ -1,8 +1,16 @@
+import { UPLOAD_FILE } from '../constants/action-types';
+
 const initialState = {
-  articles: []
+  files: []
 };
 
 const rootReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case UPLOAD_FILE:
+      return Object.assign({}, state, {
+        files: [...state.files, action.payload]
+      });
+  }
   return state;
 };
 

@@ -1,6 +1,18 @@
+import * as d3 from 'd3';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { uploadFile } from '../../actions';
 
-const Toolbar = () => {
+const handleUpload = action => async e => {
+  if (e.target.files.length) {
+    const url = URL.createObjectURL(e.target.files[0]);
+    const csv = await d3.csv(url);
+    action(csv);
+    e.target.value = '';
+  }
+};
+
+const Toolbar = ({ uploadFile }) => {
   return (
     <nav className="navbar">
       <a href="#" className="navbar-brand">Workstation</a>
@@ -11,10 +23,11 @@ const Toolbar = () => {
             <i className="fa fa-angle-down ml-5" aria-hidden="true"/>
           </a>
           <div className="dropdown-menu" aria-labelledby="nav-dropdown-file">
-            <a href="#" className="dropdown-item">
+            <label htmlFor="upload" className="dropdown-item">
+              <input type="file" id="upload" className="d-none" accept="text/csv" onChange={ handleUpload(uploadFile) } />
               <i className="fa fa-folder-open"/>
               &emsp;Open
-            </a>
+            </label>
             <a href="#" className="dropdown-item">
               <i className="fa fa-file-export"/>
               &emsp;Export
@@ -56,4 +69,8 @@ const Toolbar = () => {
   );
 };
 
-export default Toolbar;
+const mapDispatchToProps = dispatch => ({
+  uploadFile: file => dispatch(uploadFile(file))
+});
+
+export default connect(null, mapDispatchToProps)(Toolbar);
