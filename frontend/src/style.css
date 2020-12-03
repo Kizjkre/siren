@@ -1,4 +1,15 @@
+.custom-modal-close {
+  background: rgb(255, 59, 71) !important;
+  height: 2rem;
+  user-select: none;
+  width: 2rem;
+}
+
 .track {
   height: 100%;
   max-height: 20vh;
+}
+
+.window {
+  background: none !important;
 }

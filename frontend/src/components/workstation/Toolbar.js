@@ -19,7 +19,7 @@ const Toolbar = ({ uploadFile }) => {
   const file = React.createRef();
   const edit = React.createRef();
   const view = React.createRef();
-  const [state, setState] = useState({ sidebar: true, dark: halfmoon.darkModeOn });
+  const [state, setState] = useState({ sidebar: true, dark: halfmoon.getPreferredMode() === 'dark-mode' });
   return (
     <nav className="navbar">
       <a href="#!" className="navbar-brand">Workstation</a>

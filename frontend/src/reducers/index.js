@@ -1,8 +1,9 @@
-import { UPLOAD_FILE, SELECT_COLUMN } from '../constants/action-types';
+import { UPLOAD_FILE, SELECT_COLUMN, ADD_TRACK } from '../constants/action-types';
 
 const initialState = {
   files: [],
-  columns: []
+  columns: [],
+  tracks: []
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -14,6 +15,10 @@ const rootReducer = (state = initialState, action) => {
     case SELECT_COLUMN:
       return Object.assign({}, state, {
         columns: [...state.columns, action.payload]
+      });
+    case ADD_TRACK:
+      return Object.assign({}, state, {
+        tracks: [...state.tracks, action.payload]
       });
     default:
       return state;
