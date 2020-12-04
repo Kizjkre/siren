@@ -15,7 +15,7 @@ export const addTrack = payload => ({
   payload
 });
 
-export const adjustSettings = (i, settings) => ({
+export const adjustSettings = payload => ({
   type: ADJUST_SETTINGS,
-  payload: { i, settings }
+  payload
 });

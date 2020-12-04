@@ -1,14 +1,9 @@
-import { useState } from 'react';
 import { connect } from 'react-redux';
+import { adjustSettings } from '../../actions';
 
-const Settings = ({ column, i }) => {
-  const [state, setState] = useState({
-    mute: false,
-    volume: 50
-  });
-
-  const handleMute = () => setState({ ...state, mute: !state.mute });
-  const handleVolume = e => setState({...state, volume: e.target.value});
+const Settings = ({ column, i, settings, adjustSettings }) => {
+  const handleMute = () => adjustSettings({ i, settings: { ...settings[i].settings, mute: !settings[i].settings.mute} });
+  const handleVolume = e => adjustSettings({ i, settings: { ...settings[i].settings, volume: e.target.value } });
 
   return (
     <details className="collapse-panel">
@@ -21,13 +16,13 @@ const Settings = ({ column, i }) => {
         <div className="row">
           <div className="col-6">
             <div className="custom-switch">
-              <input type="checkbox" id={ `${ column }-row-${ i }-mute` } checked={ !state.mute } onChange={ handleMute }/>
+              <input type="checkbox" id={ `${ column }-row-${ i }-mute` } checked={ !settings[i].settings.mute } onChange={ handleMute }/>
               <label htmlFor={ `${ column }-row-${ i }-mute` }> </label>
             </div>
           </div>
           <div className="col-6">
             <div className="h-full d-flex align-content-start">
-              <input disabled={ state.mute } className={ state.mute ? 'disabled' : '' } type="range" min="0" max="100" onMouseUp={ handleVolume } />
+              <input disabled={ settings[i].settings.mute } className={ settings[i].settings.mute ? 'disabled' : '' } type="range" min="0" max="100" onMouseUp={ handleVolume } />
             </div>
           </div>
         </div>
@@ -40,4 +35,8 @@ const mapStateToProps = state => ({
   settings: state.settings
 });
 
-export default connect()(Settings);
+const mapDispatchToProps = dispatch => ({
+  adjustSettings: payload => dispatch(adjustSettings(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);
