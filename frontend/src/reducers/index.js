@@ -9,7 +9,8 @@ const initialState = {
 
 const initialSettings = {
   mute: false,
-  volume: 50
+  volume: 50,
+  pan: 0
 };
 
 const rootReducer = (state = initialState, action) => {
