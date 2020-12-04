@@ -4,7 +4,7 @@ import { adjustSettings } from '../../actions';
 const Settings = ({ column, i, settings, adjustSettings }) => {
   const handleMute = () => adjustSettings({ i, settings: { ...settings[i].settings, mute: !settings[i].settings.mute} });
   const handleVolume = e => adjustSettings({ i, settings: { ...settings[i].settings, volume: e.target.value } });
-  const handlePan = e => adjustSettings({ i, settings: { ...settings[i].settings, pan: e.target.value } });
+  const handlePan = e => adjustSettings({ i, settings: { ...settings[i].settings, pan: Math.abs(e.target.value) < 5 ? 0 : e.target.value } });
 
   return (
     <details className="collapse-panel">
@@ -31,7 +31,7 @@ const Settings = ({ column, i, settings, adjustSettings }) => {
         <hr />
         <h6 className="font-weight-semi-bold">Pan</h6>
         <div className="h-full d-flex align-content-start">
-          <input type="range" min="0" max="100" onMouseUp={ handlePan } />
+          <input type="range" min="-50" max="50" value={ settings[i].settings.pan } onChange={ handlePan } />
         </div>
       </div>
     </details>
