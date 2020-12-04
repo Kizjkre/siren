@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { createRef, useState } from 'react';
 import * as d3 from 'd3';
 import halfmoon from 'halfmoon';
 import { Link } from 'react-router-dom';
@@ -16,9 +16,9 @@ const handleUpload = (action, ref) => async e => {
 };
 
 const Toolbar = ({ uploadFile }) => {
-  const file = React.createRef();
-  const edit = React.createRef();
-  const view = React.createRef();
+  const file = createRef();
+  const edit = createRef();
+  const view = createRef();
   const [state, setState] = useState({ sidebar: true, dark: halfmoon.getPreferredMode() === 'dark-mode' });
   return (
     <nav className="navbar">

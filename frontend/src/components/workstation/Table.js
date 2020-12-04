@@ -1,24 +1,12 @@
 import { connect } from 'react-redux';
 
-const Table = ({ file, columns }) => {
+const Table = ({ file, column }) => {
   return (
     <table className="table table-hover">
-      <thead>
-        <tr>
-          {
-            file.columns.map(column => {
-              if (columns.includes(column)) {
-                return <th key={ column }>{ column }</th>;
-              }
-              return null;
-            })
-          }
-        </tr>
-      </thead>
       <tbody>
-        {
-          file.map(row => <tr key={ Math.random() }>{ Object.values(row).map(value => <td key={ value }>{ value }</td>) }</tr>)
-        }
+        <tr>
+          { file.map((row, i) => <td key={ `${ row[column] }-${ i }` }>{ row[column] }</td>) }
+        </tr>
       </tbody>
     </table>
   );

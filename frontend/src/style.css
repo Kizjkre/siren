@@ -1,8 +1,19 @@
-.custom-modal-close {
-  background: rgb(255, 59, 71) !important;
+.custom-modal-dismiss {
   height: 2rem;
   user-select: none;
   width: 2rem;
+}
+
+.custom-modal-dismiss.green {
+  background: rgb(0, 213, 65) !important;
+}
+
+.custom-modal-dismiss.red {
+  background: rgb(255, 59, 71) !important;
+}
+
+.icon-lg {
+  font-size: 10rem;
 }
 
 .track {
