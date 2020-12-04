@@ -38,7 +38,7 @@ const AddTrack = ({ anchor, track, files, selectColumn }) => {
             <br />Add Track
           </h5>
           <p>
-            <select className="form-control form-control-lg" defaultValue="" value={ state.column } onChange={ handleSelect }>
+            <select className="form-control form-control-lg" value={ state.column } onChange={ handleSelect }>
               <option value="" disabled>Select a column</option>
               { columns.map(column => <option key={ `column-${ column }` } value={ column }>{ column }</option>) }
             </select>

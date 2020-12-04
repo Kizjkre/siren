@@ -1,2 +1,2 @@
-export const TRACK_CONTROLS_WIDTH = 3;
+export const TRACK_CONTROLS_WIDTH = 4;
 export const TRACK_WIDTH = 12 - TRACK_CONTROLS_WIDTH;
