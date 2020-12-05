@@ -1,4 +1,10 @@
-import { UPLOAD_FILE, SELECT_COLUMN, ADD_TRACK, ADJUST_SETTINGS } from '../constants/action-types';
+import {
+  UPLOAD_FILE,
+  SELECT_COLUMN,
+  ADD_TRACK,
+  ADJUST_SETTINGS,
+  ADJUST_GLOBAL_SETTINGS
+} from '../constants/action-types';
 
 export const uploadFile = payload => ({
   type: UPLOAD_FILE,
@@ -17,5 +23,10 @@ export const addTrack = payload => ({
 
 export const adjustSettings = payload => ({
   type: ADJUST_SETTINGS,
+  payload
+});
+
+export const adjustGlobalSettings = payload => ({
+  type: ADJUST_GLOBAL_SETTINGS,
   payload
 });

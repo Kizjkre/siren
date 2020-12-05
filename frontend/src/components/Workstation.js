@@ -2,6 +2,7 @@ import Toolbar from './workstation/Toolbar';
 import FileBrowser from './workstation/FileBrowser';
 import Main from './workstation/Main';
 import AddTrack from './workstation/AddTrack';
+import Controls from './workstation/Controls';
 import { connect } from 'react-redux';
 
 const Workstation = ({ tracks }) => {
@@ -12,8 +13,7 @@ const Workstation = ({ tracks }) => {
       <Toolbar />
       <FileBrowser />
       <Main />
-      <nav className="navbar navbar-fixed-bottom">
-      </nav>
+      <Controls />
     </div>
   );
 };

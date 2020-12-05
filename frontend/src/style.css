@@ -1,3 +1,7 @@
+.controls {
+  height: 10rem !important;
+}
+
 .custom-modal-dismiss {
   height: 2rem;
   user-select: none;
@@ -14,6 +18,11 @@
 
 .icon-lg {
   font-size: 10rem;
+}
+
+.play {
+  height: 7rem;
+  width: 7rem;
 }
 
 .track {

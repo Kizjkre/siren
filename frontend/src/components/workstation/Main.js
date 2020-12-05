@@ -15,7 +15,7 @@ const Main = ({ files, columns }) => {
   });
   return (
     <div className="content-wrapper">
-      <div className="container-fluid">
+      <div className={ `container-fluid ${ tracks.length ? '' : 'h-full' }` }>
         {
           tracks.length ?
             tracks.map(({ file, column }, i) =>

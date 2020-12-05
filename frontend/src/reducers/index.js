@@ -1,10 +1,20 @@
-import { UPLOAD_FILE, SELECT_COLUMN, ADD_TRACK, ADJUST_SETTINGS } from '../constants/action-types';
+import {
+  UPLOAD_FILE,
+  SELECT_COLUMN,
+  ADD_TRACK,
+  ADJUST_SETTINGS,
+  ADJUST_GLOBAL_SETTINGS
+} from '../constants/action-types';
 
 const initialState = {
   files: [],
   columns: [],
   tracks: [],
-  settings: []
+  settings: [],
+  globalSettings: {
+    bpm: 120,
+    key: 'C'
+  }
 };
 
 const initialSettings = {
@@ -39,6 +49,10 @@ const rootReducer = (state = initialState, action) => {
           }
           return ({ i, settings });
         })
+      });
+    case ADJUST_GLOBAL_SETTINGS:
+      return Object.assign({}, state, {
+        globalSettings: action.payload
       });
     default:
       return state;
