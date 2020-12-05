@@ -79,6 +79,7 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
             <div className="w-full d-flex justify-content-center">
               <button className="btn btn-square rounded-circle btn-success play font-size-24" type="button" disabled={ !hasTracks }>
                 {/*<i className="fa fa-play" />*/}
+                {/* TODO: Toggle button color */}
               </button>
             </div>
           </div>

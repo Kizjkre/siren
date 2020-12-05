@@ -1,13 +1,9 @@
-import { createRef, useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { selectColumn } from '../../actions';
-
-const handleDrag = ref => () => {
-  // TODO: Make window draggable
-};
+import Window from './Window';
 
 const AddTrack = ({ anchor, track, files, selectColumn }) => {
-  const window = createRef();
   const [state, setState] = useState({ column: '' });
 
   let columns;
@@ -28,24 +24,12 @@ const AddTrack = ({ anchor, track, files, selectColumn }) => {
   };
 
   return (
-    <div className="modal window" id={ anchor } tabIndex="-1" role="dialog" data-overlay-dismissal-disabled="true" data-esc-dismissal-disabled="true">
-      <div className="modal-dialog" role="document" ref={ window }>
-        <div className="modal-content" onClick={ handleDrag(window) }>
-          <h5 className="modal-title">
-            <a href="#!" className="btn btn-square rounded-circle custom-modal-dismiss red">&#160;</a>
-            &nbsp;&nbsp;
-            <a href={ `#${ anchor }` } aria-disabled={ state.column === '' } className={ `btn btn-square rounded-circle custom-modal-dismiss ${ state.column === '' ? '' : 'green' }` } onClick={ handleSubmit }>&#160;</a>
-            <br />Add Track
-          </h5>
-          <p>
-            <select className="form-control form-control-lg" value={ state.column } onChange={ handleSelect }>
-              <option value="" disabled>Select a column</option>
-              { columns.map(column => <option key={ `column-${ column }` } value={ column }>{ column }</option>) }
-            </select>
-          </p>
-        </div>
-      </div>
-    </div>
+    <Window anchor={ anchor } buttons={ [{ href: `#${ anchor }`, color: state.column === '' ? '' : 'green', onClick: handleSubmit }] } title="Add Track">
+      <select className="form-control form-control-lg" value={ state.column } onChange={ handleSelect }>
+        <option value="" disabled>Select a column</option>
+        { columns.map(column => <option key={ `column-${ column }` } value={ column }>{ column }</option>) }
+      </select>
+    </Window>
   );
 };
 
