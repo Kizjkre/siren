@@ -31,12 +31,12 @@ const rootReducer = (state = initialState, action) => {
       });
     case SELECT_COLUMN:
       return Object.assign({}, state, {
-        columns: [...state.columns, action.payload]
+        columns: [...state.columns, action.payload],
+        settings: [...state.settings, { i: state.settings.length, settings: { ...initialSettings } }]
       });
     case ADD_TRACK:
       return Object.assign({}, state, {
-        tracks: [...state.tracks, action.payload],
-        settings: [...state.settings, { i: state.settings.length, settings: { ...initialSettings } }]
+        tracks: [...state.tracks, action.payload]
       });
     case ADJUST_SETTINGS:
       return Object.assign({}, state, {

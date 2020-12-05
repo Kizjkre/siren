@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { adjustGlobalSettings } from '../../actions';
 import { KEYS } from '../../constants/workstation-styles';
 
-const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
+const Controls = ({ hasColumns, globalSettings, adjustGlobalSettings }) => {
   const handleBPM = e => adjustGlobalSettings({ ...globalSettings, bpm: e.target.value });
   const handleKey = e => adjustGlobalSettings({ ...globalSettings, key: e.target.value });
 
@@ -77,7 +77,7 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
           </div>
           <div className="col-4">
             <div className="w-full d-flex justify-content-center">
-              <button className="btn btn-square rounded-circle btn-success play font-size-24" type="button" disabled={ !hasTracks }>
+              <button className="btn btn-square rounded-circle btn-success play font-size-24" type="button" disabled={ !hasColumns }>
                 {/*<i className="fa fa-play" />*/}
                 {/* TODO: Toggle button color */}
               </button>
@@ -91,7 +91,7 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
 
 const mapStateToProps = state => ({
   globalSettings: state.globalSettings,
-  hasTracks: state.tracks.length !== 0
+  hasColumns: state.columns.length !== 0
 });
 
 const mapDispatchToProps = dispatch => ({
