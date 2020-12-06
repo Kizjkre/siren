@@ -4,6 +4,7 @@ import { addTrack } from '../../actions';
 
 const FileBrowser = ({ files, addTrack }) => {
   const [state, setState] = useState({ content: null });
+
   useEffect(() => {
     if (files.length) {
       addTrack(files[0].name);
@@ -24,6 +25,7 @@ const FileBrowser = ({ files, addTrack }) => {
       })
     }
   }, [files]);
+
   return (
     <div className="sidebar">
       <div className="sidebar-menu">
