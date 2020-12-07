@@ -5,11 +5,11 @@ import AddTrack from './workstation/AddTrack';
 import Controls from './workstation/Controls';
 import { connect } from 'react-redux';
 
-const Workstation = ({ tracks }) => {
+const Workstation = ({ files }) => {
   return (
     <div className="page-wrapper with-navbar with-sidebar with-navbar-fixed-bottom">
       <div className="sticky-alerts" />
-      { tracks.map(track => <AddTrack key={ `modal-${ track }` } anchor={ `modal-${ track }` } track={ track } />) }
+      { files.map(({ name }) => <AddTrack key={ `modal-${ name }` } anchor={ `modal-${ name }` } track={ name } />) }
       <Toolbar />
       <FileBrowser />
       <Main />
@@ -19,7 +19,7 @@ const Workstation = ({ tracks }) => {
 };
 
 const mapStateToProps = state => ({
-  tracks: state.tracks
+  files: state.files
 });
 
 export default connect(mapStateToProps)(Workstation);

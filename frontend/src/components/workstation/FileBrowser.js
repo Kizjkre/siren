@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { addTrack } from '../../actions';
 
-const FileBrowser = ({ files, addTrack }) => {
+const FileBrowser = ({ files }) => {
   const [state, setState] = useState({ content: null });
 
   useEffect(() => {
     if (files.length) {
-      addTrack(files[0].name);
       setState({
         ...state,
         content: (
@@ -44,8 +42,4 @@ const mapStateToProps = state => ({
   files: state.files
 });
 
-const mapDispatchToProps = dispatch => ({
-  addTrack: file => dispatch(addTrack(file))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(FileBrowser);
+export default connect(mapStateToProps)(FileBrowser);
