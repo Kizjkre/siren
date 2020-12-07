@@ -21,7 +21,7 @@ const Window = ({ anchor, buttons, children, title }) => {
       x: dialog.current.offsetLeft,
       y: dialog.current.offsetTop
     }
-  }, []);
+  }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleMouseDown = e => {
     if (first) {

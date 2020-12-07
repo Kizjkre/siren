@@ -22,7 +22,7 @@ const FileBrowser = ({ files }) => {
         )
       })
     }
-  }, [files]);
+  }, [files]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="sidebar">
