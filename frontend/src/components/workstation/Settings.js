@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { adjustSettings } from '../../actions';
 
-const Settings = ({ column, i, settings, adjustSettings }) => {
+const Settings = ({ column, i, tracks, settings, adjustSettings }) => {
   const handleMute = () => adjustSettings({ i, settings: { ...settings[i].settings, mute: !settings[i].settings.mute} });
   const handleVolume = e => adjustSettings({ i, settings: { ...settings[i].settings, volume: e.target.value } });
   const handlePan = e => adjustSettings({ i, settings: { ...settings[i].settings, pan: Math.abs(e.target.value) < 5 ? 0 : e.target.value } });
@@ -17,7 +17,7 @@ const Settings = ({ column, i, settings, adjustSettings }) => {
         <div className="row">
           <div className="col-3">
             <div className="custom-switch">
-              <input type="checkbox" id={ `${ column }-row-${ i }-mute` } checked={ !settings[i].settings.mute } onChange={ handleMute }/>
+              <input type="checkbox" id={ `${ column }-row-${ i }-mute` } checked={ !settings[i].settings.mute } onChange={ handleMute } />
               <label htmlFor={ `${ column }-row-${ i }-mute` }> </label>
             </div>
           </div>
@@ -35,13 +35,14 @@ const Settings = ({ column, i, settings, adjustSettings }) => {
         </div>
         <br />
         <hr />
-        <button className="btn btn-block is-primary">Sonification Settings (Advanced)</button>
+        <a href={ `#sonification-${ tracks[i].name }-${ i }` } className="btn btn-block is-primary">Sonification Settings (Advanced)</a>
       </div>
     </details>
   );
 };
 
 const mapStateToProps = state => ({
+  tracks: state.tracks,
   settings: state.settings
 });
 

@@ -4,6 +4,10 @@ let first = true;
 let initial;
 
 const Window = ({ anchor, buttons, children, title }) => {
+  if (!buttons) {
+    buttons = [];
+  }
+
   const win = createRef();
   const dialog = createRef();
 
