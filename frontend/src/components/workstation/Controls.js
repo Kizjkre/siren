@@ -83,6 +83,28 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
               </button>
             </div>
           </div>
+          <div className="col-4">
+            <div className="row h-full">
+              <div className="col-12 d-flex justify-content-center">
+                <div className="h-full w-full d-flex justify-content-center">
+                  <div className="dropdown dropup with-arrow align-self-center">
+                    <button className="btn btn-lg" data-toggle="dropdown" type="button" id="bpm-dropup">
+                      <i className="fa fa-stopwatch" />
+                      &emsp;Time Signature: <span className="text-monospace">{ globalSettings.bpm }</span>
+                    </button>
+                    <div className="dropdown-menu" aria-labelledby="bpm-dropup">
+                      <div className="container mt-15">
+                        <div className="form-group">
+                          <label htmlFor="bpm">Set BPM</label>
+                          <input type="number" className="form-control" id="bpm" min="30" max="240" placeholder={ globalSettings.bpm } onChange={ handleBPM } />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
