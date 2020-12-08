@@ -1,13 +1,13 @@
 import {
   UPLOAD_FILE,
-  SELECT_COLUMN,
+  ADD_TRACK,
   ADJUST_SETTINGS,
   ADJUST_GLOBAL_SETTINGS
 } from '../constants/action-types';
 
 const initialState = {
   files: [],
-  columns: [],
+  tracks: [],
   settings: [],
   globalSettings: {
     bpm: 120,
@@ -27,9 +27,9 @@ const rootReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         files: [...state.files, action.payload]
       });
-    case SELECT_COLUMN:
+    case ADD_TRACK:
       return Object.assign({}, state, {
-        columns: [...state.columns, action.payload],
+        tracks: [...state.tracks, action.payload],
         settings: [...state.settings, { i: state.settings.length, settings: { ...initialSettings } }]
       });
     case ADJUST_SETTINGS:

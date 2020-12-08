@@ -33,6 +33,9 @@ const Settings = ({ column, i, settings, adjustSettings }) => {
         <div className="h-full d-flex align-content-start">
           <input type="range" min="-50" max="50" value={ settings[i].settings.pan } onChange={ handlePan } />
         </div>
+        <br />
+        <hr />
+        <button className="btn btn-block is-primary">Sonification Settings (Advanced)</button>
       </div>
     </details>
   );

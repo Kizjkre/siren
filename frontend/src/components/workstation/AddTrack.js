@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
-import { selectColumn } from '../../actions';
+import { addTrack } from '../../actions';
 import Window from './Window';
 
-const AddTrack = ({ anchor, track, files, selectColumn }) => {
+const AddTrack = ({ anchor, track, files, addTrack }) => {
   const [state, setState] = useState({ column: '' });
 
-  let columns;
+  let name, columns;
   for (const file of files) {
     if (file.name === track) {
+      name = file.name;
       columns = file.csv.columns;
       break;
     }
@@ -18,7 +19,7 @@ const AddTrack = ({ anchor, track, files, selectColumn }) => {
   const handleSubmit = e => {
     if (state.column !== '') {
       e.target.setAttribute('href', '#!');
-      selectColumn(state.column);
+      addTrack({ name: state.column, file: name });
       setState({ ...state, column: '' })
     }
   };
@@ -38,7 +39,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  selectColumn: column => dispatch(selectColumn(column))
+  addTrack: column => dispatch(addTrack(column))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddTrack);

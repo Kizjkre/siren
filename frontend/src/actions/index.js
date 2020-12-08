@@ -1,6 +1,6 @@
 import {
   UPLOAD_FILE,
-  SELECT_COLUMN,
+  ADD_TRACK,
   ADJUST_SETTINGS,
   ADJUST_GLOBAL_SETTINGS
 } from '../constants/action-types';
@@ -10,8 +10,8 @@ export const uploadFile = payload => ({
   payload
 });
 
-export const selectColumn = payload => ({
-  type: SELECT_COLUMN,
+export const addTrack = payload => ({
+  type: ADD_TRACK,
   payload
 });
 

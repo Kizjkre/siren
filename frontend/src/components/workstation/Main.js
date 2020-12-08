@@ -5,10 +5,10 @@ import Settings from './Settings';
 
 const Main = ({ files, columns }) => {
   let tracks = [];
-  columns.forEach(column => {
-    for (const file of files) {
-      if (file.csv.columns.includes(column)) {
-        tracks.push({ file, column });
+  columns.forEach(({ file, name }) => {
+    for (const f of files) {
+      if (f.name === file) {
+        tracks.push({ file: f, column: name });
         break;
       }
     }
@@ -49,7 +49,7 @@ const Main = ({ files, columns }) => {
 
 const mapStateToProps = state => ({
   files: state.files,
-  columns: state.columns
+  columns: state.tracks
 });
 
 export default connect(mapStateToProps)(Main);
