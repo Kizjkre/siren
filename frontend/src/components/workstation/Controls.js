@@ -5,6 +5,10 @@ import { KEYS } from '../../constants/workstation-styles';
 const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
   const handleBPM = e => adjustGlobalSettings({ ...globalSettings, bpm: e.target.value });
   const handleKey = e => adjustGlobalSettings({ ...globalSettings, key: e.target.value });
+  const handleTimesig = top => e => adjustGlobalSettings({
+    ...globalSettings,
+    timesig: top ? [e.target.value, globalSettings.timesig[1]] : Number.isInteger(Math.log(e.target.value) / Math.log(2)) ? [globalSettings.timesig[0], e.target.value] : [...globalSettings.timesig]
+  });
 
   return (
     <nav className="navbar navbar-fixed-bottom controls">
@@ -16,7 +20,7 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
                 <div className="h-full w-full d-flex justify-content-center">
                   <div className="dropdown dropup with-arrow align-self-center">
                     <button className="btn btn-lg" data-toggle="dropdown" type="button" id="bpm-dropup">
-                      <i className="fa fa-drum" />
+                      <i className="fa fa-drum"/>
                       &emsp;BPM: <span className="text-monospace">{ globalSettings.bpm }</span>
                     </button>
                     <div className="dropdown-menu" aria-labelledby="bpm-dropup">
@@ -34,7 +38,7 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
                 <div className="h-full w-full d-flex justify-content-center">
                   <div className="dropdown dropup with-arrow align-self-center">
                     <button className="btn btn-lg" data-toggle="dropdown" type="button" id="key-dropup">
-                      <i className="fa fa-hashtag" />
+                      <i className="fa fa-hashtag"/>
                       &emsp;Key: { KEYS[globalSettings.key] }
                     </button>
                     <div className="dropdown-menu" aria-labelledby="key-dropup">
@@ -78,8 +82,8 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
           <div className="col-4">
             <div className="w-full d-flex justify-content-center">
               <button className="btn btn-square rounded-circle btn-success play font-size-24" type="button" disabled={ !hasTracks }>
-                {/*<i className="fa fa-play" />*/}
-                {/* TODO: Toggle button color */}
+                {/*<i className="fa fa-play" />*/ }
+                {/* TODO: Toggle button color */ }
               </button>
             </div>
           </div>
@@ -88,15 +92,20 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
               <div className="col-12 d-flex justify-content-center">
                 <div className="h-full w-full d-flex justify-content-center">
                   <div className="dropdown dropup with-arrow align-self-center">
-                    <button className="btn btn-lg" data-toggle="dropdown" type="button" id="bpm-dropup">
-                      <i className="fa fa-stopwatch" />
-                      &emsp;Time Signature: <span className="text-monospace">{ globalSettings.bpm }</span>
+                    <button className="btn btn-lg d-flex align-items-center" data-toggle="dropdown" type="button" id="timesig-dropup">
+                      <i className="fa fa-stopwatch"/>
+                      &emsp;Time Signature:&nbsp;
+                      <span className="supsub">
+                        <sup>{ globalSettings.timesig[0] }</sup>
+                        <sub>{ globalSettings.timesig[1] }</sub>
+                      </span>
                     </button>
-                    <div className="dropdown-menu" aria-labelledby="bpm-dropup">
+                    <div className="dropdown-menu" aria-labelledby="timesig-dropup">
                       <div className="container mt-15">
                         <div className="form-group">
-                          <label htmlFor="bpm">Set BPM</label>
-                          <input type="number" className="form-control" id="bpm" min="30" max="240" placeholder={ globalSettings.bpm } onChange={ handleBPM } />
+                          <label htmlFor="timesig">Set Time Signature</label>
+                          <input type="number" className="form-control" id="timesig" min="1" max="20" placeholder={ globalSettings.timesig[0] } onChange={ handleTimesig(true) } />
+                          <input type="number" className="form-control" id="timesig-bottom" min="1" max="32" placeholder={ globalSettings.timesig[1] } onChange={ handleTimesig(false) } />
                         </div>
                       </div>
                     </div>

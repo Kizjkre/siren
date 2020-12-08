@@ -11,7 +11,8 @@ const initialState = {
   settings: [],
   globalSettings: {
     bpm: 120,
-    key: 'C'
+    key: 'C',
+    timesig: [4, 4]
   }
 };
 
@@ -19,8 +20,7 @@ const initialSettings = {
   mute: false,
   volume: 50,
   pan: 0,
-  pitch: 0,
-
+  pitch: 0
 };
 
 const rootReducer = (state = initialState, action) => {

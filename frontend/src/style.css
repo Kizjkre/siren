@@ -25,6 +25,16 @@
   width: 7rem;
 }
 
+.supsub {
+  display: flex;
+  flex-direction: column;
+  margin-left: 0.5rem;
+}
+
+.supsub > sub, .supsub > sup {
+  display: flex;
+}
+
 .track {
   height: 100%;
 }
