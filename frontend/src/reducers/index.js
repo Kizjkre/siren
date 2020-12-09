@@ -20,7 +20,11 @@ const initialSettings = {
   mute: false,
   volume: 50,
   pan: 0,
-  pitch: 0
+  pitch: 0,
+  rhythm: {
+    size: 4,
+    type: 0
+  }
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -35,6 +39,7 @@ const rootReducer = (state = initialState, action) => {
         settings: [...state.settings, { i: state.settings.length, settings: { ...initialSettings } }]
       });
     case ADJUST_SETTINGS:
+      console.log(action.payload);
       return Object.assign({}, state, {
         settings: state.settings.map(({ i, settings }) => {
           if (action.payload.i === i) {
