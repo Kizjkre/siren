@@ -18,7 +18,7 @@ const initialState = {
 
 const initialSettings = {
   mute: false,
-  volume: 50,
+  volume: 100,
   pan: 0,
   pitch: 0,
   rhythm: {
