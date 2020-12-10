@@ -2,7 +2,7 @@ import {
   UPLOAD_FILE,
   ADD_TRACK,
   ADJUST_SETTINGS,
-  ADJUST_GLOBAL_SETTINGS
+  ADJUST_GLOBAL_SETTINGS, FOCUS_WINDOW
 } from '../constants/action-types';
 
 const initialState = {
@@ -13,7 +13,8 @@ const initialState = {
     bpm: 120,
     key: 'C',
     timesig: [4, 4]
-  }
+  },
+  windows: []
 };
 
 const initialSettings = {
@@ -55,6 +56,16 @@ const rootReducer = (state = initialState, action) => {
     case ADJUST_GLOBAL_SETTINGS:
       return Object.assign({}, state, {
         globalSettings: action.payload
+      });
+    case FOCUS_WINDOW:
+      const index = state.windows.indexOf(action.payload);
+      if (index >= 0) {
+        return Object.assign({}, state, {
+          windows: [action.payload, ...state.windows.slice(0, index), ...state.windows.slice(index + 1, state.windows.length)]
+        });
+      }
+      return Object.assign({}, state, {
+        windows: [action.payload, ...state.windows]
       });
     default:
       return state;

@@ -35,7 +35,7 @@ const Settings = ({ column, i, tracks, settings, adjustSettings }) => {
         </div>
         <br />
         <hr />
-        <a href={ `#sonification-${ tracks[i].name }-${ i }` } className="btn btn-block is-primary">Sonification Settings (Advanced)</a>
+        <a href="#!" data-toggle="modal" data-target={ `sonification-${ tracks[i].name }-${ i }` } className="btn btn-block is-primary">Sonification Settings (Advanced)</a>
       </div>
     </details>
   );

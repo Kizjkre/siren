@@ -9,16 +9,14 @@ const FileBrowser = ({ files }) => {
       setState({
         ...state,
         content: (
-          files.map(file => {
-            return (
-              <a href={ `#modal-${ file.name }` } key={ `anchor-${ file.name }` } className="sidebar-link sidebar-link-with-icon">
-                <span className="sidebar-icon">
-                  <i className="fa fa-file-csv" />
-                </span>
-                { file.name }
-              </a>
-            )
-          })
+          files.map(file => (
+            <a href="#!" key={ `anchor-${ file.name }` } data-toggle="modal" data-target={ `modal-${ file.name }` } className="sidebar-link sidebar-link-with-icon">
+              <span className="sidebar-icon">
+                <i className="fa fa-file-csv" />
+              </span>
+              { file.name }
+            </a>
+          ))
         )
       })
     }
