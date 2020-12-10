@@ -11,6 +11,7 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings }) => 
         pitch: toggle ? (settings[trackno].settings.pitch < 0 ? settings[trackno].settings.pitch + 100 : settings[trackno].settings.pitch - 100) : e.target.value
       }
     });
+  
   const handleRhythm = (toggle, size, type) => e =>
     adjustSettings({
       i: trackno,
@@ -20,11 +21,21 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings }) => 
           ...settings[trackno].settings.rhythm,
           size: size ? e.target.value : settings[trackno].settings.rhythm.size,
           type: toggle ?
-            (settings[trackno].settings.type < 0 ?
-              settings[trackno].settings.type + 100 :
-              settings[trackno].settings.type - 100) :
+            (settings[trackno].settings.rhythm.type < 0 ?
+              settings[trackno].settings.rhythm.type + 100 :
+              settings[trackno].settings.rhythm.type - 100) :
             (type ? e.target.value : settings[trackno].settings.rhythm.type)
         }
+      }
+    });
+
+  const handleChords = toggle => e =>
+    adjustSettings({
+      i: trackno,
+      settings: {
+        ...settings[trackno].settings,
+        chords: toggle ? (settings[trackno].settings.chords < 0 ? settings[trackno].settings.chords + 100 : settings[trackno].settings.chords - 100) : e.target.value,
+        pitch: toggle ? (settings[trackno].settings.pitch < 0 ? settings[trackno].settings.pitch + 100 : settings[trackno].settings.pitch - 100) : settings[trackno].settings.pitch
       }
     });
   
@@ -39,7 +50,7 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings }) => 
           </div>
         </div>
         <div className="col-9">
-          <select className="form-control" defaultValue="0" disabled={ settings[trackno].settings.pitch < 0 }>
+          <select className="form-control" defaultValue="0" disabled={ settings[trackno].settings.pitch < 0 } onChange={ handlePitch(false) }>
             <option value="0">Higher values map to higher pitches</option>
             <option value="1">Lower values map to higher pitches</option>
             <option value="2">Higher moving averages map to higher pitches</option>
@@ -60,7 +71,26 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings }) => 
           </div>
         </div>
         <div className="col-9">
-          <input type="number" className="form-control" placeholder="Segmentation Size" onChange={ handleRhythm(false, true, false) } />
+          <input type="number" className="form-control" placeholder="Segmentation Size (Default 4)" onChange={ handleRhythm(false, true, false) } disabled={ settings[trackno].settings.rhythm.type < 0 } />
+        </div>
+      </div>
+      <br />
+      <div className="row">
+        <div className="col-12">
+          <select className="form-control" defaultValue="0" disabled={ settings[trackno].settings.rhythm.type < 0 } onChange={ handleRhythm(false, false, true) }>
+            <option value="0">Standard error of the mean</option>
+          </select>
+        </div>
+      </div>
+      <br />
+      <hr />
+      <h5 className="font-weight-bold">Chord Progression</h5>
+      <div className="row">
+        <div className="col-3 d-flex">
+          <div className="custom-switch align-self-center">
+            <input type="checkbox" checked={ settings[trackno].settings.pitch < 0 } onChange={ handleChords(true) } id={ `sonification-${ trackno }-chords` } />
+            <label htmlFor={ `sonification-${ trackno }-chords` }> </label>
+          </div>
         </div>
       </div>
     </Window>
