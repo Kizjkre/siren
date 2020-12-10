@@ -25,7 +25,8 @@ const initialSettings = {
     size: 4,
     type: 0
   },
-  chords: -100
+  chords: -100,
+  dynamics: 0
 };
 
 const rootReducer = (state = initialState, action) => {

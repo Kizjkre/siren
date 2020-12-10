@@ -38,6 +38,15 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings }) => 
         pitch: toggle ? (settings[trackno].settings.pitch < 0 ? settings[trackno].settings.pitch + 100 : settings[trackno].settings.pitch - 100) : settings[trackno].settings.pitch
       }
     });
+
+  const handleDynamics = toggle => e =>
+    adjustSettings({
+      i: trackno,
+      settings: {
+        ...settings[trackno].settings,
+        dynamics: toggle ? (settings[trackno].settings.dynamics < 0 ? settings[trackno].settings.dynamics + 100 : settings[trackno].settings.dynamics - 100) : e.target.value
+      }
+    });
   
   return (
     <Window anchor={ anchor } title={ `${ tracks[trackno].name }: Sonification Settings` }>
@@ -91,6 +100,22 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings }) => 
             <input type="checkbox" checked={ settings[trackno].settings.pitch < 0 } onChange={ handleChords(true) } id={ `sonification-${ trackno }-chords` } />
             <label htmlFor={ `sonification-${ trackno }-chords` }> </label>
           </div>
+        </div>
+      </div>
+      <br />
+      <hr />
+      <h5 className="font-weight-bold">Dynamics</h5>
+      <div className="row">
+        <div className="col-3 d-flex">
+          <div className="custom-switch align-self-center">
+            <input type="checkbox" checked={ settings[trackno].settings.dynamics >= 0 } onChange={ handleDynamics(true) } id={ `sonification-${ trackno }-dynamics` } />
+            <label htmlFor={ `sonification-${ trackno }-dynamics` }> </label>
+          </div>
+        </div>
+        <div className="col-9">
+          <select className="form-control" defaultValue="0" disabled={ settings[trackno].settings.dynamics < 0 } onChange={ handleDynamics(false) }>
+            <option value="0">Difference between consecutive cells</option>
+          </select>
         </div>
       </div>
     </Window>
