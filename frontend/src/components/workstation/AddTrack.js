@@ -18,14 +18,13 @@ const AddTrack = ({ anchor, track, files, addTrack }) => {
   const handleSelect = e => setState({ ...state, column: e.target.value });
   const handleSubmit = e => {
     if (state.column !== '') {
-      e.target.setAttribute('href', '#!');
       addTrack({ name: state.column, file: name });
       setState({ ...state, column: '' })
     }
   };
 
   return (
-    <Window anchor={ anchor } buttons={ [{ href: `#${ anchor }`, color: state.column === '' ? '' : 'green', onClick: handleSubmit }] } title="Add Track">
+    <Window anchor={ anchor } buttons={ [{ close: true, color: state.column === '' ? '' : 'green', onClick: handleSubmit, disabled: state.column === '' }] } title="Add Track">
       <select className="form-control form-control-lg" value={ state.column } onChange={ handleSelect }>
         <option value="" disabled>Select a column</option>
         { columns.map(column => <option key={ `column-${ column }` } value={ column }>{ column }</option>) }

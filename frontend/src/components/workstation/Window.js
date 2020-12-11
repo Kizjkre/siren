@@ -32,7 +32,6 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
       y: dialog.current.offsetTop
     };
 
-
     observer.observe(win.current, {
       attributes: true,
       attributeFilter: ['class'],
@@ -74,9 +73,9 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
             <button className="btn btn-square rounded-circle custom-modal-dismiss red" onClick={ resetPosition } data-dismiss="modal">&#160;</button>
             &nbsp;&nbsp;
             {
-              buttons.map(({ href, color, onClick }, i) =>
-                <span key={ `btn-${ href }-${ i }` }>
-                  <a href={ href } className={ `btn btn-square rounded-circle custom-modal-dismiss ${ color }` } onClick={ onClick }>&#160;</a>
+              buttons.map(({ close, color, onClick, disabled }, i) =>
+                <span key={ `btn-${ anchor }-${ i }` }>
+                  <button className={ `btn btn-square rounded-circle custom-modal-dismiss ${ color }` } onClick={ onClick } data-dismiss={ close ? 'modal' : null } disabled={ disabled }>&#160;</button>
                   &nbsp;&nbsp;
                 </span>
               )
