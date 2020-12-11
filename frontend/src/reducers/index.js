@@ -2,7 +2,7 @@ import {
   UPLOAD_FILE,
   ADD_TRACK,
   ADJUST_SETTINGS,
-  ADJUST_GLOBAL_SETTINGS, FOCUS_WINDOW
+  ADJUST_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK
 } from '../constants/action-types';
 
 const initialState = {
@@ -66,6 +66,18 @@ const rootReducer = (state = initialState, action) => {
       }
       return Object.assign({}, state, {
         windows: [action.payload, ...state.windows]
+      });
+    case DELETE_TRACK:
+      let i = 0;
+      for (const t of state.tracks) {
+        if (action.payload.file === t.file && action.payload.name === t.name) {
+          break;
+        }
+        i++;
+      }
+      return Object.assign({}, state, {
+        tracks: [...state.tracks.slice(0, i), ...state.tracks.slice(i + 1, state.tracks.length)],
+        settings: [...state.settings.slice(0, i), ...state.settings.slice(i + 1, state.settings.length)]
       });
     default:
       return state;

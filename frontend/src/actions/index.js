@@ -2,7 +2,7 @@ import {
   UPLOAD_FILE,
   ADD_TRACK,
   ADJUST_SETTINGS,
-  ADJUST_GLOBAL_SETTINGS, FOCUS_WINDOW
+  ADJUST_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK
 } from '../constants/action-types';
 
 export const uploadFile = payload => ({
@@ -27,5 +27,10 @@ export const adjustGlobalSettings = payload => ({
 
 export const focusWindow = payload => ({
   type: FOCUS_WINDOW,
+  payload
+});
+
+export const deleteTrack = payload => ({
+  type: DELETE_TRACK,
   payload
 });

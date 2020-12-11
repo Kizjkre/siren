@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
-import { adjustSettings } from '../../actions';
+import { adjustSettings, deleteTrack } from '../../actions';
 
-const Settings = ({ column, i, tracks, settings, adjustSettings }) => {
+const Settings = ({ column, i, tracks, settings, adjustSettings, deleteTrack }) => {
   const handleMute = () => adjustSettings({ i, settings: { ...settings[i].settings, mute: !settings[i].settings.mute} });
   const handleVolume = e => adjustSettings({ i, settings: { ...settings[i].settings, volume: e.target.value } });
   const handlePan = e => adjustSettings({ i, settings: { ...settings[i].settings, pan: Math.abs(e.target.value) < 5 ? 0 : e.target.value } });
+  const handleDelete = () => deleteTrack(tracks[i]);
 
   return (
     <details className="collapse-panel">
@@ -35,7 +36,13 @@ const Settings = ({ column, i, tracks, settings, adjustSettings }) => {
         </div>
         <br />
         <hr />
-        <a href="#!" data-toggle="modal" data-target={ `sonification-${ tracks[i].name }-${ i }` } className="btn btn-block is-primary">Sonification Settings (Advanced)</a>
+        <a href="#!" data-toggle="modal" data-target={ `sonification-${ tracks[i].name }-${ i }` } className="btn btn-block btn-primary">Sonification Settings (Advanced)</a>
+        <br />
+        <hr />
+        <button onClick={ handleDelete } className="btn btn-block btn-danger">
+          <i className="fa fa-trash" />
+          &emsp;Delete Track
+        </button>
       </div>
     </details>
   );
@@ -47,7 +54,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  adjustSettings: payload => dispatch(adjustSettings(payload))
+  adjustSettings: payload => dispatch(adjustSettings(payload)),
+  deleteTrack: payload => dispatch(deleteTrack(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);

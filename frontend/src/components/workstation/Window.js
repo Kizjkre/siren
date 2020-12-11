@@ -13,20 +13,36 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
   const win = createRef();
   const dialog = createRef();
 
+  const observer = new MutationObserver(e => {
+    if (e[0].target.classList.contains('show')) {
+      setState({ ...state, x: initial.x, y: initial.y });
+    }
+  });
+
   const [state, setState] = useState({ x: null, y: null, offsetX: null, offsetY: null, click: false });
 
   useEffect(() => {
     setState({
       ...state,
-      x: dialog.current.offsetLeft,
-      y: dialog.current.offsetTop
+      x: dialog.current.offsetLeft
     });
-    win.current.style.height = `${ dialog.current.getBoundingClientRect().height }px`;
-    win.current.style.width = `${ dialog.current.getBoundingClientRect().width }px`;
+
     initial = {
       x: dialog.current.offsetLeft,
       y: dialog.current.offsetTop
-    }
+    };
+
+
+    observer.observe(win.current, {
+      attributes: true,
+      attributeFilter: ['class'],
+      childList: false,
+      characterData: false
+    });
+
+    win.current.style.height = `${ dialog.current.getBoundingClientRect().height }px`;
+    win.current.style.width = `${ dialog.current.getBoundingClientRect().width }px`;
+
     focusWindow(anchor);
   }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -44,7 +60,7 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
     }
   };
   const handleMouseUp = () => setState({ ...state, click: false });
-  const resetPosition = () => setTimeout(() => setState({ ...state, x: null, y: null }), 500);
+  const resetPosition = () => setTimeout(() => setState({...state, x: initial.x, y: null}), 500);
   // const handleMouseDown = () => {};
   // const handleMouseUp = () => {};
   // const handleDrag = () => {};
@@ -55,7 +71,7 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
       <div className="modal-dialog" role="document">
         <div className="modal-content" ref={ dialog }>
           <h5 className="modal-title" onMouseDown={ handleMouseDown } onMouseMove={ handleDrag } onMouseUp={ handleMouseUp }>
-            <a href="#!" className="btn btn-square rounded-circle custom-modal-dismiss red" onClick={ resetPosition } data-dismiss="modal">&#160;</a>
+            <button className="btn btn-square rounded-circle custom-modal-dismiss red" onClick={ resetPosition } data-dismiss="modal">&#160;</button>
             &nbsp;&nbsp;
             {
               buttons.map(({ href, color, onClick }, i) =>
