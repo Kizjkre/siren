@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { focusWindow } from '../../actions';
 
-const FileBrowser = ({ files }) => {
+const FileBrowser = ({ files, focusWindow }) => {
   const [state, setState] = useState({ content: null });
+
+  const handleFocus = name => () => focusWindow(name);
 
   useEffect(() => {
     if (files.length) {
@@ -10,7 +13,7 @@ const FileBrowser = ({ files }) => {
         ...state,
         content: (
           files.map(file => (
-            <a href="#!" key={ `anchor-${ file.name }` } data-toggle="modal" data-target={ `modal-${ file.name }` } className="sidebar-link sidebar-link-with-icon">
+            <a href="#!" key={ `anchor-${ file.name }` } data-toggle="modal" data-target={ `modal-${ file.name }` } onClick={ handleFocus(`#modal-${ file.name }`) } className="sidebar-link sidebar-link-with-icon">
               <span className="sidebar-icon">
                 <i className="fa fa-file-csv" />
               </span>
@@ -40,4 +43,8 @@ const mapStateToProps = state => ({
   files: state.files
 });
 
-export default connect(mapStateToProps)(FileBrowser);
+const mapDispatchToProps = dispatch => ({
+  focusWindow: payload => dispatch(focusWindow(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(FileBrowser);

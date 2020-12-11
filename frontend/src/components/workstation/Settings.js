@@ -1,11 +1,12 @@
 import { connect } from 'react-redux';
-import { adjustSettings, deleteTrack } from '../../actions';
+import { adjustSettings, deleteTrack, focusWindow } from '../../actions';
 
-const Settings = ({ column, i, tracks, settings, adjustSettings, deleteTrack }) => {
+const Settings = ({ column, i, tracks, settings, adjustSettings, deleteTrack, focusWindow }) => {
   const handleMute = () => adjustSettings({ i, settings: { ...settings[i].settings, mute: !settings[i].settings.mute} });
   const handleVolume = e => adjustSettings({ i, settings: { ...settings[i].settings, volume: e.target.value } });
   const handlePan = e => adjustSettings({ i, settings: { ...settings[i].settings, pan: Math.abs(e.target.value) < 5 ? 0 : e.target.value } });
   const handleDelete = () => deleteTrack(tracks[i]);
+  const handleClick = () => focusWindow(`#sonification-${ tracks[i].name }-${ i }`);
 
   return (
     <details className="collapse-panel">
@@ -36,7 +37,7 @@ const Settings = ({ column, i, tracks, settings, adjustSettings, deleteTrack }) 
         </div>
         <br />
         <hr />
-        <a href="#!" data-toggle="modal" data-target={ `sonification-${ tracks[i].name }-${ i }` } className="btn btn-block btn-primary">Sonification Settings (Advanced)</a>
+        <button onClick={ handleClick } data-toggle="modal" data-target={ `sonification-${ tracks[i].name }-${ i }` } className="btn btn-block btn-primary">Sonification Settings (Advanced)</button>
         <br />
         <hr />
         <button onClick={ handleDelete } className="btn btn-block btn-danger">
@@ -55,7 +56,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   adjustSettings: payload => dispatch(adjustSettings(payload)),
-  deleteTrack: payload => dispatch(deleteTrack(payload))
+  deleteTrack: payload => dispatch(deleteTrack(payload)),
+  focusWindow: payload => dispatch(focusWindow(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);
