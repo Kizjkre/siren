@@ -4,9 +4,9 @@ const Index = () => {
   return (
     <div className="page-wrapper with-navbar">
       <nav className="navbar">
-        <a href="#!" className="navbar-brand">
+        <span className="navbar-brand anchor">
           Ocean Memory Sonification
-        </a>
+        </span>
         <ul className="navbar-nav d-none d-md-flex">
           <li className="nav-item">
             <Link to="/workstation" className="nav-link">Workstation</Link>

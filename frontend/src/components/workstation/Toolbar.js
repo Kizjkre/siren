@@ -22,37 +22,36 @@ const Toolbar = ({ uploadFile }) => {
   const [state, setState] = useState({ sidebar: true, dark: halfmoon.getPreferredMode() === 'dark-mode' });
   return (
     <nav className="navbar">
-      <a href="#!" className="navbar-brand">Workstation</a>
+      <span className="navbar-brand anchor">Workstation</span>
       <ul className="navbar-nav">
         <li className="nav-item dropdown">
-          <a className="nav-link" data-toggle="dropdown" id="nav-dropdown-file" href="#!" ref={ file }>File</a>
+          <span className="nav-link anchor" data-toggle="dropdown" id="nav-dropdown-file" ref={ file }>File</span>
           <div className="dropdown-menu" aria-labelledby="nav-dropdown-file">
             <label htmlFor="upload" className="dropdown-item">
               <input type="file" id="upload" className="d-none" accept="text/csv" onChange={ handleUpload(uploadFile, file) } />
               <i className="fa fa-folder-open"/>
               &emsp;Open
             </label>
-            <a href="#!" className="dropdown-item" onClick={ () => file.current.click() }>
+            <span className="dropdown-item anchor" onClick={ () => file.current.click() }>
               <i className="fa fa-file-export"/>
               &emsp;Export
-            </a>
+            </span>
           </div>
         </li>
         <li className="nav-item dropdown">
-          <a className="nav-link" data-toggle="dropdown" id="nav-dropdown-file" href="#!" ref={ edit }>Edit</a>
+          <span className="nav-link anchor" data-toggle="dropdown" id="nav-dropdown-file" ref={ edit }>Edit</span>
           <div className="dropdown-menu" aria-labelledby="nav-dropdown-file">
-            <a href="#!" className="dropdown-item" onClick={ () => edit.current.click() }>
+            <span className="dropdown-item anchor" onClick={ () => edit.current.click() }>
               <i className="fa fa-folder-open"/>
               &emsp;Open
-            </a>
+            </span>
           </div>
         </li>
         <li className="nav-item dropdown">
-          <a className="nav-link" data-toggle="dropdown" id="nav-dropdown-file" href="#!" ref={ view }>View</a>
+          <span className="nav-link anchor" data-toggle="dropdown" id="nav-dropdown-file" ref={ view }>View</span>
           <div className="dropdown-menu" aria-labelledby="nav-dropdown-file">
-            <a
-              href="#!"
-              className="dropdown-item"
+            <span
+              className="dropdown-item anchor"
               onClick={ () => {
                 view.current.click();
                 halfmoon.toggleSidebar();
@@ -61,10 +60,9 @@ const Toolbar = ({ uploadFile }) => {
             >
               <i className={ `fa fa-toggle-${ state.sidebar ? 'off' : 'on' }` } />
               &emsp;{ state.sidebar ? 'Close' : 'Open' } file browser
-            </a>
-            <a
-              href="#!"
-              className="dropdown-item"
+            </span>
+            <span
+              className="dropdown-item anchor"
               onClick={ () => {
                 view.current.click();
                 halfmoon.toggleDarkMode();
@@ -73,7 +71,7 @@ const Toolbar = ({ uploadFile }) => {
             >
               <i className={ `fa fa-${ state.dark ? 'sun' : 'moon' }` } />
               &emsp;Toggle { state.dark ? 'light' : 'dark' } mode
-            </a>
+            </span>
           </div>
         </li>
       </ul>

@@ -13,12 +13,12 @@ const FileBrowser = ({ files, focusWindow }) => {
         ...state,
         content: (
           files.map(file => (
-            <a href="#!" key={ `anchor-${ file.name }` } data-toggle="modal" data-target={ `modal-${ file.name }` } onClick={ handleFocus(`#modal-${ file.name }`) } className="sidebar-link sidebar-link-with-icon">
+            <span key={ `anchor-${ file.name }` } data-toggle="modal" data-target={ `modal-${ file.name }` } onClick={ handleFocus(`#modal-${ file.name }`) } className="sidebar-link sidebar-link-with-icon anchor">
               <span className="sidebar-icon">
                 <i className="fa fa-file-csv" />
               </span>
               { file.name }
-            </a>
+            </span>
           ))
         )
       })
