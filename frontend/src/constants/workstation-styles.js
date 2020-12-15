@@ -24,5 +24,6 @@ export const KEYS = {
   'Bb': 'B&#9837; Major',
   'bb': 'B&#9837; Minor',
   'B': 'B Major',
-  'b': 'B Minor'
+  'b': 'B Minor',
+  'none': 'None'
 }

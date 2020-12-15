@@ -9,6 +9,14 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
     ...globalSettings,
     timesig: top ? [e.target.value, globalSettings.timesig[1]] : Number.isInteger(Math.log(e.target.value) / Math.log(2)) ? [globalSettings.timesig[0], e.target.value] : [...globalSettings.timesig]
   });
+  const handleBPMToggle = () => adjustGlobalSettings({
+    ...globalSettings,
+    bpm: globalSettings.bpm > 30 ? globalSettings.bpm - 211 : globalSettings.bpm + 211
+  });
+  const handleTimesigToggle = () => adjustGlobalSettings({
+    ...globalSettings,
+    timesig: globalSettings.timesig[0] > 0 ? [globalSettings.timesig[0] - 20, globalSettings.timesig[1] - 32] : [globalSettings.timesig[0] + 20, globalSettings.timesig[1] + 32]
+  });
 
   return (
     <nav className="navbar navbar-fixed-bottom controls">
@@ -21,13 +29,19 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
                   <div className="dropdown dropup with-arrow align-self-center">
                     <button className="btn btn-lg" data-toggle="dropdown" type="button" id="bpm-dropup">
                       <i className="fa fa-drum"/>
-                      &emsp;BPM: <span className="text-monospace">{ globalSettings.bpm }</span>
+                      &emsp;BPM: <span className="text-monospace">{ globalSettings.bpm < 30 ? 'N/A' : globalSettings.bpm }</span>
                     </button>
                     <div className="dropdown-menu" aria-labelledby="bpm-dropup">
                       <div className="container mt-15">
                         <div className="form-group">
                           <label htmlFor="bpm">Set BPM</label>
-                          <input type="number" className="form-control" id="bpm" min="30" max="240" placeholder={ globalSettings.bpm } onChange={ handleBPM } />
+                          <br />
+                          <div className="custom-switch align-self-center">
+                            <input type="checkbox" id="bpm-toggle" checked={ globalSettings.bpm >= 30 } onChange={ handleBPMToggle } />
+                            <label htmlFor="bpm-toggle"> </label>
+                          </div>
+                          <br />
+                          <input type="number" className="form-control" id="bpm" min="30" max="240" disabled={ globalSettings.bpm < 30 } placeholder={ globalSettings.bpm < 30 ? globalSettings.bpm + 211 : globalSettings.bpm } onChange={ handleBPM } />
                         </div>
                       </div>
                     </div>
@@ -70,6 +84,7 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
                             <option value="bb">B&#9837; Minor</option>
                             <option value="B">B Major</option>
                             <option value="b">B Minor</option>
+                            <option value="none">None</option>
                           </select>
                         </div>
                       </div>
@@ -96,16 +111,22 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
                       <i className="fa fa-stopwatch"/>
                       &emsp;Time Signature:&nbsp;
                       <span className="supsub">
-                        <sup>{ globalSettings.timesig[0] }</sup>
-                        <sub>{ globalSettings.timesig[1] }</sub>
+                        <sup>{ globalSettings.timesig[0] <= 0 ? 'N/A' : globalSettings.timesig[0] }</sup>
+                        <sub>{ globalSettings.timesig[1] <= 0 ? 'N/A' : globalSettings.timesig[1] }</sub>
                       </span>
                     </button>
                     <div className="dropdown-menu" aria-labelledby="timesig-dropup">
                       <div className="container mt-15">
                         <div className="form-group">
                           <label htmlFor="timesig">Set Time Signature</label>
-                          <input type="number" className="form-control" id="timesig" min="1" max="20" placeholder={ globalSettings.timesig[0] } onChange={ handleTimesig(true) } />
-                          <input type="number" className="form-control" id="timesig-bottom" min="1" max="32" placeholder={ globalSettings.timesig[1] } onChange={ handleTimesig(false) } />
+                          <br />
+                          <div className="custom-switch align-self-center">
+                            <input type="checkbox" id="timesig-toggle" checked={ globalSettings.timesig[0] <= 0 } onChange={ handleTimesigToggle } />
+                            <label htmlFor="timesig-toggle"> </label>
+                          </div>
+                          <br />
+                          <input type="number" className="form-control" id="timesig" min="1" max="20" placeholder={ globalSettings.timesig[0] <= 0 ? 'N/A' : globalSettings.timesig[0] } onChange={ handleTimesig(true) } />
+                          <input type="number" className="form-control" id="timesig-bottom" min="1" max="32" placeholder={ globalSettings.timesig[1] <= 0 ? 'N/A' : globalSettings.timesig[1] } onChange={ handleTimesig(false) } />
                         </div>
                       </div>
                     </div>
