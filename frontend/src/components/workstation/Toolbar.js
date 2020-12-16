@@ -42,8 +42,8 @@ const Toolbar = ({ uploadFile }) => {
           <span className="nav-link anchor" data-toggle="dropdown" id="nav-dropdown-file" ref={ edit }>Edit</span>
           <div className="dropdown-menu" aria-labelledby="nav-dropdown-file">
             <span className="dropdown-item anchor" onClick={ () => edit.current.click() }>
-              <i className="fa fa-folder-open"/>
-              &emsp;Open
+              <i className="fa fa-trash"/>
+              &emsp;Remove Track
             </span>
           </div>
         </li>

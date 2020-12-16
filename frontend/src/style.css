@@ -43,6 +43,11 @@
   height: 100%;
 }
 
+.track-graph {
+  height: 100%;
+  width: 100%;
+}
+
 .window {
   background: none !important;
 }

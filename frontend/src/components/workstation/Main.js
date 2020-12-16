@@ -1,7 +1,5 @@
-import { TRACK_CONTROLS_WIDTH, TRACK_WIDTH } from '../../constants/workstation-styles';
 import { connect } from 'react-redux';
-import Table from './Table';
-import Settings from './Settings';
+import Track from './Track';
 
 const Main = ({ files, columns }) => {
   let tracks = [];
@@ -19,20 +17,7 @@ const Main = ({ files, columns }) => {
         {
           tracks.length ?
             tracks.map(({ file, column }, i) =>
-              <div key={ `${ column }-row-${ i }` } className="row row-eq-spacing">
-                <div className={ `col-${ TRACK_CONTROLS_WIDTH }` }>
-                  <div className="card track">
-                    <h2 className="card-title">Track { i + 1 } - { column }</h2>
-                    <p className="text-muted">{ file.name }</p>
-                    <Settings column={ column } i={ i } />
-                  </div>
-                </div>
-                <div className={ `col-${ TRACK_WIDTH }` }>
-                  <div className="card track overflow-scroll d-flex align-content-center">
-                    <Table file={ file.csv } column={ column } />
-                  </div>
-                </div>
-              </div>
+              <Track key={ `${ column }-row-${ i }` } i={ i } column={ column } file={ file } />
             ) : (
               <div className="d-flex justify-content-center align-items-center h-full">
                 <div className="text-center">
