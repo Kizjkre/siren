@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { adjustGlobalSettings } from '../../actions';
-import { KEYS } from '../../constants/workstation-styles';
+import { KEYS } from '../../constants/workstation';
 
 const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
   const handleBPM = e => adjustGlobalSettings({ ...globalSettings, bpm: e.target.value });

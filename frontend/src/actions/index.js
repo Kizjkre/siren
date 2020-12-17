@@ -3,7 +3,7 @@ import {
   ADD_TRACK,
   ADJUST_SETTINGS,
   ADJUST_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK
-} from '../constants/action-types';
+} from '../constants/action';
 
 export const uploadFile = payload => ({
   type: UPLOAD_FILE,

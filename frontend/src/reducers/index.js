@@ -2,35 +2,10 @@ import {
   UPLOAD_FILE,
   ADD_TRACK,
   ADJUST_SETTINGS,
-  ADJUST_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK
-} from '../constants/action-types';
+  ADJUST_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, INITIAL_STATE, INITIAL_SETTINGS
+} from '../constants/action';
 
-const initialState = {
-  files: [],
-  tracks: [],
-  settings: [],
-  globalSettings: {
-    bpm: 120,
-    key: 'C',
-    timesig: [4, 4]
-  },
-  windows: []
-};
-
-const initialSettings = {
-  mute: false,
-  volume: 100,
-  pan: 0,
-  pitch: 0,
-  rhythm: {
-    size: 4,
-    type: 0
-  },
-  chords: -100,
-  dynamics: 0
-};
-
-const rootReducer = (state = initialState, action) => {
+const rootReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case UPLOAD_FILE:
       return Object.assign({}, state, {
@@ -39,7 +14,7 @@ const rootReducer = (state = initialState, action) => {
     case ADD_TRACK:
       return Object.assign({}, state, {
         tracks: [...state.tracks, action.payload],
-        settings: [...state.settings, { i: state.settings.length, settings: { ...initialSettings } }]
+        settings: [...state.settings, { i: state.settings.length, settings: { ...INITIAL_SETTINGS } }]
       });
     case ADJUST_SETTINGS:
       return Object.assign({}, state, {

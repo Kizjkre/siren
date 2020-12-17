@@ -1,4 +1,4 @@
-import { TRACK_CONTROLS_WIDTH, TRACK_WIDTH } from '../../constants/workstation-styles';
+import { TRACK_CONTROLS_WIDTH, TRACK_WIDTH } from '../../constants/workstation';
 import Settings from './Settings';
 import TrackData from './TrackData';
 
