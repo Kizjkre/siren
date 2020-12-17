@@ -2,9 +2,9 @@ import { connect } from 'react-redux';
 import { adjustSettings, deleteTrack, focusWindow } from '../../actions';
 
 const Settings = ({ column, i, tracks, settings, adjustSettings, deleteTrack, focusWindow }) => {
-  const handleMute = () => adjustSettings({ i, settings: { ...settings[i].settings, mute: !settings[i].settings.mute} });
-  const handleVolume = e => adjustSettings({ i, settings: { ...settings[i].settings, volume: e.target.value } });
-  const handlePan = e => adjustSettings({ i, settings: { ...settings[i].settings, pan: Math.abs(e.target.value) < 5 ? 0 : e.target.value } });
+  const handleMute = () => adjustSettings({ i, settings: { ...settings[i], mute: !settings[i].mute} });
+  const handleVolume = e => adjustSettings({ i, settings: { ...settings[i], volume: e.target.value } });
+  const handlePan = e => adjustSettings({ i, settings: { ...settings[i], pan: Math.abs(e.target.value) < 5 ? 0 : e.target.value } });
   const handleDelete = () => deleteTrack(tracks[i]);
   const handleClick = () => focusWindow(`#sonification-${ tracks[i].name }-${ i }`);
 
@@ -19,13 +19,13 @@ const Settings = ({ column, i, tracks, settings, adjustSettings, deleteTrack, fo
         <div className="row">
           <div className="col-3">
             <div className="custom-switch">
-              <input type="checkbox" id={ `${ column }-row-${ i }-mute` } checked={ !settings[i].settings.mute } onChange={ handleMute } />
+              <input type="checkbox" id={ `${ column }-row-${ i }-mute` } checked={ !settings[i].mute } onChange={ handleMute } />
               <label htmlFor={ `${ column }-row-${ i }-mute` }> </label>
             </div>
           </div>
           <div className="col-9">
             <div className="h-full d-flex align-content-start">
-              <input disabled={ settings[i].settings.mute } className={ settings[i].settings.mute ? 'disabled' : '' } type="range" min="0" max="100" defaultValue="100" onMouseUp={ handleVolume } />
+              <input disabled={ settings[i].mute } className={ settings[i].mute ? 'disabled' : '' } type="range" min="0" max="100" defaultValue="100" onMouseUp={ handleVolume } />
             </div>
           </div>
         </div>
@@ -33,7 +33,7 @@ const Settings = ({ column, i, tracks, settings, adjustSettings, deleteTrack, fo
         <hr />
         <h6 className="font-weight-semi-bold">Pan</h6>
         <div className="h-full d-flex align-content-start">
-          <input type="range" min="-50" max="50" value={ settings[i].settings.pan } onChange={ handlePan } />
+          <input type="range" min="-50" max="50" value={ settings[i].pan } onChange={ handlePan } />
         </div>
         <br />
         <hr />

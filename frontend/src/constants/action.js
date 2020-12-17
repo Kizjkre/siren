@@ -21,11 +21,5 @@ export const INITIAL_SETTINGS = {
   mute: false,
   volume: 100,
   pan: 0,
-  pitch: 0,
-  rhythm: {
-    size: 4,
-    type: 0
-  },
-  chords: -100,
-  dynamics: 0
+  continuous: false
 };

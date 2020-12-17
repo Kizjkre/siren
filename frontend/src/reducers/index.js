@@ -14,19 +14,11 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     case ADD_TRACK:
       return Object.assign({}, state, {
         tracks: [...state.tracks, action.payload],
-        settings: [...state.settings, { i: state.settings.length, settings: { ...INITIAL_SETTINGS } }]
+        settings: [...state.settings, { ...INITIAL_SETTINGS }]
       });
     case ADJUST_SETTINGS:
       return Object.assign({}, state, {
-        settings: state.settings.map(({ i, settings }) => {
-          if (action.payload.i === i) {
-            return ({
-              i,
-              settings: action.payload.settings
-            });
-          }
-          return ({ i, settings });
-        })
+        settings: state.settings.map((settings, i) => action.payload.i === i ? action.payload.settings : settings)
       });
     case ADJUST_GLOBAL_SETTINGS:
       return Object.assign({}, state, {
