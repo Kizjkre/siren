@@ -26,7 +26,6 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
       x: dialog.current.offsetLeft,
       y: dialog.current.offsetTop
     };
-    console.log(initial, anchor);
 
     setState({
       ...state,

@@ -4,7 +4,7 @@ import { adjustSettings, deleteTrack, focusWindow } from '../../actions';
 const Settings = ({ column, i, tracks, settings, adjustSettings, deleteTrack, focusWindow }) => {
   const handleMute = () => adjustSettings({ i, settings: { ...settings[i], mute: !settings[i].mute} });
   const handleVolume = e => adjustSettings({ i, settings: { ...settings[i], volume: e.target.value } });
-  const handlePan = e => adjustSettings({ i, settings: { ...settings[i], pan: Math.abs(e.target.value) < 5 ? 0 : e.target.value } });
+  const handlePan = e => adjustSettings({ i, settings: { ...settings[i], pan: Math.abs(e.target.value) < 5 ? 0 : parseInt(e.target.value) } });
   const handleDelete = () => deleteTrack(tracks[i]);
   const handleClick = () => focusWindow(`#sonification-${ tracks[i].name }-${ i }`);
 

@@ -7,7 +7,7 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings }) => 
     adjustSettings({
       i: trackno,
       settings: {
-        ...settings[trackno].settings,
+        ...settings[trackno],
         continuous: e.target.checked
       }
     });
