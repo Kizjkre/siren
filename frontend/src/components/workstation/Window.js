@@ -22,15 +22,16 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
   const [state, setState] = useState({ x: null, y: null, offsetX: null, offsetY: null, click: false });
 
   useEffect(() => {
-    setState({
-      ...state,
-      x: dialog.current.offsetLeft
-    });
-
     initial = {
       x: dialog.current.offsetLeft,
       y: dialog.current.offsetTop
     };
+    console.log(initial, anchor);
+
+    setState({
+      ...state,
+      x: dialog.current.offsetLeft
+    });
 
     observer.observe(win.current, {
       attributes: true,
@@ -59,7 +60,7 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
     }
   };
   const handleMouseUp = () => setState({ ...state, click: false });
-  const resetPosition = () => setTimeout(() => setState({...state, x: initial.x, y: null}), 500);
+  const resetPosition = () => setState({...state, x: initial.x, y: null});
   // const handleMouseDown = () => {};
   // const handleMouseUp = () => {};
   // const handleDrag = () => {};
@@ -75,7 +76,7 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
             {
               buttons.map(({ close, color, onClick, disabled }, i) =>
                 <span key={ `btn-${ anchor }-${ i }` }>
-                  <button className={ `btn btn-square rounded-circle custom-modal-dismiss ${ color }` } onClick={ onClick } data-dismiss={ close ? 'modal' : null } disabled={ disabled }>&#160;</button>
+                  <button className={ `btn btn-square rounded-circle custom-modal-dismiss ${ color }` } onClick={ () => { onClick(); if (close) resetPosition(); } } data-dismiss={ close ? 'modal' : null } disabled={ disabled }>&#160;</button>
                   &nbsp;&nbsp;
                 </span>
               )
