@@ -21,5 +21,6 @@ export const INITIAL_SETTINGS = {
   mute: false,
   volume: 100,
   pan: 0,
-  continuous: false
+  continuous: false,
+  connect: -1
 };
