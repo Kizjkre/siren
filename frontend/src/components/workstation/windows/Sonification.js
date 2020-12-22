@@ -1,6 +1,6 @@
 import Window from './Window';
 import { connect } from 'react-redux';
-import { adjustSettings } from '../../actions';
+import { adjustSettings } from '../../../actions';
 
 const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings }) => {
   const handleContinuousOrDiscrete = e =>

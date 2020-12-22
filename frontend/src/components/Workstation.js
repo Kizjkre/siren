@@ -1,8 +1,8 @@
 import Toolbar from './workstation/Toolbar';
 import FileBrowser from './workstation/FileBrowser';
 import Main from './workstation/Main';
-import AddTrack from './workstation/AddTrack';
-import Sonification from './workstation/Sonification';
+import AddTrack from './workstation/windows/AddTrack';
+import Sonification from './workstation/windows/Sonification';
 import Controls from './workstation/Controls';
 import { connect } from 'react-redux';
 

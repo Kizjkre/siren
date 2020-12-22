@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
-import { addTrack } from '../../actions';
+import { addTrack } from '../../../actions';
 import Window from './Window';
 
 const AddTrack = ({ anchor, track, files, addTrack }) => {

@@ -1,6 +1,6 @@
 import { useState, useEffect, createRef } from 'react';
 import { connect } from 'react-redux';
-import { focusWindow } from '../../actions';
+import { focusWindow } from '../../../actions';
 
 let first = true;
 let initial;
