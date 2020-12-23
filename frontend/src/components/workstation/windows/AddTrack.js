@@ -16,7 +16,7 @@ const AddTrack = ({ anchor, track, files, addTrack }) => {
   }
 
   const handleSelect = e => setState({ ...state, column: e.target.value });
-  const handleSubmit = e => {
+  const handleSubmit = () => {
     if (state.column !== '') {
       addTrack({ name: state.column, file: name });
       setState({ ...state, column: '' })

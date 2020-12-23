@@ -1,3 +1,9 @@
+@media (prefers-color-scheme: light) {
+  .sonification-data-point:hover {
+    background: var(--lm-table-hoverable-bg-color-hover);
+  }
+}
+
 .anchor {
   cursor: pointer;
 }
@@ -27,6 +33,10 @@
 .play {
   height: 7rem;
   width: 7rem;
+}
+
+.sonification-data-point:hover {
+  background: var(--dm-table-hoverable-bg-color-hover);
 }
 
 .supsub {
