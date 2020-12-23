@@ -1,3 +1,5 @@
+import halfmoon from 'halfmoon';
+
 export const UPLOAD_FILE = 'UPLOAD_FILE';
 export const ADD_TRACK = 'ADD_TRACK';
 export const ADJUST_SETTINGS = 'ADJUST_SETTINGS';
@@ -12,7 +14,8 @@ export const INITIAL_STATE = {
   globalSettings: {
     bpm: 120,
     key: 'C',
-    timesig: [4, 4]
+    timesig: [4, 4],
+    dark: halfmoon.getPreferredMode() === 'dark-mode'
   },
   windows: []
 };

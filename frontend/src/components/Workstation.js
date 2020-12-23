@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Toolbar from './workstation/Toolbar';
 import FileBrowser from './workstation/FileBrowser';
 import Main from './workstation/Main';
@@ -5,8 +6,35 @@ import AddTrack from './workstation/windows/AddTrack';
 import Sonification from './workstation/windows/Sonification';
 import Controls from './workstation/Controls';
 import { connect } from 'react-redux';
+import { adjustGlobalSettings } from '../actions';
 
-const Workstation = ({ files, tracks }) => {
+let dark;
+
+const Workstation = ({ files, tracks, globalSettings, adjustGlobalSettings }) => {
+  const keyPress = keys => {
+    if (keys.length === 2 && keys[0] === 'shift' && keys[1] === 'd') {
+      dark = !dark;
+      adjustGlobalSettings({ ...globalSettings, dark });
+    }
+  };
+
+  useEffect(() => {
+    let keys = [];
+
+    document.addEventListener('keydown', e => {
+      if (!(document.querySelector('input:focus') || document.querySelector('textarea:focus') || document.querySelector('select:focus'))) {
+        keys.push(e.key.toLowerCase());
+        keyPress(keys);
+      }
+    });
+    document.addEventListener('keyup', e => {
+      if (!(document.querySelector('input:focus') || document.querySelector('textarea:focus') || document.querySelector('select:focus'))) {
+        keys.splice(keys.indexOf(e.key.toLowerCase()), 1);
+        keyPress(keys);
+      }
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div className="page-wrapper with-navbar with-sidebar with-navbar-fixed-bottom">
       <div className="sticky-alerts" />
@@ -20,9 +48,17 @@ const Workstation = ({ files, tracks }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  files: state.files,
-  tracks: state.tracks
+const mapStateToProps = state => {
+  dark = state.globalSettings.dark;
+  return ({
+    files: state.files,
+    tracks: state.tracks,
+    globalSettings: state.globalSettings
+  })
+};
+
+const mapDispatchToProps = dispatch => ({
+  adjustGlobalSettings: payload => dispatch(adjustGlobalSettings(payload))
 });
 
-export default connect(mapStateToProps)(Workstation);
+export default connect(mapStateToProps, mapDispatchToProps)(Workstation);
