@@ -1,8 +1,8 @@
 import { useState, useEffect, createRef } from 'react';
 import * as d3 from 'd3';
-import halfmoon from 'halfmoon';
+import { connect } from 'react-redux';
 
-const TrackData = ({ file, column }) => {
+const TrackData = ({ file, column, dark }) => {
   const svg = createRef();
   const xAxis = createRef();
   const yAxis = createRef();
@@ -54,11 +54,15 @@ const TrackData = ({ file, column }) => {
         <g className="y" ref={ yAxis } />
         <g className="line">
           {/* TODO: Make responsive */}
-          <path d={ state.graph } fill="none" stroke={ halfmoon.darkModeOn ? 'white' : 'black' } />
+          <path d={ state.graph } fill="none" stroke={ dark ? 'white' : 'black' } />
         </g>
       </g>
     </svg>
   );
 };
 
-export default TrackData;
+const mapStateToProps = state => ({
+  dark: state.globalSettings.dark
+});
+
+export default connect(mapStateToProps)(TrackData);
