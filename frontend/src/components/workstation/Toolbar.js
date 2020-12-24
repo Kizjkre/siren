@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import halfmoon from 'halfmoon';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { uploadFile } from '../../actions';
+import { adjustGlobalSettings, uploadFile } from '../../actions';
 
 const handleUpload = (action, ref) => async e => {
   if (e.target.files.length) {
@@ -15,7 +15,7 @@ const handleUpload = (action, ref) => async e => {
   }
 };
 
-const Toolbar = ({ uploadFile }) => {
+const Toolbar = ({ uploadFile, globalSettings, adjustGlobalSettings }) => {
   const file = createRef();
   const edit = createRef();
   const view = createRef();
@@ -66,6 +66,7 @@ const Toolbar = ({ uploadFile }) => {
               onClick={ () => {
                 view.current.click();
                 halfmoon.toggleDarkMode();
+                adjustGlobalSettings({ ...globalSettings, dark: !state.dark });
                 setState({ ...state, dark: !state.dark });
               } }
             >
@@ -85,8 +86,13 @@ const Toolbar = ({ uploadFile }) => {
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  uploadFile: file => dispatch(uploadFile(file))
+const mapStateToProps = state => ({
+  globalSettings: state.globalSettings
 });
 
-export default connect(null, mapDispatchToProps)(Toolbar);
+const mapDispatchToProps = dispatch => ({
+  uploadFile: file => dispatch(uploadFile(file)),
+  adjustGlobalSettings: payload => dispatch(adjustGlobalSettings(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Toolbar);
