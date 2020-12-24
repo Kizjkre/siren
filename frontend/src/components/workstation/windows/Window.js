@@ -42,11 +42,11 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
     win.current.style.height = `${ dialog.current.getBoundingClientRect().height }px`;
     win.current.style.width = `${ dialog.current.getBoundingClientRect().width }px`;
 
-    focusWindow(anchor);
+    focusWindow(`#${ anchor }`);
   }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleMouseDown = e => {
-    focusWindow(anchor);
+    focusWindow(`#${ anchor }`);
     if (first) {
       setState({ ...state, offsetX: e.clientX - state.x, offsetY: e.clientY - state.y, click: true });
     } else {
@@ -66,7 +66,7 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
   // const resetPosition = () => {};
 
   return (
-    <div className="modal window" id={ anchor } tabIndex="-1" role="dialog" style={ { top: state.y, left: state.x, zIndex: 100 + windows.length - windows.indexOf(anchor) } } ref={ win } data-overlay-dismissal-disabled="true" data-esc-dismissal-disabled="true">
+    <div className="modal window" id={ anchor } tabIndex="-1" role="dialog" style={ { top: state.y, left: state.x, zIndex: 100 + windows.length - windows.indexOf(`#${ anchor }`) } } ref={ win } data-overlay-dismissal-disabled="true" data-esc-dismissal-disabled="true">
       <div className="modal-dialog" role="document">
         <div className="modal-content" ref={ dialog }>
           <h5 className="modal-title" onMouseDown={ handleMouseDown } onMouseMove={ handleDrag } onMouseUp={ handleMouseUp }>
