@@ -14,7 +14,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     case ADD_TRACK:
       return Object.assign({}, state, {
         tracks: [...state.tracks, action.payload],
-        settings: [...state.settings, { ...INITIAL_SETTINGS }]
+        settings: [...state.settings, { ...INITIAL_SETTINGS, selected: state.files.find(file => file.name === action.payload.file).csv.map(row => row[action.payload.name]) }]
       });
     case ADJUST_SETTINGS:
       return Object.assign({}, state, {

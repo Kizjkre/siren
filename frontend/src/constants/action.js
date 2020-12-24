@@ -25,5 +25,6 @@ export const INITIAL_SETTINGS = {
   volume: 100,
   pan: 0,
   continuous: false,
-  connect: -1
+  connect: -1,
+  selected: []
 };
