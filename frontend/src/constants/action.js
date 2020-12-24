@@ -15,7 +15,8 @@ export const INITIAL_STATE = {
     bpm: 120,
     key: 'C',
     timesig: [4, 4],
-    dark: halfmoon.getPreferredMode() === 'dark-mode'
+    dark: halfmoon.getPreferredMode() === 'dark-mode',
+    lines: 0
   },
   windows: []
 };

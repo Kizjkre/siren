@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
 import Window from './Window';
 import { connect } from 'react-redux';
-import { adjustSettings } from '../../../actions';
-
-let connected;
+import { adjustGlobalSettings, adjustSettings } from '../../../actions';
 
 const select = (e, dark) => {
   if (dark) {
@@ -19,10 +17,10 @@ const select = (e, dark) => {
   }
 };
 
-const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files, dark }) => {
+const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files, globalSettings, adjustGlobalSettings }) => {
   useEffect(() => {
-    Array.from(document.getElementsByClassName('datum-selected')).forEach(e => select(e, dark));
-  }, [dark]); // eslint-disable-line react-hooks/exhaustive-deps
+    Array.from(document.getElementsByClassName('datum-selected')).forEach(e => select(e, globalSettings.dark));
+  }, [globalSettings.dark]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const data = files
     .find(file => file.name === tracks[trackno].file).csv
@@ -37,6 +35,8 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
       }
     });
 
+  const handleAdd = () => adjustGlobalSettings({ ...globalSettings, lines: globalSettings.lines + 1 });
+
   const handleConnect = e => {
     adjustSettings({
       i: trackno,
@@ -45,22 +45,6 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
         connect: e.target.value === 'none' ? -1 : e.target.value
       }
     });
-    console.log({
-      i: e.target.value === 'none' ? connected : parseInt(e.target.value),
-      settings: {
-        ...settings[e.target.value === 'none' ? connected : parseInt(e.target.value)],
-        connect: e.target.value === 'none' ? -1 : trackno
-      }
-    });
-    adjustSettings({
-      i: e.target.value === 'none' ? connected : parseInt(e.target.value),
-      settings: {
-        ...settings[e.target.value === 'none' ? connected : parseInt(e.target.value)],
-        connect: e.target.value === 'none' ? -1 : trackno
-      }
-    });
-
-    connected = e.target.value === 'none' ? -1 : parseInt(e.target.value);
   };
 
   const handlePoint = datum => e => {
@@ -80,7 +64,7 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
       });
     } else {
       e.target.classList.add('datum-selected');
-      select(e.target, dark);
+      select(e.target, globalSettings.dark);
       adjustSettings({
         i: trackno,
         settings: {
@@ -104,10 +88,8 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
       <hr />
       <h5 className="font-weight-bold">Connect</h5>
       <div className="d-flex w-full justify-items center align-items-center">
-        <select className="form-control" value={ settings[trackno].connect < 0 ? 'none' : settings[trackno].connect } onChange={ handleConnect }>
-          <option value="none" disabled>None</option>
-          { tracks.map(({ name }, i) => i === trackno ? null : <option key={ name } value={ i }>{ name }</option>) }
-        </select>
+        <button className="btn btn-square btn-primary" onClick={ handleAdd }>+</button>
+        { [...Array(globalSettings.lines).keys()].map(i => <button className="btn btn-square">{ i }</button>) }
       </div>
       <br />
       <hr />
@@ -132,11 +114,12 @@ const mapStateToProps = state => ({
   tracks: state.tracks,
   settings: state.settings,
   files: state.files,
-  dark: state.globalSettings.dark
+  globalSettings: state.globalSettings
 });
 
 const mapDispatchToProps = dispatch => ({
-  adjustSettings: payload => dispatch(adjustSettings(payload))
+  adjustSettings: payload => dispatch(adjustSettings(payload)),
+  adjustGlobalSettings: payload => dispatch(adjustGlobalSettings(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sonification);
