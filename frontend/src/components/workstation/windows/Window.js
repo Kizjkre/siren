@@ -60,16 +60,12 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
   };
   const handleMouseUp = () => setState({ ...state, click: false });
   const resetPosition = () => setState({...state, x: initial.x, y: null});
-  // const handleMouseDown = () => {};
-  // const handleMouseUp = () => {};
-  // const handleDrag = () => {};
-  // const resetPosition = () => {};
 
   return (
     <div className="modal window" id={ anchor } tabIndex="-1" role="dialog" style={ { top: state.y, left: state.x, zIndex: 100 + windows.length - windows.indexOf(`#${ anchor }`) } } ref={ win } data-overlay-dismissal-disabled="true" data-esc-dismissal-disabled="true">
       <div className="modal-dialog" role="document">
         <div className="modal-content" ref={ dialog }>
-          <h5 className="modal-title" onMouseDown={ handleMouseDown } onMouseMove={ handleDrag } onMouseUp={ handleMouseUp }>
+          <h5 className="modal-title window-title" onMouseDown={ handleMouseDown } onMouseMove={ handleDrag } onMouseUp={ handleMouseUp }>
             <button className="btn btn-square rounded-circle custom-modal-dismiss red" onClick={ resetPosition } data-dismiss="modal">&#160;</button>
             &nbsp;&nbsp;
             {
