@@ -1,3 +1,7 @@
+:root {
+  --navbar-fixed-bottom-height: 10rem;
+}
+
 @media (prefers-color-scheme: light) {
   .sonification-data-point:hover {
     background: var(--lm-table-hoverable-bg-color-hover);
@@ -9,7 +13,7 @@
 }
 
 .controls {
-  height: 10rem !important;
+  height: var(--navbar-fixed-bottom-height) !important;
 }
 
 .custom-modal-dismiss {
