@@ -20,7 +20,7 @@ const select = (e, dark) => {
 };
 
 const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files, globalSettings, adjustGlobalSettings, focusWindow }) => {
-  const [state, setState] = useState({ title: '', children: <></> })
+  const [state, setState] = useState({ title: '', children: null })
 
   useEffect(() => {
     Array.from(document.getElementsByClassName('datum-selected')).forEach(e => select(e, globalSettings.dark));

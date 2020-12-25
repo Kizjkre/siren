@@ -30,6 +30,10 @@
   background: rgb(255, 59, 71) !important;
 }
 
+.filler {
+  height: 40rem;
+}
+
 .icon-lg {
   font-size: 10rem;
 }
