@@ -30,21 +30,30 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
     adjustSettings({
       i: trackno,
       settings: {
-        ...settings[trackno],
         continuous: e.target.checked
       }
     });
 
-  const handleAdd = () => adjustGlobalSettings({ ...globalSettings, lines: globalSettings.lines + 1 });
+  const handleAdd = () => adjustGlobalSettings({ channels: globalSettings.channels + 1 });
 
-  const handleConnect = e => {
-    adjustSettings({
-      i: trackno,
-      settings: {
-        ...settings[trackno],
-        connect: e.target.value === 'none' ? -1 : e.target.value
-      }
-    });
+  const handleChannel = i => e => {
+    if (e.target.classList.contains('btn-primary')) {
+      e.target.classList.remove('btn-primary');
+      adjustSettings({
+        i: trackno,
+        settings: {
+          channel: [...settings[trackno].channel].splice(settings[trackno].channel.indexOf(i))
+        }
+      });
+    } else {
+      e.target.classList.add('btn-primary');
+      adjustSettings({
+        i: trackno,
+        settings: {
+          channel: [...settings[trackno].channel, i]
+        }
+      });
+    }
   };
 
   const handlePoint = datum => e => {
@@ -58,7 +67,6 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
       adjustSettings({
         i: trackno,
         settings: {
-          ...settings[trackno],
           selected: settings[trackno].selected.length === 1 ? [...data] : [...settings[trackno].selected].splice(settings[trackno].selected.indexOf(datum), 1)
         }
       });
@@ -68,7 +76,6 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
       adjustSettings({
         i: trackno,
         settings: {
-          ...settings[trackno],
           selected: settings[trackno].selected.length === data.length ? [datum] : [...settings[trackno].selected, datum]
         }
       });
@@ -78,7 +85,7 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
   return (
     <Window anchor={ anchor } title={ `${ tracks[trackno].name }: Sonification Settings` }>
       <h5 className="font-weight-bold">{ settings[trackno].continuous ? 'Continuous' : 'Discrete' }</h5>
-      <div className="d-flex w-full justify-items center align-items-center">
+      <div className="d-flex w-full justify-items-center align-items-center">
         <div className="custom-switch">
           <input type="checkbox" id="continuous" value={ settings[trackno].continuous } onChange={ handleContinuousOrDiscrete } />
           <label htmlFor="continuous" />
@@ -86,10 +93,11 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
       </div>
       <br />
       <hr />
-      <h5 className="font-weight-bold">Connect</h5>
-      <div className="d-flex w-full justify-items center align-items-center">
-        <button className="btn btn-square btn-primary" onClick={ handleAdd }>+</button>
-        { [...Array(globalSettings.lines).keys()].map(i => <button className="btn btn-square">{ i }</button>) }
+      <h5 className="font-weight-bold">Connect to Channel</h5>
+      <p className="text-muted">Channels group tracks into one output, allowing for tracks to affect different aspects of the sonification.</p>
+      <div className="w-full">
+        <button className="btn btn-square btn-primary m-5" onClick={ handleAdd }>+</button>
+        { [...Array(globalSettings.channels).keys()].map(i => <button key={ `channel-${ i }` } className="btn btn-square m-5" onClick={ handleChannel(i) }>{ i }</button>) }
       </div>
       <br />
       <hr />

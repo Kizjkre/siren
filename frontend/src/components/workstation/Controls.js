@@ -3,18 +3,15 @@ import { adjustGlobalSettings } from '../../actions';
 import { KEYS } from '../../constants/workstation';
 
 const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
-  const handleBPM = e => adjustGlobalSettings({ ...globalSettings, bpm: e.target.value });
-  const handleKey = e => adjustGlobalSettings({ ...globalSettings, key: e.target.value });
+  const handleBPM = e => adjustGlobalSettings({ bpm: e.target.value });
+  const handleKey = e => adjustGlobalSettings({ key: e.target.value });
   const handleTimesig = top => e => adjustGlobalSettings({
-    ...globalSettings,
     timesig: top ? [e.target.value, globalSettings.timesig[1]] : Number.isInteger(Math.log(e.target.value) / Math.log(2)) ? [globalSettings.timesig[0], e.target.value] : [...globalSettings.timesig]
   });
   const handleBPMToggle = () => adjustGlobalSettings({
-    ...globalSettings,
     bpm: globalSettings.bpm > 30 ? globalSettings.bpm - 211 : globalSettings.bpm + 211
   });
   const handleTimesigToggle = () => adjustGlobalSettings({
-    ...globalSettings,
     timesig: globalSettings.timesig[0] > 0 ? [globalSettings.timesig[0] - 20, globalSettings.timesig[1] - 32] : [globalSettings.timesig[0] + 20, globalSettings.timesig[1] + 32]
   });
 
@@ -53,7 +50,7 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
                   <div className="dropdown dropup with-arrow align-self-center">
                     <button className="btn btn-lg" data-toggle="dropdown" type="button" id="key-dropup">
                       <i className="fa fa-hashtag"/>
-                      &emsp;Key: { KEYS[globalSettings.key] }
+                      &emsp;Key: { <span dangerouslySetInnerHTML={ { __html: KEYS[globalSettings.key] } } /> }
                     </button>
                     <div className="dropdown-menu" aria-labelledby="key-dropup">
                       <div className="container mt-15">

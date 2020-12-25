@@ -15,7 +15,7 @@ const handleUpload = (action, ref) => async e => {
   }
 };
 
-const Toolbar = ({ uploadFile, globalSettings, adjustGlobalSettings }) => {
+const Toolbar = ({ uploadFile, adjustGlobalSettings }) => {
   const file = createRef();
   const edit = createRef();
   const view = createRef();
@@ -66,7 +66,7 @@ const Toolbar = ({ uploadFile, globalSettings, adjustGlobalSettings }) => {
               onClick={ () => {
                 view.current.click();
                 halfmoon.toggleDarkMode();
-                adjustGlobalSettings({ ...globalSettings, dark: !state.dark });
+                adjustGlobalSettings({ dark: !state.dark });
                 setState({ ...state, dark: !state.dark });
               } }
             >
@@ -86,13 +86,9 @@ const Toolbar = ({ uploadFile, globalSettings, adjustGlobalSettings }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  globalSettings: state.globalSettings
-});
-
 const mapDispatchToProps = dispatch => ({
   uploadFile: file => dispatch(uploadFile(file)),
   adjustGlobalSettings: payload => dispatch(adjustGlobalSettings(payload))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Toolbar);
+export default connect(null, mapDispatchToProps)(Toolbar);

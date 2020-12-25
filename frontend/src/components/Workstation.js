@@ -10,11 +10,11 @@ import { adjustGlobalSettings } from '../actions';
 
 let dark;
 
-const Workstation = ({ files, tracks, globalSettings, adjustGlobalSettings }) => {
+const Workstation = ({ files, tracks, adjustGlobalSettings }) => {
   const keyPress = keys => {
     if (keys.length === 2 && keys[0] === 'shift' && keys[1] === 'd') {
       dark = !dark;
-      adjustGlobalSettings({ ...globalSettings, dark });
+      adjustGlobalSettings({ dark });
     }
   };
 
@@ -52,8 +52,7 @@ const mapStateToProps = state => {
   dark = state.globalSettings.dark;
   return ({
     files: state.files,
-    tracks: state.tracks,
-    globalSettings: state.globalSettings
+    tracks: state.tracks
   })
 };
 

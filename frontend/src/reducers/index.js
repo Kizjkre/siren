@@ -18,11 +18,11 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       });
     case ADJUST_SETTINGS:
       return Object.assign({}, state, {
-        settings: state.settings.map((settings, i) => action.payload.i === i ? action.payload.settings : settings)
+        settings: state.settings.map((settings, i) => action.payload.i === i ? { ...settings, ...action.payload.settings } : settings)
       });
     case ADJUST_GLOBAL_SETTINGS:
       return Object.assign({}, state, {
-        globalSettings: action.payload
+        globalSettings: { ...state.globalSettings, ...action.payload }
       });
     case FOCUS_WINDOW:
       const index = state.windows.indexOf(action.payload);
