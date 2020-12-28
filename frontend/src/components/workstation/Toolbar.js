@@ -43,7 +43,11 @@ const Toolbar = ({ uploadFile, adjustGlobalSettings }) => {
           <div className="dropdown-menu" aria-labelledby="nav-dropdown-file">
             <span className="dropdown-item anchor" onClick={ () => edit.current.click() }>
               <i className="fa fa-trash"/>
-              &emsp;Remove Track
+              &emsp;Delete Track
+            </span>
+            <span className="dropdown-item anchor" onClick={ () => edit.current.click() }>
+              <i className="fa fa-trash"/>
+              &emsp;Remove File
             </span>
           </div>
         </li>
