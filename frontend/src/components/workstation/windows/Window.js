@@ -1,3 +1,5 @@
+// TODO: Fix initial open location
+
 import { useState, useEffect, createRef } from 'react';
 import { connect } from 'react-redux';
 import { focusWindow } from '../../../actions';
@@ -19,7 +21,7 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
     }
   });
 
-  const [state, setState] = useState({ x: null, y: null, offsetX: null, offsetY: null, click: false });
+  const [state, setState] = useState({ x: null, y: null, offsetX: null, offsetY: null, click: false, zIndex: -1000 });
 
   useEffect(() => {
     initial = {
@@ -45,6 +47,10 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
     focusWindow(`#${ anchor }`);
   }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    setState({ ...state, zIndex: win.current.classList.contains('show') ? 100 + windows.length - windows.indexOf(`#${ anchor }`) : -1000 });
+  }, [windows]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleMouseDown = e => {
     focusWindow(`#${ anchor }`);
     if (first) {
@@ -62,7 +68,7 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
   const resetPosition = () => setState({...state, x: initial.x, y: null});
 
   return (
-    <div className="modal window" id={ anchor } tabIndex="-1" role="dialog" style={ { top: state.y, left: state.x, zIndex: 100 + windows.length - windows.indexOf(`#${ anchor }`) } } ref={ win } data-overlay-dismissal-disabled="true" data-esc-dismissal-disabled="true">
+    <div className="modal window" id={ anchor } tabIndex="-1" role="dialog" style={ { top: state.y, left: state.x, zIndex: state.zIndex } } ref={ win } data-overlay-dismissal-disabled="true" data-esc-dismissal-disabled="true">
       <div className="modal-dialog" role="document">
         <div className="modal-content" ref={ dialog }>
           <h5 className="modal-title window-title" onMouseDown={ handleMouseDown } onMouseMove={ handleDrag } onMouseUp={ handleMouseUp }>
