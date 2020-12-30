@@ -18,8 +18,8 @@ const AddTrack = ({ anchor, track, files, addTrack }) => {
   const handleSelect = e => setState({ ...state, column: e.target.value });
   const handleSubmit = () => {
     if (state.column !== '') {
-      addTrack({ name: state.column, file: name });
-      setState({ ...state, column: '' })
+      addTrack({ name: state.column, file: name, data: files.find(file => file.name === track).csv.map(row => isNaN(row[state.column]) ? row[state.column] : parseFloat(row[state.column])) });
+      setState({ ...state, column: '' });
     }
   };
 

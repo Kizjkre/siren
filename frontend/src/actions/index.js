@@ -2,8 +2,8 @@ import {
   UPLOAD_FILE,
   ADD_TRACK,
   ADJUST_SETTINGS,
-  ADJUST_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK
-} from '../constants/action';
+  ADJUST_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, ADJUST_DATA
+} from '../constants/state';
 
 export const uploadFile = payload => ({
   type: UPLOAD_FILE,
@@ -32,5 +32,10 @@ export const focusWindow = payload => ({
 
 export const deleteTrack = payload => ({
   type: DELETE_TRACK,
+  payload
+});
+
+export const adjustData = payload => ({
+  type: ADJUST_DATA,
   payload
 });

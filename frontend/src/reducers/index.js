@@ -2,8 +2,8 @@ import {
   UPLOAD_FILE,
   ADD_TRACK,
   ADJUST_SETTINGS,
-  ADJUST_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, INITIAL_STATE, INITIAL_SETTINGS
-} from '../constants/action';
+  ADJUST_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, INITIAL_STATE, INITIAL_SETTINGS, ADJUST_DATA
+} from '../constants/state';
 
 const rootReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -45,6 +45,10 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       return Object.assign({}, state, {
         tracks: [...state.tracks.slice(0, i), ...state.tracks.slice(i + 1, state.tracks.length)],
         settings: [...state.settings.slice(0, i), ...state.settings.slice(i + 1, state.settings.length)]
+      });
+    case ADJUST_DATA:
+      return Object.assign({}, state, {
+        tracks: [...state.tracks, state.tracks.find(t => t.name === name)]
       });
     default:
       return state;

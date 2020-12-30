@@ -2,14 +2,14 @@ import { useState, useEffect, createRef } from 'react';
 import * as d3 from 'd3';
 import { connect } from 'react-redux';
 
-const TrackData = ({ file, column, dark }) => {
+const TrackData = ({ column, dark, tracks }) => {
   const svg = createRef();
   const xAxis = createRef();
   const yAxis = createRef();
 
   const [state, setState] = useState({ graph: '' });
 
-  const data = file.map((row, i) => ([i, isNaN(parseFloat(row[column])) ? row[column] : parseFloat(row[column])]));
+  const data = tracks.find(t => t.name === column).data.map((d, i) => [i, d]);
 
   useEffect(() => {
     const width = getComputedStyle(svg.current).width;
@@ -62,7 +62,8 @@ const TrackData = ({ file, column, dark }) => {
 };
 
 const mapStateToProps = state => ({
-  dark: state.globalSettings.dark
+  dark: state.globalSettings.dark,
+  tracks: state.tracks
 });
 
 export default connect(mapStateToProps)(TrackData);

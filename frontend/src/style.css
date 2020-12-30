@@ -62,6 +62,10 @@
   width: 100%;
 }
 
+.transparent {
+  opacity: 0;
+}
+
 .window {
   background: none !important;
 }

@@ -6,6 +6,7 @@ export const ADJUST_SETTINGS = 'ADJUST_SETTINGS';
 export const ADJUST_GLOBAL_SETTINGS = 'ADJUST_GLOBAL_SETTINGS';
 export const FOCUS_WINDOW = 'FOCUS_WINDOW';
 export const DELETE_TRACK = 'DELETE_TRACK';
+export const ADJUST_DATA = 'ADJUST_DATA';
 
 export const INITIAL_STATE = {
   files: [],
@@ -26,6 +27,5 @@ export const INITIAL_SETTINGS = {
   volume: 100,
   pan: 0,
   continuous: false,
-  channel: [],
-  selected: []
+  channel: []
 };

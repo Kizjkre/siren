@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Window from './Window';
 import Info from './Info';
+import Channel from './Channel';
 import { connect } from 'react-redux';
 import { adjustGlobalSettings, adjustSettings, focusWindow } from '../../../actions';
 import { channel, data as dataInfo } from '../helper/info';
@@ -19,16 +20,12 @@ const select = (e, dark) => {
   }
 };
 
-const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files, globalSettings, adjustGlobalSettings, focusWindow }) => {
+const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, globalSettings, adjustGlobalSettings, focusWindow }) => {
   const [state, setState] = useState({ title: '', children: null });
 
   useEffect(() => {
     Array.from(document.getElementsByClassName('datum-selected')).forEach(e => select(e, globalSettings.dark));
   }, [globalSettings.dark]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const data = files
-    .find(file => file.name === tracks[trackno].file).csv
-    .map(row => row[tracks[trackno].name]);
 
   const handleContinuousOrDiscrete = e =>
     adjustSettings({
@@ -43,10 +40,12 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
   const handleChannel = i => e => {
     if (e.target.classList.contains('btn-primary')) {
       e.target.classList.remove('btn-primary');
+      const temp = [...settings[trackno].channel];
+      temp.splice(settings[trackno].channel.indexOf(i), 1);
       adjustSettings({
         i: trackno,
         settings: {
-          channel: [...settings[trackno].channel].splice(settings[trackno].channel.indexOf(i))
+          channel: temp
         }
       });
     } else {
@@ -54,7 +53,7 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
       adjustSettings({
         i: trackno,
         settings: {
-          channel: [...settings[trackno].channel, i]
+          channel: [...settings[trackno].channel, i].sort((a, b) => a - b)
         }
       });
     }
@@ -71,7 +70,7 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
       adjustSettings({
         i: trackno,
         settings: {
-          selected: settings[trackno].selected.length === 1 ? [...data] : [...settings[trackno].selected].splice(settings[trackno].selected.indexOf(datum), 1)
+          selected: settings[trackno].selected.length === 1 ? [...tracks[trackno].data] : [...settings[trackno].selected].splice(settings[trackno].selected.indexOf(datum), 1)
         }
       });
     } else {
@@ -80,7 +79,7 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
       adjustSettings({
         i: trackno,
         settings: {
-          selected: settings[trackno].selected.length === data.length ? [datum] : [...settings[trackno].selected, datum]
+          selected: settings[trackno].selected.length === tracks[trackno].data.length ? [datum] : [...settings[trackno].selected, datum]
         }
       });
     }
@@ -95,18 +94,6 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
     <>
       <Window anchor={ anchor } title={ `${ tracks[trackno].name }: Sonification Settings` }>
         <h5 className="font-weight-bold d-flex align-items-baseline">
-          { settings[trackno].continuous ? 'Continuous' : 'Discrete' }&emsp;
-          <i className="fa fa-question-circle anchor" data-toggle="modal" data-target="help-window" />
-        </h5>
-        <div className="d-flex w-full justify-items-center align-items-center">
-          <div className="custom-switch">
-            <input type="checkbox" id="continuous" value={ settings[trackno].continuous } onChange={ handleContinuousOrDiscrete } />
-            <label htmlFor="continuous" />
-          </div>
-        </div>
-        <br />
-        <hr />
-        <h5 className="font-weight-bold d-flex align-items-baseline">
           Connect to Channel&emsp;
           <i className="fa fa-question-circle anchor" data-toggle="modal" data-target="help-window" onClick={ handleInfo('Connect to Channel', channel) } />
         </h5>
@@ -114,27 +101,56 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
           <button className="btn btn-square btn-primary m-5" onClick={ handleAdd }>+</button>
           { [...Array(globalSettings.channels).keys()].map(i => <button key={ `channel-${ i }` } className="btn btn-square m-5" onClick={ handleChannel(i) }>{ i }</button>) }
         </div>
+        {
+          settings[trackno].channel.length === 0 ? null : (
+            <>
+              <br />
+              <div className="w-full">
+                <button className="btn btn-primary ml-5" data-toggle="modal" data-target={ `channel-${ tracks[trackno].name }-${ trackno }` } onClick={ () => focusWindow(`#channel-${ tracks[trackno].name }-${ trackno }`) }>Channel Settings</button>
+              </div>
+            </>
+          )
+        }
         <br />
         <hr />
-        <h5 className="font-weight-bold d-flex align-items-baseline">
-          Data Processing&emsp;
-          <i className="fa fa-question-circle anchor" data-toggle="modal" data-target="help-window" onClick={ handleInfo('Data Processing', dataInfo) } />
-        </h5>
-        <h6 className="font-weight-semi-bold">Data Points</h6>
+        <h5 className="font-weight-bold d-flex align-items-baseline">Data Processing</h5>
+        <h6 className="font-weight-semi-bold d-flex align-items-baseline">
+          Data Points&emsp;
+          <i className="fa fa-question-circle anchor" data-toggle="modal" data-target="help-window" onClick={ handleInfo('Data Points', dataInfo) } />
+        </h6>
         <div className="w-full overflow-scroll">
           <table className="table">
             <tbody>
-            <tr>
-              <th>{ tracks[trackno].name }</th>
-              { data.map((datum, i) => <td key={ `data-${ i }` } className="anchor sonification-data-point" onClick={ handlePoint(datum) }>{ datum }</td>) }
-            </tr>
+              <tr>
+                <th>{ tracks[trackno].name }</th>
+                { tracks[trackno].data.map((datum, i) => <td key={ `data-${ i }` } className="anchor sonification-data-point is-primary" onClick={ handlePoint(datum) }>{ datum }</td>) }
+              </tr>
             </tbody>
           </table>
         </div>
+        {
+          settings[trackno].channel.length > 0 ? null : (
+            <>
+              <br />
+              <hr />
+              <h5 className="font-weight-bold d-flex align-items-baseline">
+                { settings[trackno].continuous ? 'Continuous' : 'Discrete' }&emsp;
+                <i className="fa fa-question-circle anchor" data-toggle="modal" data-target="help-window" />
+              </h5>
+              <div className="d-flex w-full justify-items-center align-items-center">
+                <div className="custom-switch">
+                  <input type="checkbox" id="continuous" value={ settings[trackno].continuous } onChange={ handleContinuousOrDiscrete } />
+                  <label htmlFor="continuous" />
+                </div>
+              </div>
+            </>
+          )
+        }
       </Window>
       <Info title={ state.title }>
         { state.children }
       </Info>
+      <Channel anchor={ `channel-${ tracks[trackno].name }-${ trackno }` } title={ tracks[trackno].name } i={ trackno } />
     </>
   );
 };
@@ -142,7 +158,6 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, files
 const mapStateToProps = state => ({
   tracks: state.tracks,
   settings: state.settings,
-  files: state.files,
   globalSettings: state.globalSettings
 });
 
