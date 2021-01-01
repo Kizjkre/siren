@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
-import { adjustSettings, deleteTrack, focusWindow } from '../../actions';
+import { setSettings, deleteTrack, focusWindow } from '../../actions';
 
-const Settings = ({ column, i, tracks, settings, adjustSettings, deleteTrack, focusWindow }) => {
-  const handleMute = () => adjustSettings({ i, settings: { mute: !settings[i].mute } });
-  const handleVolume = e => adjustSettings({ i, settings: { volume: e.target.value } });
-  const handlePan = e => adjustSettings({ i, settings: { pan: Math.abs(e.target.value) < 5 ? 0 : parseInt(e.target.value) } });
-  const handleDelete = () => deleteTrack(tracks[i]);
+const Settings = ({ column, i, tracks, setSettings, deleteTrack, focusWindow }) => {
+  const handleMute = () => setSettings(i, { mute: !tracks[i].settings.mute });
+  const handleVolume = e => setSettings(i, { volume: e.target.value });
+  const handlePan = e => setSettings(i, { pan: Math.abs(e.target.value) < 5 ? 0 : parseInt(e.target.value) });
+  const handleDelete = () => deleteTrack(i);
   const handleClick = () => focusWindow(`#sonification-${ tracks[i].name }-${ i }`);
 
   return (
@@ -16,19 +16,19 @@ const Settings = ({ column, i, tracks, settings, adjustSettings, deleteTrack, fo
       </summary>
       <div className="collapse-content">
         {
-          settings[i].channel.length > 0 ? null : (
+          tracks[i].settings.channel.length > 0 ? null : (
             <>
               <h6 className="font-weight-semi-bold">Volume</h6>
               <div className="row">
                 <div className="col-3">
                   <div className="custom-switch">
-                    <input type="checkbox" id={ `${ column }-row-${ i }-mute` } checked={ !settings[i].mute } onChange={ handleMute } />
+                    <input type="checkbox" id={ `${ column }-row-${ i }-mute` } checked={ !tracks[i].settings.mute } onChange={ handleMute } />
                     <label htmlFor={ `${ column }-row-${ i }-mute` }> </label>
                   </div>
                 </div>
                 <div className="col-9">
                   <div className="h-full d-flex align-content-start">
-                    <input disabled={ settings[i].mute } className={ settings[i].mute ? 'disabled' : '' } type="range" min="0" max="100" defaultValue="100" onMouseUp={ handleVolume } />
+                    <input disabled={ tracks[i].settings.mute } className={ tracks[i].settings.mute ? 'disabled' : '' } type="range" min="0" max="100" defaultValue="100" onMouseUp={ handleVolume } />
                   </div>
                 </div>
               </div>
@@ -36,7 +36,7 @@ const Settings = ({ column, i, tracks, settings, adjustSettings, deleteTrack, fo
               <hr />
               <h6 className="font-weight-semi-bold">Pan</h6>
               <div className="h-full d-flex align-content-start">
-                <input type="range" min="-50" max="50" value={ settings[i].pan } onChange={ handlePan } />
+                <input type="range" min="-50" max="50" value={ tracks[i].settings.pan } onChange={ handlePan } />
               </div>
               <br />
               <hr />
@@ -56,14 +56,13 @@ const Settings = ({ column, i, tracks, settings, adjustSettings, deleteTrack, fo
 };
 
 const mapStateToProps = state => ({
-  tracks: state.tracks,
-  settings: state.settings
+  tracks: state.tracks
 });
 
 const mapDispatchToProps = dispatch => ({
-  adjustSettings: payload => dispatch(adjustSettings(payload)),
-  deleteTrack: payload => dispatch(deleteTrack(payload)),
-  focusWindow: payload => dispatch(focusWindow(payload))
+  setSettings: (id, settings) => dispatch(setSettings(id, settings)),
+  deleteTrack: id => dispatch(deleteTrack(id)),
+  focusWindow: window => dispatch(focusWindow(window))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Window from './Window';
 import { connect } from 'react-redux';
 
-const Channel = ({ anchor, title, i, settings }) => {
+const Channel = ({ anchor, title, i, tracks }) => {
   const [state, setState] = useState({ channel: -1 });
 
   const handleChannel = i => e => {
@@ -27,7 +27,7 @@ const Channel = ({ anchor, title, i, settings }) => {
               <span className="sr-only">Previous</span>
             </button>
           </li>
-          { settings[i].channel.map(i => <li key={ `pagination-${ i }` } className="page-item"><button className="page-link" onClick={ handleChannel(i) }>{ i }</button></li>) }
+          { tracks[i].settings.channel.map(i => <li key={ `pagination-${ i }` } className="page-item"><button className="page-link" onClick={ handleChannel(i) }>{ i }</button></li>) }
           <li className="page-item">
             <button className="page-link">
               <i className="fa fa-angle-right" aria-hidden="true" />
@@ -45,7 +45,7 @@ const Channel = ({ anchor, title, i, settings }) => {
 };
 
 const mapStateToProps = state => ({
-  settings: state.settings
+  tracks: state.tracks
 });
 
 export default connect(mapStateToProps)(Channel);

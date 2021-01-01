@@ -11,7 +11,6 @@ const Main = ({ files, tracks }) => {
       }
     }
   });
-  console.log(tracks);
 
   return (
     <div className="content-wrapper">

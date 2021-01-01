@@ -9,7 +9,7 @@ const handleUpload = (action, ref) => async e => {
   if (e.target.files.length) {
     const url = URL.createObjectURL(e.target.files[0]);
     const csv = await d3.csv(url);
-    action({ name: e.target.files[0].name, csv });
+    action(e.target.files[0].name, csv);
     e.target.value = '';
     ref.current.click();
   }
@@ -91,7 +91,7 @@ const Toolbar = ({ uploadFile, adjustGlobalSettings }) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  uploadFile: file => dispatch(uploadFile(file)),
+  uploadFile: (name, data) => dispatch(uploadFile(name, data)),
   adjustGlobalSettings: payload => dispatch(adjustGlobalSettings(payload))
 });
 

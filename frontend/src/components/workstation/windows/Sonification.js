@@ -3,7 +3,7 @@ import Window from './Window';
 import Info from './Info';
 import Channel from './Channel';
 import { connect } from 'react-redux';
-import { adjustGlobalSettings, adjustSettings, focusWindow } from '../../../actions';
+import { adjustGlobalSettings, setSettings, focusWindow } from '../../../actions';
 import { channel, data as dataInfo } from '../helper/info';
 
 const select = (e, dark) => {
@@ -20,7 +20,7 @@ const select = (e, dark) => {
   }
 };
 
-const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, globalSettings, adjustGlobalSettings, focusWindow }) => {
+const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, adjustGlobalSettings, focusWindow }) => {
   const [state, setState] = useState({ title: '', children: null });
 
   useEffect(() => {
@@ -28,34 +28,19 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, globa
   }, [globalSettings.dark]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleContinuousOrDiscrete = e =>
-    adjustSettings({
-      i: trackno,
-      settings: {
-        continuous: e.target.checked
-      }
-    });
+    setSettings(trackno, { continuous: e.target.checked });
 
   const handleAdd = () => adjustGlobalSettings({ channels: globalSettings.channels + 1 });
 
   const handleChannel = i => e => {
     if (e.target.classList.contains('btn-primary')) {
       e.target.classList.remove('btn-primary');
-      const temp = [...settings[trackno].channel];
-      temp.splice(settings[trackno].channel.indexOf(i), 1);
-      adjustSettings({
-        i: trackno,
-        settings: {
-          channel: temp
-        }
-      });
+      const temp = [...tracks[trackno].settings.channel];
+      temp.splice(tracks[trackno].settings.channel.indexOf(i), 1);
+      setSettings(trackno, { channel: temp });
     } else {
       e.target.classList.add('btn-primary');
-      adjustSettings({
-        i: trackno,
-        settings: {
-          channel: [...settings[trackno].channel, i].sort((a, b) => a - b)
-        }
-      });
+      setSettings(trackno, { channel: [...tracks[trackno].settings.channel, i].sort((a, b) => a - b) });
     }
   };
 
@@ -67,21 +52,11 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, globa
       e.target.style.rowBorder = null;
       e.target.style.cellBorder = null;
 
-      adjustSettings({
-        i: trackno,
-        settings: {
-          selected: settings[trackno].selected.length === 1 ? [...tracks[trackno].data] : [...settings[trackno].selected].splice(settings[trackno].selected.indexOf(datum), 1)
-        }
-      });
+      setSettings(trackno, { selected: tracks[trackno].settings.selected.length === 1 ? [...tracks[trackno].data] : [...tracks[trackno].settings.selected].splice(tracks[trackno].settings.selected.indexOf(datum), 1) });
     } else {
       e.target.classList.add('datum-selected');
       select(e.target, globalSettings.dark);
-      adjustSettings({
-        i: trackno,
-        settings: {
-          selected: settings[trackno].selected.length === tracks[trackno].data.length ? [datum] : [...settings[trackno].selected, datum]
-        }
-      });
+      setSettings(trackno, { selected: tracks[trackno].settings.selected.length === tracks[trackno].data.length ? [datum] : [...tracks[trackno].settings.selected, datum] });
     }
   };
 
@@ -102,7 +77,7 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, globa
           { [...Array(globalSettings.channels).keys()].map(i => <button key={ `channel-${ i }` } className="btn btn-square m-5" onClick={ handleChannel(i) }>{ i }</button>) }
         </div>
         {
-          settings[trackno].channel.length === 0 ? null : (
+          tracks[trackno].settings.channel.length === 0 ? null : (
             <>
               <br />
               <div className="w-full">
@@ -129,17 +104,17 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, globa
           </table>
         </div>
         {
-          settings[trackno].channel.length > 0 ? null : (
+          tracks[trackno].settings.channel.length > 0 ? null : (
             <>
               <br />
               <hr />
               <h5 className="font-weight-bold d-flex align-items-baseline">
-                { settings[trackno].continuous ? 'Continuous' : 'Discrete' }&emsp;
+                { tracks[trackno].settings.continuous ? 'Continuous' : 'Discrete' }&emsp;
                 <i className="fa fa-question-circle anchor" data-toggle="modal" data-target="help-window" />
               </h5>
               <div className="d-flex w-full justify-items-center align-items-center">
                 <div className="custom-switch">
-                  <input type="checkbox" id="continuous" value={ settings[trackno].continuous } onChange={ handleContinuousOrDiscrete } />
+                  <input type="checkbox" id="continuous" value={ tracks[trackno].settings.continuous } onChange={ handleContinuousOrDiscrete } />
                   <label htmlFor="continuous" />
                 </div>
               </div>
@@ -157,14 +132,13 @@ const Sonification = ({ anchor, trackno, tracks, settings, adjustSettings, globa
 
 const mapStateToProps = state => ({
   tracks: state.tracks,
-  settings: state.settings,
   globalSettings: state.globalSettings
 });
 
 const mapDispatchToProps = dispatch => ({
-  adjustSettings: payload => dispatch(adjustSettings(payload)),
-  adjustGlobalSettings: payload => dispatch(adjustGlobalSettings(payload)),
-  focusWindow: payload => dispatch(focusWindow(payload))
+  setSettings: (id, settings) => dispatch(setSettings(id, settings)),
+  adjustGlobalSettings: settings => dispatch(adjustGlobalSettings(settings)),
+  focusWindow: window => dispatch(focusWindow(window))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sonification);

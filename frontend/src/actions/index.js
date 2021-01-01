@@ -1,41 +1,41 @@
 import {
   UPLOAD_FILE,
   ADD_TRACK,
-  ADJUST_SETTINGS,
-  ADJUST_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, ADJUST_DATA
+  SET_SETTINGS,
+  SET_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, SET_DATA
 } from '../constants/state';
 
-export const uploadFile = payload => ({
+export const uploadFile = (name, data) => ({
   type: UPLOAD_FILE,
-  payload
+  payload: { name, csv: data } // TODO: Refactor CSV to data
 });
 
-export const addTrack = payload => ({
+export const addTrack = (name, file, data) => ({
   type: ADD_TRACK,
-  payload
+  payload: { name, file, data }
 });
 
-export const adjustSettings = payload => ({
-  type: ADJUST_SETTINGS,
-  payload
+export const setSettings = (id, settings) => ({
+  type: SET_SETTINGS,
+  payload: { id, settings }
 });
 
-export const adjustGlobalSettings = payload => ({
-  type: ADJUST_GLOBAL_SETTINGS,
-  payload
+export const adjustGlobalSettings = settings => ({
+  type: SET_GLOBAL_SETTINGS,
+  payload: settings
 });
 
-export const focusWindow = payload => ({
+export const focusWindow = window => ({
   type: FOCUS_WINDOW,
-  payload
+  payload: window
 });
 
-export const deleteTrack = payload => ({
+export const deleteTrack = id => ({
   type: DELETE_TRACK,
-  payload
+  payload: id
 });
 
-export const adjustData = payload => ({
-  type: ADJUST_DATA,
-  payload
+export const adjustData = data => ({
+  type: SET_DATA,
+  payload: data
 });

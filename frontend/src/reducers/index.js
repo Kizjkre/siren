@@ -1,8 +1,8 @@
 import {
   UPLOAD_FILE,
   ADD_TRACK,
-  ADJUST_SETTINGS,
-  ADJUST_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, INITIAL_STATE, INITIAL_SETTINGS, ADJUST_DATA
+  SET_SETTINGS,
+  SET_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, INITIAL_STATE, INITIAL_SETTINGS, SET_DATA
 } from '../constants/state';
 
 const rootReducer = (state = INITIAL_STATE, action) => {
@@ -13,14 +13,13 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       });
     case ADD_TRACK:
       return Object.assign({}, state, {
-        tracks: [...state.tracks, action.payload],
-        settings: [...state.settings, { ...INITIAL_SETTINGS, selected: state.files.find(file => file.name === action.payload.file).csv.map(row => row[action.payload.name]) }]
+        tracks: [...state.tracks, { ...action.payload, settings: { ...INITIAL_SETTINGS }, id: state.tracks.length }],
       });
-    case ADJUST_SETTINGS:
+    case SET_SETTINGS:
       return Object.assign({}, state, {
-        settings: state.settings.map((settings, i) => action.payload.i === i ? { ...settings, ...action.payload.settings } : settings)
+        tracks: state.tracks.map(t => action.payload.id === t.id ? { ...t, settings: { ...t.settings, ...action.payload.settings } } : t)
       });
-    case ADJUST_GLOBAL_SETTINGS:
+    case SET_GLOBAL_SETTINGS:
       return Object.assign({}, state, {
         globalSettings: { ...state.globalSettings, ...action.payload }
       });
@@ -37,18 +36,17 @@ const rootReducer = (state = INITIAL_STATE, action) => {
     case DELETE_TRACK:
       let i = 0;
       for (const t of state.tracks) {
-        if (action.payload.file === t.file && action.payload.name === t.name) {
+        if (action.payload === t.id) {
           break;
         }
         i++;
       }
       return Object.assign({}, state, {
         tracks: [...state.tracks.slice(0, i), ...state.tracks.slice(i + 1, state.tracks.length)],
-        settings: [...state.settings.slice(0, i), ...state.settings.slice(i + 1, state.settings.length)]
       });
-    case ADJUST_DATA:
+    case SET_DATA:
       return Object.assign({}, state, {
-        tracks: [...state.tracks, state.tracks.find(t => t.name === name)]
+        tracks: [...state.tracks, state.tracks.find(t => t.name === action.payload.name)]
       });
     default:
       return state;
