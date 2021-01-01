@@ -2,18 +2,23 @@ import { useState, useEffect, createRef } from 'react';
 import * as d3 from 'd3';
 import { connect } from 'react-redux';
 
-const TrackData = ({ column, dark, tracks }) => {
+let height = -1;
+
+const TrackData = ({ dark, tracks, id }) => {
   const svg = createRef();
   const xAxis = createRef();
   const yAxis = createRef();
 
   const [state, setState] = useState({ graph: '' });
 
-  const data = tracks.find(t => t.name === column).data.map((d, i) => [i, d]);
+  const data = tracks.find(t => t.id === id).data.map((d, i) => [i, d]);
 
   useEffect(() => {
     const width = getComputedStyle(svg.current).width;
-    const height = getComputedStyle(svg.current).height;
+
+    if (height < 0) {
+      height = getComputedStyle(svg.current).height;
+    }
 
     const x = d3.scaleLinear()
       .domain(d3.extent(data, datum => datum[0]))
@@ -45,7 +50,7 @@ const TrackData = ({ column, dark, tracks }) => {
 
     xAxis.current.style.transform = `translateY(calc(${ height } - 20px))`;
     yAxis.current.style.transform = 'translateX(30px)';
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [tracks]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <svg className="track-graph" ref={ svg }>

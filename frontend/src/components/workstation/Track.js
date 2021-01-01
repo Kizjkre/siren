@@ -13,7 +13,7 @@ const Track = ({ i, column, name }) => (
     </div>
     <div className={ `col-${ TRACK_WIDTH }` }>
       <div className="card track overflow-scroll d-flex align-content-center">
-        <TrackData column={ column } />
+        <TrackData id={ i } />
       </div>
     </div>
   </div>
