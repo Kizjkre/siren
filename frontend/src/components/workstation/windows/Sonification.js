@@ -5,7 +5,7 @@ import Channel from './Channel';
 import { connect } from 'react-redux';
 import { adjustGlobalSettings, setSettings, focusWindow, setData } from '../../../actions';
 import { channel, data as dataInfo } from '../helper/info';
-import { removeOutliers } from '../helper/processing';
+import { chunkify, removeOutliers } from '../helper/processing';
 
 const select = (e, dark) => {
   if (dark) {
@@ -21,15 +21,14 @@ const select = (e, dark) => {
   }
 };
 
-const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, adjustGlobalSettings, focusWindow, setData }) => {
-  const [state, setState] = useState({ title: '', children: null });
+const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, adjustGlobalSettings, focusWindow, setData, files }) => {
+  const [state, setState] = useState({ title: '', children: null, segment: '' });
 
   useEffect(() => {
     Array.from(document.getElementsByClassName('datum-selected')).forEach(e => select(e, globalSettings.dark));
   }, [globalSettings.dark]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleContinuousOrDiscrete = e =>
-    setSettings(trackno, { continuous: e.target.checked });
+  const handleContinuousOrDiscrete = e => setSettings(trackno, { continuous: e.target.checked });
 
   const handleAdd = () => adjustGlobalSettings({ channels: globalSettings.channels + 1 });
 
@@ -45,7 +44,9 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, ad
     }
   };
 
-  const handlePoint = datum => e => {
+  const handlePoint = (datum, i) => e => {
+    const temp = tracks[trackno].data;
+
     if (e.target.classList.contains('datum-selected')) {
       e.target.classList.remove('datum-selected');
       e.target.style.background = null;
@@ -53,11 +54,13 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, ad
       e.target.style.rowBorder = null;
       e.target.style.cellBorder = null;
 
-      setSettings(trackno, { selected: tracks[trackno].settings.selected.length === 1 ? [...tracks[trackno].data] : [...tracks[trackno].settings.selected].splice(tracks[trackno].settings.selected.indexOf(datum), 1) });
+      temp.splice(i, 1);
+      setData(trackno, temp);
     } else {
       e.target.classList.add('datum-selected');
       select(e.target, globalSettings.dark);
-      setSettings(trackno, { selected: tracks[trackno].settings.selected.length === tracks[trackno].data.length ? [datum] : [...tracks[trackno].settings.selected, datum] });
+      temp.splice(i, 0, datum);
+      setData(trackno, temp);
     }
   };
 
@@ -66,8 +69,16 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, ad
     focusWindow('#help-window');
   };
 
-  const handleOutliers = () => {
-    setData(trackno, removeOutliers(tracks[trackno].data));
+  const handleOutliers = () => setData(trackno, removeOutliers(tracks[trackno].data));
+
+  const handleRestore = () => {
+    setData(trackno, files.find(f => f.name === tracks[trackno].file).csv.map(row => isNaN(row[state.column]) ? row[state.column] : parseFloat(row[state.column])));
+    setState({ ...state, segment: '' });
+  };
+
+  const handleSegment = e => {
+    setData(trackno, chunkify(tracks[trackno].data, e.target.value));
+    setState({ ...state, segment: e.target.value });
   };
 
   return (
@@ -103,13 +114,24 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, ad
             <tbody>
               <tr>
                 <th>{ tracks[trackno].name }</th>
-                { tracks[trackno].data.map((datum, i) => <td key={ `data-${ i }` } className="anchor sonification-data-point is-primary" onClick={ handlePoint(datum) }>{ datum }</td>) }
+                { tracks[trackno].data.map((datum, i) => <td key={ `data-${ i }` } className="anchor sonification-data-point is-primary" onClick={ handlePoint(datum, i) }>{ datum }</td>) }
               </tr>
             </tbody>
           </table>
         </div>
         <br />
-        <button className="btn btn-primary" onClick={ handleOutliers }>Remove Outliers</button>
+        <div className="row">
+          <div className="col-6">
+            <button className="btn btn-primary" onClick={ handleOutliers }>Remove Outliers</button>
+          </div>
+          <div className="col-6">
+            <input className="form-control" placeholder="Segmentation Size" type="number" min="1" value={ state.segment } onChange={ handleSegment } />
+          </div>
+        </div>
+        <br />
+        <br />
+        <button className="btn btn-primary" onClick={ handleRestore }>Restore Data</button>
+        <br />
         {
           tracks[trackno].settings.channel.length > 0 ? null : (
             <>
@@ -139,7 +161,8 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, ad
 
 const mapStateToProps = state => ({
   tracks: state.tracks,
-  globalSettings: state.globalSettings
+  globalSettings: state.globalSettings,
+  files: state.files
 });
 
 const mapDispatchToProps = dispatch => ({
