@@ -35,7 +35,7 @@ export const deleteTrack = id => ({
   payload: id
 });
 
-export const adjustData = data => ({
+export const setData = (id, data) => ({
   type: SET_DATA,
-  payload: data
+  payload: { id, data }
 });

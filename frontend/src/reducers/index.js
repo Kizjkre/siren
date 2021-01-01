@@ -46,7 +46,12 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       });
     case SET_DATA:
       return Object.assign({}, state, {
-        tracks: [...state.tracks, state.tracks.find(t => t.name === action.payload.name)]
+        tracks: state.tracks.map(t => {
+          if (t.id !== action.payload.id) {
+            return t;
+          }
+          return { ...t, data: action.payload.data };
+        })
       });
     default:
       return state;

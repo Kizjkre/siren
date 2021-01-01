@@ -3,8 +3,9 @@ import Window from './Window';
 import Info from './Info';
 import Channel from './Channel';
 import { connect } from 'react-redux';
-import { adjustGlobalSettings, setSettings, focusWindow } from '../../../actions';
+import { adjustGlobalSettings, setSettings, focusWindow, setData } from '../../../actions';
 import { channel, data as dataInfo } from '../helper/info';
+import { removeOutliers } from '../helper/processing';
 
 const select = (e, dark) => {
   if (dark) {
@@ -20,7 +21,7 @@ const select = (e, dark) => {
   }
 };
 
-const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, adjustGlobalSettings, focusWindow }) => {
+const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, adjustGlobalSettings, focusWindow, setData }) => {
   const [state, setState] = useState({ title: '', children: null });
 
   useEffect(() => {
@@ -65,6 +66,10 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, ad
     focusWindow('#help-window');
   };
 
+  const handleOutliers = () => {
+    setData(trackno, removeOutliers(tracks[trackno].data));
+  };
+
   return (
     <>
       <Window anchor={ anchor } title={ `${ tracks[trackno].name }: Sonification Settings` }>
@@ -103,6 +108,8 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, ad
             </tbody>
           </table>
         </div>
+        <br />
+        <button className="btn btn-primary" onClick={ handleOutliers }>Remove Outliers</button>
         {
           tracks[trackno].settings.channel.length > 0 ? null : (
             <>
@@ -138,7 +145,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   setSettings: (id, settings) => dispatch(setSettings(id, settings)),
   adjustGlobalSettings: settings => dispatch(adjustGlobalSettings(settings)),
-  focusWindow: window => dispatch(focusWindow(window))
+  focusWindow: window => dispatch(focusWindow(window)),
+  setData: (id, data) => dispatch(setData(id, data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sonification);
