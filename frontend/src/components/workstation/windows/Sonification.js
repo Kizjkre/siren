@@ -72,7 +72,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, ad
   const handleOutliers = () => setData(trackno, removeOutliers(tracks[trackno].data));
 
   const handleRestore = () => {
-    setData(trackno, files.find(f => f.name === tracks[trackno].file).csv.map(row => isNaN(row[state.column]) ? row[state.column] : parseFloat(row[state.column])));
+    setData(trackno, files.find(f => f.name === tracks[trackno].file).csv.map(row => isNaN(row[tracks[trackno].name]) ? row[tracks[trackno].name] : parseFloat(row[tracks[trackno].name])));
     setState({ ...state, segment: '' });
   };
 
@@ -128,7 +128,6 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, ad
             <input className="form-control" placeholder="Segmentation Size" type="number" min="1" value={ state.segment } onChange={ handleSegment } />
           </div>
         </div>
-        <br />
         <br />
         <button className="btn btn-primary" onClick={ handleRestore }>Restore Data</button>
         <br />
