@@ -7,9 +7,12 @@ import { focusWindow } from '../../../actions';
 let first = true;
 let initial;
 
-const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
+const Window = ({ anchor, buttons, children, title, windows, focusWindow, onClose }) => {
   if (!buttons) {
     buttons = [];
+  }
+  if (!onClose) {
+    onClose = () => null;
   }
 
   const win = createRef();
@@ -18,6 +21,8 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow }) => {
   const observer = new MutationObserver(e => {
     if (e[0].target.classList.contains('show')) {
       setState({ ...state, x: initial.x, y: initial.y });
+    } else {
+      onClose();
     }
   });
 
