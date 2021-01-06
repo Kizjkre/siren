@@ -16,7 +16,7 @@ export const INITIAL_STATE = {
     key: 'C',
     timesig: [4, 4],
     dark: ['dark-mode', 'not-set'].includes(halfmoon.getPreferredMode()),
-    channels: 0
+    channels: []
   },
   windows: []
 };
@@ -27,4 +27,8 @@ export const INITIAL_SETTINGS = {
   pan: 0,
   continuous: false,
   channel: []
+};
+
+export const INITIAL_CHANNEL_SETTINGS = {
+  continuous: false
 };

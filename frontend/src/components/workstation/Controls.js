@@ -1,15 +1,51 @@
 import { connect } from 'react-redux';
 import { adjustGlobalSettings } from '../../actions';
 import { KEYS } from '../../constants/workstation';
+import { play, pause, stop } from './helper/synth';
 
-const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
+const Controls = ({ globalSettings, adjustGlobalSettings, tracks }) => {
+  const hasTracks = tracks.length !== 0;
+
   const handleBPM = e => adjustGlobalSettings({ bpm: e.target.value.length === 0 ? 30 : parseInt(e.target.value) });
+
   const handleKey = e => adjustGlobalSettings({ key: e.target.value });
+
   const handleTimesig = top => e => adjustGlobalSettings({
     timesig: top ? [e.target.value, globalSettings.timesig[1]] : Number.isInteger(Math.log(e.target.value) / Math.log(2)) ? [globalSettings.timesig[0], e.target.value] : [...globalSettings.timesig]
   });
+
   const handleBPMToggle = () => adjustGlobalSettings({ bpm: globalSettings.bpm > 0 ? -1 : 120 });
+
   const handleTimesigToggle = () => adjustGlobalSettings({ timesig: globalSettings.timesig[0] > 0 ? [-1, -1] : [4, 4] });
+
+  const handlePlay = e => {
+    if (e.target.classList.contains('btn-danger')) {
+      e.target.classList.add('btn-success');
+      e.target.classList.remove('btn-danger');
+
+      stop();
+    } else if (e.target.classList.contains('btn-secondary')) {
+      e.target.classList.add('btn-danger');
+      e.target.classList.remove('btn-secondary');
+
+      pause();
+    } else {
+      e.target.classList.add('btn-secondary');
+      e.target.classList.remove('btn-success');
+
+      const output = [];
+
+      tracks.forEach(t => {
+        if (t.settings.channel.length === 0) {
+          output.push(t);
+        } else {
+          // TODO: Do something
+        }
+      });
+
+      play(output, globalSettings);
+    }
+  };
 
   return (
     <nav className="navbar navbar-fixed-bottom controls">
@@ -53,31 +89,7 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
                         <div className="form-group">
                           <label htmlFor="key">Set Key</label>
                           <select className="form-control" id="key" onChange={ handleKey }>
-                            <option value="C">C Major</option>
-                            <option value="c">C Minor</option>
-                            <option value="C#">C# Major</option>
-                            <option value="c#">C# Minor</option>
-                            <option value="D">D Major</option>
-                            <option value="d">D Minor</option>
-                            <option value="Eb">E&#9837; Major</option>
-                            <option value="eb">E&#9837; Minor</option>
-                            <option value="E">E Major</option>
-                            <option value="e">E Minor</option>
-                            <option value="F">F Major</option>
-                            <option value="f">F Minor</option>
-                            <option value="F#">F# Major</option>
-                            <option value="f#">F# Minor</option>
-                            <option value="G">G Major</option>
-                            <option value="g">G Minor</option>
-                            <option value="Ab">A&#9837; Major</option>
-                            <option value="ab">A&#9837; Minor</option>
-                            <option value="A">A Major</option>
-                            <option value="a">A Minor</option>
-                            <option value="Bb">B&#9837; Major</option>
-                            <option value="bb">B&#9837; Minor</option>
-                            <option value="B">B Major</option>
-                            <option value="b">B Minor</option>
-                            <option value="none">None</option>
+                            { Object.keys(KEYS).map(k => <option value={ k } key={ k }>{ KEYS[k] }</option>) }
                           </select>
                         </div>
                       </div>
@@ -89,9 +101,9 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
           </div>
           <div className="col-4">
             <div className="w-full d-flex justify-content-center">
-              <button className="btn btn-square rounded-circle btn-success play font-size-24" type="button" disabled={ !hasTracks }>
-                {/*<i className="fa fa-play" />*/ }
-                {/* TODO: Toggle button color */ }
+              <button className="btn btn-square rounded-circle btn-success play font-size-24" type="button" disabled={ !hasTracks } onClick={ handlePlay }>
+                { /*<i className="fa fa-play" />*/ }
+                { /* TODO: Toggle button color */ }
               </button>
             </div>
           </div>
@@ -136,7 +148,7 @@ const Controls = ({ hasTracks, globalSettings, adjustGlobalSettings }) => {
 
 const mapStateToProps = state => ({
   globalSettings: state.globalSettings,
-  hasTracks: state.tracks.length !== 0
+  tracks: state.tracks
 });
 
 const mapDispatchToProps = dispatch => ({

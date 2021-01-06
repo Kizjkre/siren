@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { adjustGlobalSettings, setSettings, focusWindow, setData } from '../../../actions';
 import { channel, data as dataInfo } from '../helper/info';
 import { chunkify, removeOutliers } from '../helper/processing';
+import { INITIAL_CHANNEL_SETTINGS } from '../../../constants/state';
 
 const select = (e, dark) => {
   if (dark) {
@@ -30,7 +31,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, ad
 
   const handleContinuousOrDiscrete = e => setSettings(trackno, { continuous: e.target.checked });
 
-  const handleAdd = () => adjustGlobalSettings({ channels: globalSettings.channels + 1 });
+  const handleAdd = () => adjustGlobalSettings({ channels: [...globalSettings.channels, INITIAL_CHANNEL_SETTINGS] });
 
   const handleChannel = i => e => {
     if (e.target.classList.contains('btn-primary')) {
@@ -90,7 +91,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, ad
         </h5>
         <div className="w-full">
           <button className="btn btn-square btn-primary m-5" onClick={ handleAdd }>+</button>
-          { [...Array(globalSettings.channels).keys()].map(i => <button key={ `channel-${ i }` } className="btn btn-square m-5" onClick={ handleChannel(i) }>{ i }</button>) }
+          { [...globalSettings.channels].map((_, i) => <button key={ `channel-${ i }` } className="btn btn-square m-5" onClick={ handleChannel(i) }>{ i }</button>) }
         </div>
         {
           tracks[trackno].settings.channel.length === 0 ? null : (
