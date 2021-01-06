@@ -20,7 +20,7 @@ export const setSettings = (id, settings) => ({
   payload: { id, settings }
 });
 
-export const adjustGlobalSettings = settings => ({
+export const setGlobalSettings = settings => ({
   type: SET_GLOBAL_SETTINGS,
   payload: settings
 });

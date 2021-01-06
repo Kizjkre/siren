@@ -1,22 +1,22 @@
 import { connect } from 'react-redux';
-import { adjustGlobalSettings } from '../../actions';
+import { setGlobalSettings } from '../../actions';
 import { KEYS } from '../../constants/workstation';
 import { play, pause, stop } from './helper/synth';
 
-const Controls = ({ globalSettings, adjustGlobalSettings, tracks }) => {
+const Controls = ({ globalSettings, setGlobalSettings, tracks }) => {
   const hasTracks = tracks.length !== 0;
 
-  const handleBPM = e => adjustGlobalSettings({ bpm: e.target.value.length === 0 ? 30 : parseInt(e.target.value) });
+  const handleBPM = e => setGlobalSettings({ bpm: e.target.value.length === 0 ? 30 : parseInt(e.target.value) });
 
-  const handleKey = e => adjustGlobalSettings({ key: e.target.value });
+  const handleKey = e => setGlobalSettings({ key: e.target.value });
 
-  const handleTimesig = top => e => adjustGlobalSettings({
+  const handleTimesig = top => e => setGlobalSettings({
     timesig: top ? [e.target.value, globalSettings.timesig[1]] : Number.isInteger(Math.log(e.target.value) / Math.log(2)) ? [globalSettings.timesig[0], e.target.value] : [...globalSettings.timesig]
   });
 
-  const handleBPMToggle = () => adjustGlobalSettings({ bpm: globalSettings.bpm > 0 ? -1 : 120 });
+  const handleBPMToggle = () => setGlobalSettings({ bpm: globalSettings.bpm > 0 ? -1 : 120 });
 
-  const handleTimesigToggle = () => adjustGlobalSettings({ timesig: globalSettings.timesig[0] > 0 ? [-1, -1] : [4, 4] });
+  const handleTimesigToggle = () => setGlobalSettings({ timesig: globalSettings.timesig[0] > 0 ? [-1, -1] : [4, 4] });
 
   const handlePlay = e => {
     if (e.target.classList.contains('btn-danger')) {
@@ -30,7 +30,7 @@ const Controls = ({ globalSettings, adjustGlobalSettings, tracks }) => {
 
       pause();
     } else {
-      e.target.classList.add('btn-secondary');
+      e.target.classList.add('btn-danger'); // TODO: fix
       e.target.classList.remove('btn-success');
 
       const output = [];
@@ -152,7 +152,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  adjustGlobalSettings: payload => dispatch(adjustGlobalSettings(payload))
+  setGlobalSettings: payload => dispatch(setGlobalSettings(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Controls);

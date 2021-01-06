@@ -30,5 +30,6 @@ export const INITIAL_SETTINGS = {
 };
 
 export const INITIAL_CHANNEL_SETTINGS = {
-  continuous: false
+  continuous: false,
+  tracks: []
 };
