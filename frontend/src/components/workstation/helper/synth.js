@@ -41,12 +41,12 @@ export const play = (data, globalSettings) => {
             osc.frequency.setValueAtTime(calculateFrequency(SCALES[key][index % SCALES[key].length], 4 + Math.floor(index / SCALES[key].length)), context.currentTime + i * 60 / bpm);
           });
         }
+
+        osc.start();
+        osc.stop(context.currentTime + d.data.length * 60 / bpm);
       } else {
         // TODO: Do something
       }
-
-      osc.start();
-      osc.stop(context.currentTime + d.data.length * 60 / bpm);
     });
   }
 };
