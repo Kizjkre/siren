@@ -39,7 +39,7 @@ const Workstation = ({ files, tracks, adjustGlobalSettings }) => {
     <div className="page-wrapper with-navbar with-sidebar with-navbar-fixed-bottom">
       <div className="sticky-alerts" />
       { files.map(({ name }) => <AddTrack key={ `modal-${ name }` } anchor={ `modal-${ name }` } track={ name } />) }
-      { tracks.map(({ file, name }, i) => <Sonification key={ `sonification-${ name }-${ i }` } anchor={ `sonification-${ name }-${ i }` } trackno={ i } />) }
+      { tracks.map(({ file, name }, i) => <Sonification key={ `sonification-${ name }-${ i }` } anchor={ `sonification-${ name.replace(/\s/g, '-') }-${ i }` } trackno={ i } />) }
       <Toolbar />
       <FileBrowser />
       <Main />

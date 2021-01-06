@@ -43,7 +43,7 @@ const Settings = ({ column, i, tracks, setSettings, deleteTrack, focusWindow }) 
             </>
           )
         }
-        <button onClick={ handleClick } data-toggle="modal" data-target={ `sonification-${ tracks[i].name }-${ i }` } className="btn btn-block btn-primary">Sonification Settings (Advanced)</button>
+        <button onClick={ handleClick } data-toggle="modal" data-target={ `sonification-${ tracks[i].name.replace(/\s/g, '-') }-${ i }` } className="btn btn-block btn-primary">Sonification Settings (Advanced)</button>
         <br />
         <hr />
         <button onClick={ handleDelete } className="btn btn-block btn-danger">

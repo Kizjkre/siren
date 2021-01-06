@@ -89,7 +89,7 @@ const Controls = ({ globalSettings, adjustGlobalSettings, tracks }) => {
                         <div className="form-group">
                           <label htmlFor="key">Set Key</label>
                           <select className="form-control" id="key" onChange={ handleKey }>
-                            { Object.keys(KEYS).map(k => <option value={ k } key={ k }>{ KEYS[k] }</option>) }
+                            { Object.keys(KEYS).map(k => <option value={ k } key={ k } dangerouslySetInnerHTML={ { __html: KEYS[k] } } />) }
                           </select>
                         </div>
                       </div>
