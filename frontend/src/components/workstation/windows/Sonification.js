@@ -143,8 +143,8 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, ad
               </h5>
               <div className="d-flex w-full justify-items-center align-items-center">
                 <div className="custom-switch">
-                  <input type="checkbox" id="continuous" value={ tracks[trackno].settings.continuous } onChange={ handleContinuousOrDiscrete } />
-                  <label htmlFor="continuous" />
+                  <input type="checkbox" id={ `continuous-${ anchor }` } value={ tracks[trackno].settings.continuous } onChange={ handleContinuousOrDiscrete } />
+                  <label htmlFor={ `continuous-${ anchor }` } />
                 </div>
               </div>
             </>
@@ -154,7 +154,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, ad
       <Info title={ state.title }>
         { state.children }
       </Info>
-      <Channel anchor={ `channel-${ tracks[trackno].name }-${ trackno }` } title={ tracks[trackno].name } i={ trackno } />
+      <Channel anchor={ `channel-${ tracks[trackno].name.replace(/\s/g, '-') }-${ trackno }` } title={ tracks[trackno].name } i={ trackno } />
     </>
   );
 };
