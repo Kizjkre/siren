@@ -31,7 +31,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
 
   const handleContinuousOrDiscrete = e => setSettings(trackno, { continuous: e.target.checked });
 
-  const handleAdd = () => setGlobalSettings({ channels: [...globalSettings.channels, { ...INITIAL_CHANNEL_SETTINGS, tracks: [trackno] }] });
+  const handleAdd = () => setGlobalSettings({ channels: [...globalSettings.channels, { ...INITIAL_CHANNEL_SETTINGS, id: globalSettings.channels.length }] });
 
   const handleChannel = i => e => {
     if (e.target.classList.contains('btn-primary')) {
@@ -40,9 +40,17 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
       const temp = [...tracks[trackno].settings.channel];
       temp.splice(tracks[trackno].settings.channel.indexOf(i), 1);
       setSettings(trackno, { channel: temp });
+
+      const temp2 = [...globalSettings.channels];
+      temp2[i].tracks.splice(temp2[i].tracks.indexOf(trackno), 1);
+      setGlobalSettings({ channels: temp2 });
     } else {
       e.target.classList.add('btn-primary');
       setSettings(trackno, { channel: [...tracks[trackno].settings.channel, i].sort((a, b) => a - b) });
+
+      const temp = [...globalSettings.channels];
+      temp[i].tracks = [...temp[i].tracks, trackno];
+      setGlobalSettings({ channels: temp });
     }
   };
 
