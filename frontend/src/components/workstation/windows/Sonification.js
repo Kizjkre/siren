@@ -40,14 +40,9 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
       const temp = [...tracks[trackno].settings.channel];
       temp.splice(tracks[trackno].settings.channel.indexOf(i), 1);
       setSettings(trackno, { channel: temp });
-
-      const temp2 = [...globalSettings.channels];
-      temp2.splice(globalSettings.channels.indexOf(trackno), 1);
-      setGlobalSettings({ channels: [...globalSettings.channels, { ...globalSettings.channels[trackno], tracks: temp2 }] });
     } else {
       e.target.classList.add('btn-primary');
       setSettings(trackno, { channel: [...tracks[trackno].settings.channel, i].sort((a, b) => a - b) });
-      setGlobalSettings({ channels: [...globalSettings.channels, { ...globalSettings.channels[trackno], tracks: [...globalSettings.channels[trackno].tracks, trackno] }] });
     }
   };
 
