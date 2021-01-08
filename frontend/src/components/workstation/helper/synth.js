@@ -44,9 +44,11 @@ export const play = (data, globalSettings) => {
 
         osc.start();
         osc.stop(context.currentTime + d.data.length * 60 / bpm);
-      } else {
-        // TODO: Do something
       }
+    });
+
+    globalSettings.channels.forEach(c => {
+      console.log(c);
     });
   }
 };

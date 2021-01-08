@@ -1,6 +1,8 @@
 export const TRACK_CONTROLS_WIDTH = 4;
 export const TRACK_WIDTH = 12 - TRACK_CONTROLS_WIDTH;
 
+export const FEATURES = ['Volume', 'Tempo', 'Pitch', 'Pan']; // TODO: Add more
+
 export const KEYS = {
   'C': 'C Major',
   'c': 'C Minor',

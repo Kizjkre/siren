@@ -1,6 +1,7 @@
 import { useState, createRef, useEffect } from 'react';
 import Window from './Window';
 import { connect } from 'react-redux';
+import { FEATURES } from '../../../constants/workstation';
 
 const deselect = e => Array.from(e.children).forEach(child => {
   if (child.classList.contains('active')) {
@@ -9,7 +10,7 @@ const deselect = e => Array.from(e.children).forEach(child => {
 });
 
 const Channel = ({ anchor, title, i, tracks }) => {
-  const [state, setState] = useState({ channel: -1 });
+  const [state, setState] = useState({ channel: -1, features: [] });
 
   const ul = createRef();
 
@@ -19,13 +20,30 @@ const Channel = ({ anchor, title, i, tracks }) => {
     }
   }, [state.channel]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    if (tracks[i].settings.channel.length <= state.channel) {
+      setState({ ...state, channel: -1 });
+    }
+  }, [tracks[i].settings.channel]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleChannel = i => e => {
     deselect(e.target.parentElement.parentElement);
     e.target.parentElement.classList.add('active');
     setState({ ...state, channel: i });
   };
 
-  const handleAdd = () => {};
+  const handleAdd = () => setState({
+    ...state,
+    features: [
+      ...state.features,
+      (
+        <select className="form-control" key={ `select-${ state.features.length }` } value={ 'none' }>
+          <option value="none" disabled>None</option>
+          { FEATURES.map(f => <option value={ f } key={ f }>{ f }</option>) }
+        </select>
+      )
+    ]
+  });
 
   const handleClose = () => setState({ ...state, channel: -1 });
 
@@ -51,6 +69,9 @@ const Channel = ({ anchor, title, i, tracks }) => {
       <div className={ state.channel === -1 ? 'transparent' : '' }>
         <h5 className="font-weight-bold">Channel { state.channel } Controlled Features</h5>
         <button className="btn btn-primary" onClick={ handleAdd }>+&emsp;Add Controlled Feature</button>
+        <br />
+        <hr />
+        { state.features }
       </div>
     </Window>
   );
