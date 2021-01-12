@@ -2,13 +2,6 @@ import { NOTES, SCALES } from '../../../constants/workstation';
 
 let context;
 
-// const synth = new WebAudioTinySynth({ internalContext: 0, quality: 1 });
-//
-// synth.setAudioContext(context);
-// synth.ready().then(() => {
-//
-// });
-
 export const play = (data, globalSettings) => {
   if (context) {
     context.resume();
