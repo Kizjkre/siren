@@ -43,7 +43,9 @@ const Controls = ({ globalSettings, setGlobalSettings, tracks }) => {
         }
       });
 
-      play(output, globalSettings);
+      (async () => {
+        await play(output, globalSettings);
+      })();
     }
   };
 
