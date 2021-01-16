@@ -2,7 +2,7 @@ import { TRACK_CONTROLS_WIDTH, TRACK_WIDTH } from '../../constants/workstation';
 import Settings from './Settings';
 import TrackData from './TrackData';
 
-const Track = ({ i, column, name }) => (
+const Track = ({ i, id, column, name }) => (
   <div className="row row-eq-spacing">
     <div className={ `col-${ TRACK_CONTROLS_WIDTH }` }>
       <div className="card track">
@@ -13,7 +13,7 @@ const Track = ({ i, column, name }) => (
     </div>
     <div className={ `col-${ TRACK_WIDTH }` }>
       <div className="card track overflow-scroll d-flex align-content-center">
-        <TrackData id={ i } />
+        <TrackData id={ id } />
       </div>
     </div>
   </div>
