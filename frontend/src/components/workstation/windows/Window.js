@@ -7,7 +7,7 @@ import { focusWindow } from '../../../actions';
 let first = true;
 let initial;
 
-const Window = ({ anchor, buttons, children, title, windows, focusWindow, onClose }) => {
+const Window = ({ anchor, buttons, children, title, windows, focusWindow, onClose, width }) => {
   if (!buttons) {
     buttons = [];
   }
@@ -75,7 +75,7 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow, onClos
   return (
     <div className="modal window" id={ anchor } tabIndex="-1" role="dialog" style={ { top: state.y, left: state.x, zIndex: state.zIndex } } ref={ win } data-overlay-dismissal-disabled="true" data-esc-dismissal-disabled="true">
       <div className="modal-dialog" role="document">
-        <div className="modal-content" ref={ dialog }>
+        <div className="modal-content" ref={ dialog } style={ { width: width ? width: null } }>
           <h5 className="modal-title window-title" onMouseDown={ handleMouseDown } onMouseMove={ handleDrag } onMouseUp={ handleMouseUp }>
             <button className="btn btn-square rounded-circle custom-modal-dismiss red" onClick={ resetPosition } data-dismiss="modal">&#160;</button>
             &nbsp;&nbsp;

@@ -3,10 +3,10 @@ import Track from './Track';
 
 const Main = ({ files, tracks }) => {
   let t = [];
-  tracks.forEach(({ file, name }) => {
+  tracks.forEach(({ file, name, id }) => {
     for (const f of files) {
       if (f.name === file) {
-        t.push({ file: f, column: name });
+        t.push({ file: f, column: name, id });
         break;
       }
     }
@@ -17,8 +17,8 @@ const Main = ({ files, tracks }) => {
       <div className={ `container-fluid ${ tracks.length ? '' : 'h-full' }` }>
         {
           t.length ?
-            t.map(({ file, column }, i) =>
-              <Track key={ `${ column }-row-${ i }` } i={ i } column={ column } name={ file.name } />
+            t.map(({ file, column, id }, i) =>
+              <Track key={ `${ column }-row-${ i }` } i={ i } id={ id } column={ column } name={ file.name } />
             ) : (
               <div className="d-flex justify-content-center align-items-center h-full">
                 <div className="text-center">

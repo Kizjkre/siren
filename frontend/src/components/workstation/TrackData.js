@@ -11,8 +11,6 @@ const TrackData = ({ dark, tracks, id }) => {
 
   const [state, setState] = useState({ graph: '' });
 
-  console.log(id, tracks);
-
   const data = tracks.find(t => t.id === id).data.map((d, i) => [i, d]);
 
   useEffect(() => {

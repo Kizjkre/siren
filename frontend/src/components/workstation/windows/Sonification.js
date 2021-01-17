@@ -93,7 +93,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
 
   return (
     <>
-      <Window anchor={ anchor } title={ `${ tracks[trackno].name }: Sonification Settings` }>
+      <Window anchor={ anchor } title={ `${ tracks[trackno].name }: Sonification Settings` } width="50vw">
         <h5 className="font-weight-bold d-flex align-items-baseline">
           Connect to Channel&emsp;
           <i className="fa fa-question-circle anchor" data-toggle="modal" data-target="help-window" onClick={ handleInfo('Connect to Channel', channel) } />
