@@ -1,11 +1,6 @@
-// TODO: Fix initial open location
-
-import { useState, useEffect, createRef } from 'react';
+import { useState, useEffect, useRef, createRef } from 'react';
 import { connect } from 'react-redux';
 import { focusWindow } from '../../../actions';
-
-let first = true;
-let initial;
 
 const Window = ({ anchor, buttons, children, title, windows, focusWindow, onClose, width }) => {
   if (!buttons) {
@@ -17,34 +12,24 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow, onClos
 
   const win = createRef();
   const dialog = createRef();
-
-  const observer = new MutationObserver(e => {
-    if (e[0].target.classList.contains('show')) {
-      setState({ ...state, x: initial.x, y: initial.y });
-    } else {
-      onClose();
-    }
-  });
+  const initial = useRef({ x: null, y: null });
 
   const [state, setState] = useState({ x: null, y: null, offsetX: null, offsetY: null, click: false, zIndex: -1000 });
 
   useEffect(() => {
-    initial = {
+    setState({
+      ...state,
+      x: dialog.current.offsetLeft,
+      initial: {
+        x: dialog.current.offsetLeft,
+        y: dialog.current.offsetTop
+      }
+    });
+
+    initial.current = {
       x: dialog.current.offsetLeft,
       y: dialog.current.offsetTop
     };
-
-    setState({
-      ...state,
-      x: dialog.current.offsetLeft
-    });
-
-    observer.observe(win.current, {
-      attributes: true,
-      attributeFilter: ['class'],
-      childList: false,
-      characterData: false
-    });
 
     win.current.style.height = `${ dialog.current.getBoundingClientRect().height }px`;
     win.current.style.width = `${ dialog.current.getBoundingClientRect().width }px`;
@@ -53,16 +38,17 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow, onClos
   }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    setState({ ...state, zIndex: win.current.classList.contains('show') ? 100 + windows.length - windows.indexOf(`#${ anchor }`) : -1000 });
-  }, [windows]) // eslint-disable-line react-hooks/exhaustive-deps
+    if (win.current.classList.contains('show')) {
+      setState({ ...state, zIndex: 100 + windows.length - windows.indexOf(`#${ anchor }`), x: initial.current.x, y: initial.current.y });
+    } else {
+      onClose();
+      setState({ ...state, zIndex: -1000 });
+    }
+  }, [windows]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleMouseDown = e => {
     focusWindow(`#${ anchor }`);
-    if (first) {
-      setState({ ...state, offsetX: e.clientX - state.x, offsetY: e.clientY - state.y, click: true });
-    } else {
-      setState({ ...state, click: true });
-    }
+    setState({ ...state, offsetX: e.clientX - state.x, offsetY: e.clientY - state.y, click: true });
   };
   const handleDrag = e => {
     if (state.click) {
@@ -70,7 +56,7 @@ const Window = ({ anchor, buttons, children, title, windows, focusWindow, onClos
     }
   };
   const handleMouseUp = () => setState({ ...state, click: false });
-  const resetPosition = () => setState({...state, x: initial.x, y: null});
+  const resetPosition = () => setState({...state, x: initial.current.x, y: null});
 
   return (
     <div className="modal window" id={ anchor } tabIndex="-1" role="dialog" style={ { top: state.y, left: state.x, zIndex: state.zIndex } } ref={ win } data-overlay-dismissal-disabled="true" data-esc-dismissal-disabled="true">
