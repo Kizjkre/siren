@@ -24,10 +24,10 @@ const rootReducer = (state = INITIAL_STATE, action) => {
         globalSettings: { ...state.globalSettings, ...action.payload }
       });
     case FOCUS_WINDOW:
-      const index = state.windows.indexOf(action.payload);
-      if (index >= 0) {
+      const focusIndex = state.windows.indexOf(action.payload);
+      if (focusIndex >= 0) {
         return Object.assign({}, state, {
-          windows: [action.payload, ...state.windows.slice(0, index), ...state.windows.slice(index + 1, state.windows.length)]
+          windows: [action.payload, ...state.windows.slice(0, focusIndex), ...state.windows.slice(focusIndex + 1, state.windows.length)]
         });
       }
       return Object.assign({}, state, {
