@@ -35,6 +35,30 @@ export const KEYS = {
   'none': 'None'
 };
 
+export const NOTES = {
+  'a': 0,
+  'a#': 1,
+  'bb': 1,
+  'b': 2,
+  'cb': 2,
+  'b#': 3,
+  'c': 3,
+  'c#': 4,
+  'db': 4,
+  'd': 5,
+  'd#': 6,
+  'eb': 6,
+  'e': 7,
+  'fb': 7,
+  'e#': 8,
+  'f': 8,
+  'f#': 9,
+  'gb': 9,
+  'g': 10,
+  'g#': 11,
+  'ab': 11
+};
+
 export const SCALES = {
   'C': ['c', 'd', 'e', 'f', 'g', 'a', 'b'],
   'c': ['c', 'd', 'eb', 'f', 'g', 'ab', 'bb'],

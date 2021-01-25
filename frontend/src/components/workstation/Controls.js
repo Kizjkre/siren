@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { setGlobalSettings } from '../../actions';
 import { KEYS } from '../../constants/workstation';
-import { play, pause, stop } from './helper/synth';
+import { play, pause, stop } from '../../synth/synth';
 
 const Controls = ({ globalSettings, setGlobalSettings, tracks }) => {
   const hasTracks = tracks.length !== 0;
