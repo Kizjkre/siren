@@ -4,8 +4,8 @@ import Info from './Info';
 import Channel from './Channel';
 import { connect } from 'react-redux';
 import { setGlobalSettings, setSettings, focusWindow, setData } from '../../../actions';
-import { channel, data as dataInfo } from '../helper/info';
-import { chunkify, removeOutliers } from '../helper/processing';
+import { channel, data as dataInfo } from '../../../helper/info';
+import { chunkify, removeOutliers } from '../../../helper/processing';
 import { INITIAL_CHANNEL_SETTINGS } from '../../../constants/state';
 
 const select = (e, dark) => {

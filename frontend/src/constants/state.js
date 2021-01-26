@@ -31,5 +31,23 @@ export const INITIAL_SETTINGS = {
 
 export const INITIAL_CHANNEL_SETTINGS = {
   continuous: false,
-  tracks: []
+  tracks: [],
+  features: [
+    {
+      name: 'Volume',
+      controller: -1
+    },
+    {
+      name: 'Pitch',
+      controller: -1
+    },
+    {
+      name: 'Pan',
+      controller: -1
+    },
+    {
+      name: 'Tempo',
+      controller: -1
+    }
+  ]
 };

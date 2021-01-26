@@ -2,6 +2,7 @@ import { useState, createRef, useEffect } from 'react';
 import Window from './Window';
 import { connect } from 'react-redux';
 import { FEATURES } from '../../../constants/workstation';
+import { setGlobalSettings } from '../../../actions';
 
 const deselect = e => Array.from(e.children).forEach(child => {
   if (child.classList.contains('active')) {
@@ -9,41 +10,42 @@ const deselect = e => Array.from(e.children).forEach(child => {
   }
 });
 
-const Channel = ({ anchor, title, i, tracks }) => {
-  const [state, setState] = useState({ channel: -1, features: [] });
+const Channel = ({ anchor, title, i, tracks, channels, setGlobalSettings }) => {
+  const [state, setState] = useState({ selected: -1 });
 
   const ul = createRef();
+  const channel = state.selected < 0 ? { features: [] } : channels.find(c => c.id === state.selected);
 
   useEffect(() => {
-    if (state.channel === -1) {
+    if (state.selected === -1) {
       deselect(ul.current);
     }
-  }, [state.channel]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state.selected]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (tracks[i].settings.channel.length <= state.channel) {
-      setState({ ...state, channel: -1 });
+    if (tracks[i].settings.channel.length <= state.selected) {
+      setState({ ...state, selected: -1 });
     }
   }, [tracks[i].settings.channel]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChannel = i => e => {
     deselect(e.target.parentElement.parentElement);
     e.target.parentElement.classList.add('active');
-    setState({ ...state, channel: i });
+    setState({ ...state, selected: i });
   };
 
-  const handleAdd = () => setState({
-    ...state,
-    features: [
-      ...state.features,
-      (
-        <select className="form-control" key={ `select-${ state.features.length }` } value={ 'none' }>
-          <option value="none" disabled>None</option>
-          { FEATURES.map(f => <option value={ f } key={ f }>{ f }</option>) }
-        </select>
-      )
-    ]
-  });
+  const handleFeature = e => {
+    const c = [...channels];
+    const index = channels.findIndex(ch => ch.id === i);
+    if (!e.target.classList.contains('btn-primary')) {
+      e.target.classList.add('btn-primary');
+      c[index].features.find(f => f.name === e.target.innerText.trim()).controller = i;
+    } else {
+      e.target.classList.remove('btn-primary');
+      c[index].features.find(f => f.name === e.target.innerText.trim()).controller = -1;
+    }
+    setGlobalSettings({ channels: c });
+  };
 
   const handleClose = () => setState({ ...state, channel: -1 });
 
@@ -66,19 +68,29 @@ const Channel = ({ anchor, title, i, tracks }) => {
           </li>
         </ul>
       </nav>
-      <div className={ state.channel === -1 ? 'transparent' : '' }>
-        <h5 className="font-weight-bold">Channel { state.channel } Controlled Features</h5>
-        <button className="btn btn-primary" onClick={ handleAdd }>+&emsp;Add Controlled Feature</button>
-        <br />
-        <hr />
-        { state.features }
+      <div className={ state.selected === -1 ? 'transparent' : '' }>
+        <h5 className="font-weight-bold">Channel { state.selected } Controlled Features</h5>
+        {
+          FEATURES.map(f => {
+            const feature = channel.features.find(f2 => f2.name === f);
+            if ([-1, i].includes(feature?.controller)) {
+              return <button key={ f } className="btn ml-5" onClick={ handleFeature }>{ f }</button>;
+            }
+            return null;
+          })
+        }
       </div>
     </Window>
   );
 };
 
 const mapStateToProps = state => ({
-  tracks: state.tracks
+  tracks: state.tracks,
+  channels: state.globalSettings.channels
 });
 
-export default connect(mapStateToProps)(Channel);
+const mapDispatchToProps = dispatch => ({
+  setGlobalSettings: settings => dispatch(setGlobalSettings(settings))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Channel);
