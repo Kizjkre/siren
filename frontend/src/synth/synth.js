@@ -1,58 +1,64 @@
-import { NOTES, SCALES } from '../constants/workstation';
+import { SCALES } from '../constants/workstation';
+import * as Tone from 'tone';
 
-let context;
+const osc = [];
+const gain = [];
 
-export const play = (tracks, globalSettings) => {
-  if (context) {
-    context.resume();
-  } else {
-    context = new AudioContext();
+export const play = async (tracks, globalSettings) => {
+  const bpm = globalSettings.bpm < 0 ? 60 : globalSettings.bpm;
+  const key = globalSettings.key === 'none' ? 'chromatic' : globalSettings.key;
 
-    let bpm = globalSettings.bpm < 0 ? 60 : globalSettings.bpm;
-    let key = globalSettings.key === 'none' ? 'chromatic' : globalSettings.key;
+  Tone.Transport.bpm.value = bpm;
 
-    const now = context.currentTime;
+  const master = new Tone.Gain(1 / tracks.length).toDestination();
 
-    tracks.forEach(t => {
-      if (t.settings.channel.length === 0) {
-        const osc = new OscillatorNode(context, { type: 'sine' });
-        const gain = new GainNode(context);
-        osc.connect(gain).connect(context.destination);
-        gain.gain.value = t.settings.mute ? 0 : t.settings.volume / 100 / tracks.length;
+  tracks.forEach(d => {
+    if (d.settings.channel.length === 0) {
+      const max = Math.max(...d.data);
+      const min = Math.min(...d.data);
+      const num = SCALES[key].length * 2;
+      const normalize = x => Math.round(num / (max - min) * (x - min));
 
-        const max = Math.max(...t.data);
-        const min = Math.min(...t.data);
-        const num = SCALES[key].length * 2;
-        const normalize = x => Math.round(num / (max - min) * (x - min));
+      gain.push(new Tone.Gain(d.settings.mute ? 0 : d.settings.volume / 100));
 
-        if (t.settings.continuous) {
-          t.data.forEach((datum, i) => {
-            const index = normalize(datum);
-            osc.frequency.linearRampToValueAtTime(calculateFrequency(SCALES[key][index % SCALES[key].length], 4 + Math.floor(index / SCALES[key].length)), now + i * 60 / bpm);
-          });
-        } else {
-          t.data.forEach((datum, i) => {
-            const index = normalize(datum);
-            osc.frequency.setValueAtTime(calculateFrequency(SCALES[key][index % SCALES[key].length], 4 + Math.floor(index / SCALES[key].length)), now + i * 60 / bpm);
-          });
-        }
+      // TODO: More oscillator types
+      osc.push(new Tone.OmniOscillator(0, 'sine').connect(master));
 
-        osc.start();
-        osc.stop(now + t.data.length * 60 / bpm);
+      osc[osc.length - 1].debug = true;
+
+      const melody = [];
+
+      d.data.forEach((datum, i) => {
+        const index = normalize(datum);
+        melody.push([`0:${ i }`, `${ SCALES[key][index % SCALES[key].length] }${ 4 + Math.floor(index / SCALES[key].length) }`]);
+      });
+
+      if (d.settings.continuous) {
+        melody.forEach(([time, note]) => {
+          osc[osc.length - 1].frequency.linearRampToValueAtTime(note, time);
+        });
+      } else {
+        melody.forEach(([time, note]) => {
+          osc[osc.length - 1].frequency.setValueAtTime(note, time);
+        });
       }
-    });
 
-    globalSettings.channels.forEach(c => {
-      console.log(c);
-    });
-  }
+      osc[osc.length - 1].start(0);
+      osc[osc.length - 1].stop(osc[osc.length - 1].toSeconds(melody[melody.length - 1][0]));
+    }
+  });
+
+  globalSettings.channels.forEach(c => {
+    console.log(c);
+  });
+
+  Tone.Transport.start();
 };
 
-export const pause = () => context.suspend();
+export const pause = () => Tone.Transport.pause();
 
 export const stop = () => {
-  context.close();
-  context = undefined;
+  Tone.Transport.stop();
+  osc.forEach(o => o.stop());
+  osc.splice(0);
 };
-
-const calculateFrequency = (note, octave) => 440 * 2 ** (octave - (NOTES[note] > 2 ? 5 : 4)) * 2 ** (NOTES[note] / 12);
