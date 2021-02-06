@@ -2,6 +2,7 @@ import { SCALES } from '../constants/workstation';
 import * as Tone from 'tone';
 
 const osc = [];
+const pan = [];
 const gain = [];
 
 export const play = async (tracks, globalSettings) => {
@@ -20,11 +21,11 @@ export const play = async (tracks, globalSettings) => {
       const normalize = x => Math.round(num / (max - min) * (x - min));
 
       gain.push(new Tone.Gain(d.settings.mute ? 0 : d.settings.volume / 100));
+      pan.push(new Tone.Panner(d.settings.pan / 50).connect(master));
 
-      // TODO: More oscillator types
-      osc.push(new Tone.OmniOscillator(0, 'sine').connect(master));
-
-      osc[osc.length - 1].debug = true;
+      osc.push(new Tone.OmniOscillator(0, 'sine')
+        .connect(pan[pan.length - 1])
+        .connect(gain[gain.length - 1]));
 
       const melody = [];
 
@@ -43,8 +44,7 @@ export const play = async (tracks, globalSettings) => {
         });
       }
 
-      osc[osc.length - 1].start(0);
-      osc[osc.length - 1].stop(osc[osc.length - 1].toSeconds(melody[melody.length - 1][0]));
+      osc[osc.length - 1].sync().start(0);
     }
   });
 
@@ -59,6 +59,7 @@ export const pause = () => Tone.Transport.pause();
 
 export const stop = () => {
   Tone.Transport.stop();
-  osc.forEach(o => o.stop());
+  osc.forEach(o => o.stop().dispose());
   osc.splice(0);
+  console.log(osc);
 };
