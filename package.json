@@ -12,6 +12,7 @@
   "scripts": {
     "start": "concurrently \"yarn run frontend:start\" \"yarn run backend:start\"",
     "frontend:start": "cd frontend && yarn start",
-    "backend:start": "cd backend && yarn start"
+    "backend:start": "cd backend && yarn start",
+    "postinstall": "concurrently \"cd frontend && yarn\" \"cd backend && yarn\""
   }
 }
