@@ -4,11 +4,12 @@ import halfmoon from 'halfmoon';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setGlobalSettings, uploadFile } from '../../actions';
+import { formatCSV } from '../../helper/processing';
 
 const handleUpload = (action, ref) => async e => {
   if (e.target.files.length) {
     const url = URL.createObjectURL(e.target.files[0]);
-    const csv = await d3.csv(url);
+    const csv = await d3.csvParse(formatCSV(await (await fetch(url)).text()));
     action(e.target.files[0].name, csv);
     e.target.value = '';
     ref.current.click();

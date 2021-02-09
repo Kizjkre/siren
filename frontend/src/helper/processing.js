@@ -45,3 +45,10 @@ export const removeOutliers = data => {
   });
   return temp;
 };
+
+export const formatCSV = raw => {
+  let lines = raw.split(/\n/g);
+  const columns = lines[lines.length / 2].split(',').length;
+  lines = lines.filter(line => line.split(',').length === columns);
+  return lines.join('\n');
+};
