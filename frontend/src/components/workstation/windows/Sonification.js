@@ -23,7 +23,7 @@ const select = (e, dark) => {
 };
 
 const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, setGlobalSettings, focusWindow, setData, files }) => {
-  const [state, setState] = useState({ title: '', children: null, segment: '' });
+  const [state, setState] = useState({ title: '', children: null, segment: '', data: [...tracks[trackno].data] });
 
   useEffect(() => {
     Array.from(document.getElementsByClassName('datum-selected')).forEach(e => select(e, globalSettings.dark));
@@ -124,7 +124,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
             <tbody>
               <tr>
                 <th>{ tracks[trackno].name }</th>
-                { tracks[trackno].data.map((datum, i) => <td key={ `data-${ i }` } className="anchor sonification-data-point is-primary" onClick={ handlePoint(datum, i) }>{ datum }</td>) }
+                { state.data.map((datum, i) => <td key={ `data-${ i }` } className="anchor sonification-data-point is-primary datum-selected" onClick={ handlePoint(datum, i) }>{ datum }</td>) }
               </tr>
             </tbody>
           </table>
