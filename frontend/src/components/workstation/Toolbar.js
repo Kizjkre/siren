@@ -16,11 +16,11 @@ const handleUpload = (action, ref) => async e => {
   }
 };
 
-const Toolbar = ({ uploadFile, setGlobalSettings }) => {
+const Toolbar = ({ uploadFile, setGlobalSettings, dark }) => {
   const file = createRef();
   const edit = createRef();
   const view = createRef();
-  const [state, setState] = useState({ sidebar: true, dark: halfmoon.getPreferredMode() === 'dark-mode' });
+  const [state, setState] = useState({ sidebar: true });
   return (
     <nav className="navbar">
       <span className="navbar-brand anchor">Workstation</span>
@@ -71,12 +71,11 @@ const Toolbar = ({ uploadFile, setGlobalSettings }) => {
               onClick={ () => {
                 view.current.click();
                 halfmoon.toggleDarkMode();
-                setGlobalSettings({ dark: !state.dark });
-                setState({ ...state, dark: !state.dark });
+                setGlobalSettings({ dark: !dark });
               } }
             >
-              <i className={ `fa fa-${ state.dark ? 'sun' : 'moon' }` } />
-              &emsp;Toggle { state.dark ? 'light' : 'dark' } mode
+              <i className={ `fa fa-${ dark ? 'sun' : 'moon' }` } />
+              &emsp;Toggle { dark ? 'light' : 'dark' } mode
             </span>
           </div>
         </li>
@@ -91,9 +90,13 @@ const Toolbar = ({ uploadFile, setGlobalSettings }) => {
   );
 };
 
+const mapStateToProps = state => ({
+  dark: state.globalSettings.dark
+});
+
 const mapDispatchToProps = dispatch => ({
   uploadFile: (name, data) => dispatch(uploadFile(name, data)),
   setGlobalSettings: payload => dispatch(setGlobalSettings(payload))
 });
 
-export default connect(null, mapDispatchToProps)(Toolbar);
+export default connect(mapStateToProps, mapDispatchToProps)(Toolbar);
