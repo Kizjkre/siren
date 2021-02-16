@@ -12,6 +12,7 @@ export const chunkify = (data, size) => {
   return temp;
 };
 
+// UNUSED
 export const scale = (data, type, max = 1, min = -1, center = 0) => {
   if (data.some(d => isNaN(d))) {
     return null;
