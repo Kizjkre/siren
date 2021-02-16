@@ -1,26 +1,24 @@
 import { createRef, useState } from 'react';
-import * as d3 from 'd3';
 import halfmoon from 'halfmoon';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setGlobalSettings, uploadFile } from '../../actions';
-import { formatCSV } from '../../helper/processing';
-
-const handleUpload = (action, ref) => async e => {
-  if (e.target.files.length) {
-    const url = URL.createObjectURL(e.target.files[0]);
-    const csv = await d3.csvParse(formatCSV(await (await fetch(url)).text()));
-    action(e.target.files[0].name, csv);
-    e.target.value = '';
-    ref.current.click();
-  }
-};
 
 const Toolbar = ({ uploadFile, setGlobalSettings, dark }) => {
   const file = createRef();
   const edit = createRef();
   const view = createRef();
   const [state, setState] = useState({ sidebar: true });
+
+  const handleUpload = async e => {
+    if (e.target.files.length) {
+      const url = URL.createObjectURL(e.target.files[0]);
+      await uploadFile(e.target.files[0].name, await (await fetch(url)).text());
+      e.target.value = '';
+      file.current.click();
+    }
+  };
+
   return (
     <nav className="navbar">
       <span className="navbar-brand anchor">Workstation</span>
@@ -29,7 +27,7 @@ const Toolbar = ({ uploadFile, setGlobalSettings, dark }) => {
           <span className="nav-link anchor" data-toggle="dropdown" id="nav-dropdown-file" ref={ file }>File</span>
           <div className="dropdown-menu" aria-labelledby="nav-dropdown-file">
             <label htmlFor="upload" className="dropdown-item">
-              <input type="file" id="upload" className="d-none" accept="text/csv" onChange={ handleUpload(uploadFile, file) } />
+              <input type="file" id="upload" className="d-none" accept="text/csv" onChange={ handleUpload } />
               <i className="fa fa-folder-open"/>
               &emsp;Open
             </label>
@@ -95,7 +93,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  uploadFile: (name, data) => dispatch(uploadFile(name, data)),
+  uploadFile: async (name, raw) => dispatch(await uploadFile(name, raw)),
   setGlobalSettings: payload => dispatch(setGlobalSettings(payload))
 });
 

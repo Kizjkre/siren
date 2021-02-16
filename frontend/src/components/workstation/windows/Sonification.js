@@ -82,7 +82,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
   const handleOutliers = () => setData(trackno, removeOutliers(tracks[trackno].data));
 
   const handleRestore = () => {
-    setData(trackno, files.find(f => f.name === tracks[trackno].file).csv.map(row => isNaN(row[tracks[trackno].name]) ? row[tracks[trackno].name] : parseFloat(row[tracks[trackno].name])));
+    setData(trackno, files.find(f => f.name === tracks[trackno].file).data.map(row => isNaN(row[tracks[trackno].name]) ? row[tracks[trackno].name] : parseFloat(row[tracks[trackno].name])));
     setState({ ...state, segment: '' });
   };
 
