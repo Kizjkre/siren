@@ -17,8 +17,10 @@ export const play = (tracks, globalSettings) => {
       if (t.settings.channel.length === 0) {
         const osc = new OscillatorNode(context, { type: 'sine' });
         const gain = new GainNode(context);
-        osc.connect(gain).connect(context.destination);
+        const panner = new StereoPannerNode(context);
+        osc.connect(gain).connect(panner).connect(context.destination);
         gain.gain.value = t.settings.mute ? 0 : t.settings.volume / 100 / tracks.length;
+        panner.pan.value = t.settings.pan / 50;
 
         const max = Math.max(...t.data);
         const min = Math.min(...t.data);
