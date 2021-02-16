@@ -12,10 +12,8 @@ export const chunkify = (data, size) => {
   return temp;
 };
 
-export const isNumerical = data => data.every(d => !isNaN(d));
-
 export const scale = (data, type, max = 1, min = -1, center = 0) => {
-  if (!isNumerical(data)) {
+  if (data.some(d => isNaN(d))) {
     return null;
   }
   return data.map(d => {
@@ -51,4 +49,17 @@ export const formatCSV = raw => {
   const columns = lines[lines.length / 2].split(',').length;
   lines = lines.filter(line => line.split(',').length === columns);
   return lines.join('\n');
+};
+
+export const typeify = data => {
+  // TODO: more data types
+  data.forEach(row => {
+    Object.keys(row).forEach(col => {
+      if (!isNaN(row[col])) {
+        row[col] = parseFloat(row[col]);
+      }
+    });
+  });
+
+  return data;
 };

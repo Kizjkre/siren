@@ -5,10 +5,11 @@ import {
   SET_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, SET_DATA
 } from '../constants/state';
 import * as d3 from 'd3';
-import { formatCSV } from '../helper/processing';
+import { formatCSV, typeify } from '../helper/processing';
 
 export const uploadFile = async (name, raw) => {
-  const data = await d3.csvParse(formatCSV(raw));
+  const data = typeify(await d3.csvParse(formatCSV(raw)));
+
   return {
     type: UPLOAD_FILE,
     payload: { name, data }
