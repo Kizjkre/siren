@@ -21,7 +21,7 @@ export const play = (tracks, globalSettings) => {
         const gain = new GainNode(context);
         const panner = new StereoPannerNode(context);
         osc.connect(gain).connect(panner).connect(context.destination);
-        gain.gain.value = t.settings.mute ? 0 : t.settings.volume / 100 / tracks.length;
+        gain.gain.value = t.settings.mute ? 0 : t.settings.volume / 100 / (tracks.length + globalSettings.channels.length);
         panner.pan.value = t.settings.pan / 50;
 
         const max = Math.max(...t.data);
@@ -52,7 +52,14 @@ export const play = (tracks, globalSettings) => {
       const panner = new StereoPannerNode(context);
       osc.connect(gain).connect(panner).connect(context.destination);
 
-      const data = feature => store.getState().tracks.find(t => t.id === c.features.find(f => f.name === feature).controller).data;
+      const data = feature => {
+        const controller = c.features.find(f => f.name === feature).controller;
+        if (controller < 0) {
+          return [];
+        }
+        return store.getState().tracks.find(t => t.id === controller).data;
+      };
+
       const pitch = data('Pitch');
 
       const rawVolume = data('Volume');
@@ -65,9 +72,16 @@ export const play = (tracks, globalSettings) => {
       const num = SCALES[key].length * 2;
       const normalize = x => Math.round(num / (maxPitch - minPitch) * (x - minPitch));
 
+      if (volume.length === 0) {
+        gain.gain.value = 1 / (tracks.length + globalSettings.channels.length);
+      }
+
       volume.forEach((datum, i) => gain.gain.linearRampToValueAtTime(datum, now + i * 60 / bpm));
       pan.forEach((datum, i) => panner.pan.linearRampToValueAtTime(datum, now + i * 60 / bpm));
 
+      if (pitch.length === 0) {
+        osc.frequency.value = calculateFrequency(SCALES[key][0], 4);
+      }
       if (c.continuous) {
         pitch.forEach((datum, i) => {
           const index = normalize(datum);
@@ -81,7 +95,7 @@ export const play = (tracks, globalSettings) => {
       }
 
       osc.start();
-      osc.stop(now + pitch.length * 60 / bpm);
+      osc.stop(now + Math.max(pitch.length, volume.length, pan.length) * 60 / bpm);
     });
   }
 };
