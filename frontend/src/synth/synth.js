@@ -1,4 +1,6 @@
 import { NOTES, SCALES } from '../constants/workstation';
+import { average, scale } from '../helper/processing';
+import store from '../store/';
 
 let context;
 
@@ -45,7 +47,41 @@ export const play = (tracks, globalSettings) => {
     });
 
     globalSettings.channels.forEach(c => {
-      console.log(c);
+      const osc = new OscillatorNode(context, { type: 'sine' });
+      const gain = new GainNode(context);
+      const panner = new StereoPannerNode(context);
+      osc.connect(gain).connect(panner).connect(context.destination);
+
+      const data = feature => store.getState().tracks.find(t => t.id === c.features.find(f => f.name === feature).controller).data;
+      const pitch = data('Pitch');
+
+      const rawVolume = data('Volume');
+      const rawPan = data('Pan');
+      const volume = scale(rawVolume, 'logistic', 1, 0, average(rawVolume));
+      const pan = scale(rawPan, 'logistic', 1, -1, average(rawPan));
+
+      const maxPitch = Math.max(...pitch);
+      const minPitch = Math.min(...pitch);
+      const num = SCALES[key].length * 2;
+      const normalize = x => Math.round(num / (maxPitch - minPitch) * (x - minPitch));
+
+      volume.forEach((datum, i) => gain.gain.linearRampToValueAtTime(datum, now + i * 60 / bpm));
+      pan.forEach((datum, i) => panner.pan.linearRampToValueAtTime(datum, now + i * 60 / bpm));
+
+      if (c.continuous) {
+        pitch.forEach((datum, i) => {
+          const index = normalize(datum);
+          osc.frequency.linearRampToValueAtTime(calculateFrequency(SCALES[key][index % SCALES[key].length], 4 + Math.floor(index / SCALES[key].length)), now + i * 60 / bpm);
+        });
+      } else {
+        pitch.forEach((datum, i) => {
+          const index = normalize(datum);
+          osc.frequency.setValueAtTime(calculateFrequency(SCALES[key][index % SCALES[key].length], 4 + Math.floor(index / SCALES[key].length)), now + i * 60 / bpm);
+        });
+      }
+
+      osc.start();
+      osc.stop(now + pitch.length * 60 / bpm);
     });
   }
 };

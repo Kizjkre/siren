@@ -12,7 +12,6 @@ export const chunkify = (data, size) => {
   return temp;
 };
 
-// UNUSED
 export const scale = (data, type, max = 1, min = -1, center = 0) => {
   if (data.some(d => isNaN(d))) {
     return null;
@@ -63,4 +62,10 @@ export const typeify = data => {
   });
 
   return data;
+};
+
+export const average = data => {
+  let sum = 0;
+  data.forEach(datum => sum += datum);
+  return sum / data.length;
 };

@@ -107,7 +107,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
             <>
               <br />
               <div className="w-full">
-                <button className="btn btn-primary ml-5" data-toggle="modal" data-target={ `channel-${ tracks[trackno].name }-${ trackno }` } onClick={ () => focusWindow(`#channel-${ tracks[trackno].name }-${ trackno }`) }>Channel Settings</button>
+                <button className="btn btn-primary ml-5" data-toggle="modal" data-target={ `channel-${ tracks[trackno].name.replace(/\s/g, '-') }-${ trackno }` } onClick={ () => focusWindow(`#channel-${ tracks[trackno].name }-${ trackno }`) }>Channel Settings</button>
               </div>
             </>
           )

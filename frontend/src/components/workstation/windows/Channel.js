@@ -28,15 +28,15 @@ const Channel = ({ anchor, title, i, tracks, channels, setGlobalSettings }) => {
     }
   }, [tracks[i].settings.channel]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleChannel = i => e => {
+  const handleChannel = channel => e => {
     deselect(e.target.parentElement.parentElement);
     e.target.parentElement.classList.add('active');
-    setState({ ...state, selected: i });
+    setState({ ...state, selected: channel });
   };
 
   const handleFeature = e => {
     const c = [...channels];
-    const index = channels.findIndex(ch => ch.id === i);
+    const index = channels.findIndex(ch => ch.id === state.selected);
     if (!e.target.classList.contains('btn-primary')) {
       e.target.classList.add('btn-primary');
       c[index].features.find(f => f.name === e.target.innerText.trim()).controller = i;
