@@ -2,9 +2,9 @@ import { createRef, useState } from 'react';
 import halfmoon from 'halfmoon';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setGlobalSettings, uploadFile } from '../../actions';
+import { setGlobalDark, uploadFile } from '../../actions';
 
-const Toolbar = ({ uploadFile, setGlobalSettings, dark }) => {
+const Toolbar = ({ uploadFile, setGlobalDark, dark }) => {
   const file = createRef();
   const edit = createRef();
   const view = createRef();
@@ -69,7 +69,7 @@ const Toolbar = ({ uploadFile, setGlobalSettings, dark }) => {
               onClick={ () => {
                 view.current.click();
                 halfmoon.toggleDarkMode();
-                setGlobalSettings({ dark: !dark });
+                setGlobalDark(!dark);
               } }
             >
               <i className={ `fa fa-${ dark ? 'sun' : 'moon' }` } />
@@ -94,7 +94,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   uploadFile: async (name, raw) => dispatch(await uploadFile(name, raw)),
-  setGlobalSettings: payload => dispatch(setGlobalSettings(payload))
+  setGlobalDark: dark => dispatch(setGlobalDark(dark))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Toolbar);

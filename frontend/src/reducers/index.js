@@ -4,6 +4,7 @@ import {
   SET_SETTINGS,
   SET_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, INITIAL_STATE, INITIAL_SETTINGS, SET_DATA
 } from '../constants/state';
+import globalSettingsReducer from './globalSettings';
 
 const rootReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -21,7 +22,7 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       });
     case SET_GLOBAL_SETTINGS:
       return Object.assign({}, state, {
-        globalSettings: { ...state.globalSettings, ...action.payload }
+        globalSettings: globalSettingsReducer(state.globalSettings, action)
       });
     case FOCUS_WINDOW:
       const focusIndex = state.windows.indexOf(action.payload);

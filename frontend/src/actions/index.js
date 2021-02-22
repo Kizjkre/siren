@@ -26,9 +26,29 @@ export const setSettings = (id, settings) => ({
   payload: { id, settings }
 });
 
-export const setGlobalSettings = settings => ({
+export const setGlobalBPM = bpm => ({
   type: SET_GLOBAL_SETTINGS,
-  payload: settings
+  payload: { bpm }
+});
+
+export const setGlobalTimesig = timesig => ({
+  type: SET_GLOBAL_SETTINGS,
+  payload: { timesig }
+});
+
+export const setGlobalKey = key => ({
+  type: SET_GLOBAL_SETTINGS,
+  payload: { key }
+});
+
+export const setGlobalDark = dark => ({
+  type: SET_GLOBAL_SETTINGS,
+  payload: { dark }
+});
+
+export const setGlobalChannels = channels => ({
+  type: SET_GLOBAL_SETTINGS,
+  payload: { channels }
 });
 
 export const focusWindow = window => ({

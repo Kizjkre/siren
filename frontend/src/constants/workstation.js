@@ -1,9 +1,5 @@
-import { INITIAL_CHANNEL_SETTINGS } from './state';
-
 export const TRACK_CONTROLS_WIDTH = 4;
 export const TRACK_WIDTH = 12 - TRACK_CONTROLS_WIDTH;
-
-export const FEATURES = INITIAL_CHANNEL_SETTINGS.features.map(f => f.name);
 
 export const KEYS = {
   'C': 'C Major',

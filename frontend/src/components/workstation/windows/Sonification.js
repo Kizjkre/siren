@@ -3,7 +3,7 @@ import Window from './Window';
 import Info from './Info';
 import Channel from './Channel';
 import { connect } from 'react-redux';
-import { setGlobalSettings, setSettings, focusWindow, setData } from '../../../actions';
+import { setSettings, focusWindow, setData, setGlobalChannels } from '../../../actions';
 import { channel, data as dataInfo } from '../../../helper/info';
 import { chunkify, removeOutliers } from '../../../helper/processing';
 import { INITIAL_CHANNEL_SETTINGS } from '../../../constants/state';
@@ -22,7 +22,7 @@ const select = (e, dark) => {
   }
 };
 
-const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, setGlobalSettings, focusWindow, setData, files }) => {
+const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, setGlobalChannels, focusWindow, setData, files }) => {
   const [state, setState] = useState({ title: '', children: null, segment: '', data: [...tracks[trackno].data] });
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
 
   const handleContinuousOrDiscrete = e => setSettings(trackno, { continuous: e.target.checked });
 
-  const handleAdd = () => setGlobalSettings({ channels: [...globalSettings.channels, { ...INITIAL_CHANNEL_SETTINGS, id: globalSettings.channels.length }] });
+  const handleAdd = () => setGlobalChannels([...globalSettings.channels, { ...INITIAL_CHANNEL_SETTINGS, id: globalSettings.channels.length }]);
 
   const handleChannel = i => e => {
     if (e.target.classList.contains('btn-primary')) {
@@ -43,14 +43,14 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
 
       const temp2 = [...globalSettings.channels];
       temp2[i].tracks.splice(temp2[i].tracks.indexOf(trackno), 1);
-      setGlobalSettings({ channels: temp2 });
+      setGlobalChannels(temp2);
     } else {
       e.target.classList.add('btn-primary');
       setSettings(trackno, { channel: [...tracks[trackno].settings.channel, i].sort((a, b) => a - b) });
 
       const temp = [...globalSettings.channels];
       temp[i].tracks = [...temp[i].tracks, trackno];
-      setGlobalSettings({ channels: temp });
+      setGlobalChannels(temp);
     }
   };
 
@@ -176,9 +176,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setSettings: (id, settings) => dispatch(setSettings(id, settings)),
-  setGlobalSettings: settings => dispatch(setGlobalSettings(settings)),
   focusWindow: window => dispatch(focusWindow(window)),
-  setData: (id, data) => dispatch(setData(id, data))
+  setData: (id, data) => dispatch(setData(id, data)),
+  setGlobalChannels: channels => dispatch(setGlobalChannels(channels))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sonification);

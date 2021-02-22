@@ -6,15 +6,15 @@ import AddTrack from './workstation/windows/AddTrack';
 import Sonification from './workstation/windows/Sonification';
 import Controls from './workstation/Controls';
 import { connect } from 'react-redux';
-import { setGlobalSettings } from '../actions';
+import { setGlobalDark } from '../actions';
 
 let dark;
 
-const Workstation = ({ files, tracks, setGlobalSettings }) => {
+const Workstation = ({ files, tracks, setGlobalDark }) => {
   const keyPress = keys => {
     if (keys.length === 2 && keys[0] === 'shift' && keys[1] === 'd') {
       dark = !dark;
-      setGlobalSettings({ dark });
+      setGlobalDark(dark);
     }
   };
 
@@ -57,7 +57,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  setGlobalSettings: payload => dispatch(setGlobalSettings(payload))
+  setGlobalDark: dark => dispatch(setGlobalDark(dark))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Workstation);
