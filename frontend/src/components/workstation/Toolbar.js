@@ -3,6 +3,7 @@ import halfmoon from 'halfmoon';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setGlobalDark, uploadFile } from '../../actions';
+import store from '../../store/';
 
 const Toolbar = ({ uploadFile, setGlobalDark, dark }) => {
   const file = createRef();
@@ -19,6 +20,14 @@ const Toolbar = ({ uploadFile, setGlobalDark, dark }) => {
     }
   };
 
+  const handleExport = () => {
+    const data = `data:text/json;charset=utf-8,${ encodeURIComponent(JSON.stringify(store.getState())) }`;
+    const a = document.createElement('a');
+    a.setAttribute('href', data);
+    a.setAttribute('download', 'omsonification.json');
+    a.click();
+  };
+
   return (
     <nav className="navbar">
       <span className="navbar-brand anchor">Workstation</span>
@@ -31,7 +40,13 @@ const Toolbar = ({ uploadFile, setGlobalDark, dark }) => {
               <i className="fa fa-folder-open"/>
               &emsp;Open
             </label>
-            <span className="dropdown-item anchor" onClick={ () => file.current.click() }>
+            <span
+              className="dropdown-item anchor"
+              onClick={ () => {
+                handleExport();
+                file.current.click();
+              } }
+            >
               <i className="fa fa-file-export"/>
               &emsp;Export
             </span>

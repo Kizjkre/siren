@@ -59,7 +59,6 @@ const Channel = ({ anchor, title, i, tracks, channels, setGlobalChannels }) => {
         {
           channels.find(c => c.id === state.selected)?.features.map(feature =>
             {
-              console.log(feature);
               return [-1, i].includes(feature.controller) ?
                 <button key={ feature.name } className="btn ml-5" onClick={ handleFeature }>{ feature.name }</button> :
                 <button key={ feature.name } className="btn ml-5 disabled" disabled>{ feature.name }</button>
