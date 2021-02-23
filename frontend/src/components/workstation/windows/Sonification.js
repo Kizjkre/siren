@@ -158,7 +158,11 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
             <button className="btn btn-primary" onClick={ handleOutliers }>Remove Outliers</button>
           </div>
           <div className="col-6">
-            <input className="form-control" placeholder="Segmentation Size" type="number" min="1" value={ state.segment } onChange={ handleSegment } />
+            {
+              state.data.every(datum => !isNaN(datum)) ?
+                <></> :
+                <input className="form-control" placeholder="Segmentation Size" type="number" min="1" value={ state.segment } onChange={ handleSegment } />
+            }
           </div>
         </div>
         <br />
