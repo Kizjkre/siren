@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createRef } from 'react';
 import Window from './Window';
 import Info from './Info';
 import Channel from './Channel';
@@ -24,6 +24,25 @@ const select = (e, dark) => {
 
 const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, setGlobalChannels, focusWindow, setData, files }) => {
   const [state, setState] = useState({ title: '', children: null, segment: '', data: [...tracks[trackno].data] });
+
+  const data = createRef();
+
+  useEffect(() => {
+    Array.from(data.current.children).forEach(datum => {
+      let value = datum.innerText.trim();
+      if (!isNaN(value)) {
+        value = parseFloat(value);
+      }
+      if (tracks[trackno].data.includes(value)) {
+        select(datum, globalSettings.dark);
+      } else {
+        datum.style.background = null;
+        datum.style.color = null;
+        datum.style.rowBorder = null;
+        datum.style.cellBorder = null;
+      }
+    });
+  }, [tracks[trackno].data]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     Array.from(document.getElementsByClassName('datum-selected')).forEach(e => select(e, globalSettings.dark));
@@ -122,9 +141,13 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
         <div className="w-full overflow-scroll">
           <table className="table">
             <tbody>
-              <tr>
+              <tr ref={ data }>
                 <th>{ tracks[trackno].name }</th>
-                { state.data.map((datum, i) => <td key={ `data-${ i }` } className="anchor sonification-data-point is-primary datum-selected" onClick={ handlePoint(datum, i) }>{ datum }</td>) }
+                {
+                  state.data.map((datum, i) =>
+                    <td key={ `data-${ i }` } className="anchor sonification-data-point datum-selected" onClick={ handlePoint(datum, i) }>{ datum }</td>
+                  )
+                }
               </tr>
             </tbody>
           </table>
