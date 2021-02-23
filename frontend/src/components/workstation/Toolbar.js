@@ -2,10 +2,10 @@ import { createRef, useState } from 'react';
 import halfmoon from 'halfmoon';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setGlobalDark, uploadFile } from '../../actions';
+import { setGlobalDark, setState, uploadFile } from '../../actions';
 import store from '../../store/';
 
-const Toolbar = ({ uploadFile, setGlobalDark, dark }) => {
+const Toolbar = ({ uploadFile, setGlobalDark, dark, setGlobalState }) => {
   const file = createRef();
   const edit = createRef();
   const view = createRef();
@@ -15,6 +15,15 @@ const Toolbar = ({ uploadFile, setGlobalDark, dark }) => {
     if (e.target.files.length) {
       const url = URL.createObjectURL(e.target.files[0]);
       await uploadFile(e.target.files[0].name, await (await fetch(url)).text());
+      e.target.value = '';
+      file.current.click();
+    }
+  };
+
+  const handleImport = async e => {
+    if (e.target.files.length) {
+      const url = URL.createObjectURL(e.target.files[0]);
+      setGlobalState(await (await fetch(url)).json());
       e.target.value = '';
       file.current.click();
     }
@@ -34,11 +43,16 @@ const Toolbar = ({ uploadFile, setGlobalDark, dark }) => {
       <ul className="navbar-nav">
         <li className="nav-item dropdown">
           <span className="nav-link anchor" data-toggle="dropdown" id="nav-dropdown-file" ref={ file }>File</span>
-          <div className="dropdown-menu" aria-labelledby="nav-dropdown-file">
-            <label htmlFor="upload" className="dropdown-item">
+          <div className="dropdown-menu anchor" aria-labelledby="nav-dropdown-file">
+            <label htmlFor="upload" className="dropdown-item anchor margin-0">
               <input type="file" id="upload" className="d-none" accept="text/csv" onChange={ handleUpload } />
-              <i className="fa fa-folder-open"/>
+              <i className="fa fa-folder-open" />
               &emsp;Open
+            </label>
+            <label htmlFor="import" className="dropdown-item anchor margin-0">
+              <input type="file" id="import" className="d-none" accept="application/json" onChange={ handleImport } />
+              <i className="fa fa-file-import" />
+              &emsp;Import
             </label>
             <span
               className="dropdown-item anchor"
@@ -50,6 +64,7 @@ const Toolbar = ({ uploadFile, setGlobalDark, dark }) => {
               <i className="fa fa-file-export"/>
               &emsp;Export
             </span>
+
           </div>
         </li>
         <li className="nav-item dropdown">
@@ -109,7 +124,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   uploadFile: async (name, raw) => dispatch(await uploadFile(name, raw)),
-  setGlobalDark: dark => dispatch(setGlobalDark(dark))
+  setGlobalDark: dark => dispatch(setGlobalDark(dark)),
+  setGlobalState: state => dispatch(setState(state))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Toolbar);

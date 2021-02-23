@@ -2,7 +2,7 @@ import {
   UPLOAD_FILE,
   ADD_TRACK,
   SET_SETTINGS,
-  SET_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, SET_DATA
+  SET_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, SET_DATA, SET_STATE
 } from '../constants/state';
 import * as d3 from 'd3';
 import { formatCSV, typeify } from '../helper/processing';
@@ -64,4 +64,9 @@ export const deleteTrack = id => ({
 export const setData = (id, data) => ({
   type: SET_DATA,
   payload: { id, data }
+});
+
+export const setState = state => ({
+  type: SET_STATE,
+  payload: state
 });

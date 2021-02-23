@@ -7,6 +7,7 @@ export const SET_GLOBAL_SETTINGS = 'SET_GLOBAL_SETTINGS';
 export const FOCUS_WINDOW = 'FOCUS_WINDOW';
 export const DELETE_TRACK = 'DELETE_TRACK';
 export const SET_DATA = 'SET_DATA';
+export const SET_STATE = 'SET_STATE';
 
 export const INITIAL_STATE = {
   files: [],
