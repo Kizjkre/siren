@@ -12,8 +12,10 @@ export const chunkify = (data, size) => {
   return temp;
 };
 
+export const isNumerical = data => data.every(d => typeof d === 'number');
+
 export const scale = (data, type, max = 1, min = -1, center = 0) => {
-  if (data.some(d => isNaN(d))) {
+  if (!isNumerical(data)) {
     return null;
   }
   return data.map(d => {
