@@ -74,12 +74,14 @@ export const play = (tracks, globalSettings) => {
       const num = SCALES[key].length * 2;
       const normalize = x => Math.round(num / (maxPitch - minPitch) * (x - minPitch));
 
+      const length = now + pitch.length * 60 / bpm;
+
       if (volume.length === 0) {
         gain.gain.value = 1 / (tracks.length + globalSettings.channels.length);
       }
 
-      volume.forEach((datum, i) => gain.gain.linearRampToValueAtTime(datum, now + i * 60 / bpm));
-      pan.forEach((datum, i) => panner.pan.linearRampToValueAtTime(datum, now + i * 60 / bpm));
+      volume.forEach((datum, i) => gain.gain.linearRampToValueAtTime(datum, now + i / pitch.length * length));
+      pan.forEach((datum, i) => panner.pan.linearRampToValueAtTime(datum, now + i / pan.length * length));
 
       if (pitch.length === 0) {
         osc.frequency.value = calculateFrequency(SCALES[key][0], 4);
@@ -97,7 +99,7 @@ export const play = (tracks, globalSettings) => {
       }
 
       osc.start();
-      osc.stop(now + Math.max(pitch.length, volume.length, pan.length) * 60 / bpm);
+      osc.stop(length);
     });
   }
 };
