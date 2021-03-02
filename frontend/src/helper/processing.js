@@ -1,14 +1,16 @@
 import * as d3 from 'd3';
 
 export const chunkify = (data, size) => {
-  const temp = [];
-  for (let i = 0; i < data.length - size; i += size) {
-    const subTemp = [];
-    for (let j = 0; j < size; j++) {
-      subTemp.push(data[i + j]);
-    }
-    temp.push(subTemp);
+  if (size < 1) {
+    return data;
   }
+
+  const temp = [];
+  data.forEach(d => {
+    for (let i = 0; i < d.length - size; i += size) {
+      temp.push(d.substr(i, size));
+    }
+  });
   return temp;
 };
 
@@ -71,3 +73,11 @@ export const average = data => {
   data.forEach(datum => sum += datum);
   return sum / data.length;
 };
+
+export const numerize = data => data.map(d => {
+  let sum = 0;
+  for (let i = 0; i < d.length; i++) {
+    sum += d.charCodeAt(i);
+  }
+  return sum / d.length;
+});

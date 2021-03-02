@@ -106,7 +106,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
   };
 
   const handleSegment = e => {
-    setData(trackno, chunkify(tracks[trackno].data, e.target.value));
+    setData(trackno, chunkify(tracks[trackno].data, parseInt(e.target.value)));
     setState({ ...state, segment: e.target.value });
   };
 
