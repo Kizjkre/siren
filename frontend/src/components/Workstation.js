@@ -6,11 +6,12 @@ import AddTrack from './workstation/windows/AddTrack';
 import Sonification from './workstation/windows/Sonification';
 import Controls from './workstation/Controls';
 import { connect } from 'react-redux';
-import { setGlobalDark } from '../actions';
+import { setGlobalDark, setState } from '../actions';
+import demoData from '../helper/demo';
 
 let dark;
 
-const Workstation = ({ files, tracks, setGlobalDark }) => {
+const Workstation = ({ files, tracks, setGlobalDark, setGlobalState }) => {
   const keyPress = keys => {
     if (keys.length === 2 && keys[0] === 'shift' && keys[1] === 'd') {
       dark = !dark;
@@ -33,6 +34,8 @@ const Workstation = ({ files, tracks, setGlobalDark }) => {
         keyPress(keys);
       }
     });
+
+    setGlobalState(demoData());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -57,7 +60,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  setGlobalDark: dark => dispatch(setGlobalDark(dark))
+  setGlobalDark: dark => dispatch(setGlobalDark(dark)),
+  setGlobalState: state => dispatch(setState(state))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Workstation);
