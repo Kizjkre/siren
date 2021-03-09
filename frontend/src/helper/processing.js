@@ -74,10 +74,18 @@ export const average = data => {
   return sum / data.length;
 };
 
-export const numerize = data => data.map(d => {
+export const numerizeToNumber = data => data.map(d => {
   let sum = 0;
   for (let i = 0; i < d.length; i++) {
     sum += d.charCodeAt(i);
   }
   return sum / d.length;
+});
+
+export const numerizeToArray = data => data.map(d => {
+  const values = [];
+  for (let i = 0; i < d.length; i++) {
+    values.push(d.charCodeAt(i));
+  }
+  return values;
 });
