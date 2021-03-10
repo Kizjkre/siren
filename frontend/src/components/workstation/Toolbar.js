@@ -39,7 +39,7 @@ const Toolbar = ({ uploadFile, setGlobalDark, dark, setGlobalState }) => {
 
   return (
     <nav className="navbar">
-      <span className="navbar-brand anchor">Workstation</span>
+      <span className="navbar-brand anchor">SIREN</span>
       <ul className="navbar-nav">
         <li className="nav-item dropdown">
           <span className="nav-link anchor" data-toggle="dropdown" id="nav-dropdown-file" ref={ file }>File</span>
