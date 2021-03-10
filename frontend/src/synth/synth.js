@@ -2,12 +2,16 @@ import { NOTES, SCALES } from '../constants/workstation';
 import { average, isNumerical, numerizeToArray, numerizeToNumber, scale } from '../helper/processing';
 import store from '../store/';
 import SimpleSynth from './SimpleSynth';
+import SimpleContext from './SimpleContext';
 
 let context;
+const simpleContext = new SimpleContext();
 
 export const play = (tracks, globalSettings) => {
+  // if (simpleContext.context) {
   if (context) {
     context.resume();
+    // simpleContext.start();
   } else {
     context = new AudioContext();
 
@@ -112,9 +116,10 @@ export const play = (tracks, globalSettings) => {
   }
 };
 
-export const pause = () => context.suspend();
+export const pause = () => simpleContext.pause();
 
 export const stop = () => {
+  // simpleContext.removeContext();
   context.close();
   context = undefined;
 };
