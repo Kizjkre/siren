@@ -1,4 +1,5 @@
 import { NOTES } from '../constants/workstation';
+import SimpleContext from './SimpleContext';
 
 const OPTIONS = {
   gain: 1,
@@ -38,18 +39,23 @@ export default class SimpleSynth {
 
   static _synths = 0;
 
-  queue(notes, length) {
+  queue(notes, start) {
+    const time = SimpleContext.toSeconds(start[0], start[1]);
     if (this._continuous) {
       notes.forEach(({ note, octave }, i) =>
-        this._osc[i].frequency.linearRampToValueAtTime(calculateFrequency(note, octave), length)
+        this._osc[i].frequency.linearRampToValueAtTime(calculateFrequency(note, octave), time)
       );
     } else {
       notes.forEach(({ note, octave }, i) =>
-        this._osc[i].frequency.setValueAtTime(calculateFrequency(note, octave), length)
+        this._osc[i].frequency.setValueAtTime(calculateFrequency(note, octave), time)
       );
     }
 
-    this._duration += length;
+    this._duration += time;
+  }
+
+  queueGain(gain, start) {
+    this._gain.gain.setValueAtTime(gain, start);
   }
 
   play() {

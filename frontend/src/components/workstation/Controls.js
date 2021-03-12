@@ -43,9 +43,7 @@ const Controls = ({ globalSettings, tracks, setGlobalBPM, setGlobalTimesig, setG
         }
       });
 
-      (async () => {
-        await play(output, globalSettings);
-      })();
+      (async () => await play())();
     }
   };
 
@@ -114,7 +112,7 @@ const Controls = ({ globalSettings, tracks, setGlobalBPM, setGlobalTimesig, setG
               <div className="col-12 d-flex justify-content-center">
                 <div className="h-full w-full d-flex justify-content-center">
                   <div className="dropdown dropup with-arrow align-self-center">
-                    <button className="btn btn-lg d-flex align-items-center" data-toggle="dropdown" type="button" id="timesig-dropup">
+                    <button className="btn btn-lg d-flex align-items-center transparent" data-toggle="dropdown" type="button" id="timesig-dropup">
                       <i className="fa fa-stopwatch"/>
                       &emsp;Time Signature:&nbsp;
                       <span className="supsub">

@@ -5,27 +5,32 @@ import SimpleSynth from './SimpleSynth';
 import SimpleContext from './SimpleContext';
 
 let context;
-const simpleContext = new SimpleContext();
 
-export const play = (tracks, globalSettings) => {
-  // if (simpleContext.context) {
-  if (context) {
+export const play = () => {
+  const state = store.getState();
+
+  if (SimpleContext.context) {
+  // if (context) {
     context.resume();
-    // simpleContext.start();
+    SimpleContext.start();
   } else {
     context = new AudioContext();
+    SimpleContext.createContext();
+    SimpleContext.setBpm(state.globalSettings.bpm < 0 ? 60 : state.globalSettings.bpm);
+    SimpleContext.setKey(state.globalSettings.key === 'none' ? 'chromatic' : state.globalSettings.key);
+    SimpleContext.setTimesig(state.globalSettings.timesig);
 
-    const bpm = globalSettings.bpm < 0 ? 60 : globalSettings.bpm;
-    const key = globalSettings.key === 'none' ? 'chromatic' : globalSettings.key;
+    const bpm = state.globalSettings.bpm < 0 ? 60 : state.globalSettings.bpm;
+    const key = state.globalSettings.key === 'none' ? 'chromatic' : state.globalSettings.key;
 
     const now = context.currentTime;
 
-    tracks.forEach(t => {
+    state.tracks.forEach(t => {
       if (t.settings.channel.length === 0) {
         const data = isNumerical(t.data) ? t.data : numerizeToArray(t.data);
 
         const synth = new SimpleSynth(context, {
-          gain: t.settings.mute ? 0 : t.settings.volume / 100 / (tracks.length + globalSettings.channels.length),
+          gain: t.settings.mute ? 0 : t.settings.volume / 100 / (state.tracks.length + state.globalSettings.channels.length),
           pan: t.settings.pan / 50,
           continuous: t.settings.continuous,
           num: data[0].length || 1
@@ -39,28 +44,18 @@ export const play = (tracks, globalSettings) => {
         data.forEach((datum, i) => {
           const notes = [];
           if (typeof datum === 'object') {
-            datum.forEach(d => {
-              const index = normalize(d);
-              notes.push({
-                note: SCALES[key][index % SCALES[key].length],
-                octave: 4 + Math.floor(index / SCALES[key].length)
-              });
-            });
+            datum.forEach(d => notes.push(SimpleContext.toNoteInScale(normalize(d))));
           } else {
-            const index = normalize(datum);
-            notes.push({
-              note: SCALES[key][index % SCALES[key].length],
-              octave: 4 + Math.floor(index / SCALES[key].length)
-            });
+            notes.push(SimpleContext.toNoteInScale(normalize(datum)));
           }
-          synth.queue(notes, now + i * 60 / bpm);
+          synth.queue(notes, [Math.floor(i / SimpleContext.getTimesig()[0]), i % SimpleContext.getTimesig()[0]]);
         });
 
         synth.play();
       }
     });
 
-    globalSettings.channels.forEach(c => {
+    state.globalSettings.channels.forEach(c => {
       const osc = new OscillatorNode(context, { type: 'sine' });
       const gain = new GainNode(context);
       const panner = new StereoPannerNode(context);
@@ -71,7 +66,7 @@ export const play = (tracks, globalSettings) => {
         if (controller < 0) {
           return [];
         }
-        return store.getState().tracks.find(t => t.id === controller).data;
+        return state.tracks.find(t => t.id === controller).data;
       };
 
       const rawPitch = data('Pitch');
@@ -89,7 +84,7 @@ export const play = (tracks, globalSettings) => {
       const length = now + pitch.length * 60 / bpm;
 
       if (volume.length === 0) {
-        gain.gain.value = 1 / (tracks.length + globalSettings.channels.length);
+        gain.gain.value = 1 / (state.tracks.length + state.globalSettings.channels.length);
       }
 
       volume.forEach((datum, i) => gain.gain.linearRampToValueAtTime(datum, now + i / pitch.length * length));
@@ -113,13 +108,15 @@ export const play = (tracks, globalSettings) => {
       osc.start();
       osc.stop(length);
     });
+
+    SimpleContext.start();
   }
 };
 
-export const pause = () => simpleContext.pause();
+export const pause = () => SimpleContext.pause();
 
 export const stop = () => {
-  // simpleContext.removeContext();
+  SimpleContext.removeContext();
   context.close();
   context = undefined;
 };

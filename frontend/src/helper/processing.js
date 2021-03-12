@@ -39,13 +39,7 @@ export const scale = (data, type, max = 1, min = -1, center = 0) => {
 export const removeOutliers = data => {
   const first = d3.quantile(data, 0.25);
   const third = d3.quantile(data, 0.75);
-  const temp = [];
-  data.forEach(d => {
-    if (!(d < 1.5 * first || d > 1.5 * third)) {
-      temp.push(d);
-    }
-  });
-  return temp;
+  return data.filter(d => !(d < first -  1.5 * (third - first) || d > third + 1.5 * (third - first)));
 };
 
 export const formatCSV = raw => {
@@ -74,6 +68,8 @@ export const average = data => {
   return sum / data.length;
 };
 
+export const isOutlier = (datum, q1, q3) => !(datum < q1 -  1.5 * (q3 - q1) || datum > q3 + 1.5 * (q3 - q1));
+
 export const numerizeToNumber = data => data.map(d => {
   let sum = 0;
   for (let i = 0; i < d.length; i++) {
@@ -81,6 +77,21 @@ export const numerizeToNumber = data => data.map(d => {
   }
   return sum / d.length;
 });
+
+// export const numerizeToArray = data => {
+//   data = data.map(d => {
+//     const values = [];
+//     for (let i = 0; i < d.length; i++) {
+//       values.push(d.charCodeAt(i));
+//     }
+//     return values;
+//   });
+//
+//   const q1 = d3.quantile(data.flat(), 0.25);
+//   const q3 = d3.quantile(data.flat(), 0.75);
+//
+//   return data.map(d => isOutlier(d, q1, q3) ? d - (q3 + 1.5 * (q3 - q1)) : d);
+// };
 
 export const numerizeToArray = data => data.map(d => {
   const values = [];

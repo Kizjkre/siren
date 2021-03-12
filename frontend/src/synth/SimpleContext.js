@@ -1,37 +1,43 @@
+import { SCALES } from '../constants/workstation';
+
 export default class SimpleContext {
-  constructor(options) {
-    SimpleContext.bpm = options?.bpm || 120;
-    SimpleContext.key = options?.key || 'C';
-    SimpleContext.timesig = options?.timesig || [4, 4];
-  }
-
-  static bpm = 120;
-  static key = 'C';
-  static timesig = [4, 4];
-  static context = null;
-
+  static _bpm = 120;
+  static _key = 'C';
+  static _timesig = [4, 4];
+  static _context = null;
   static _current = [0, 0];
 
-  createContext() {
-    SimpleContext.context = new AudioContext();
-    SimpleContext.context.suspend();
+  static toSeconds(measure, beat) {
+    return (measure * SimpleContext._timesig[0] + beat) * 60 / SimpleContext._bpm;
   }
 
-  removeContext() {
-    SimpleContext?.close();
-    SimpleContext.context = null;
+  static toNoteInScale(index) {
+    return {
+      note: SCALES[SimpleContext._key][index % SCALES[SimpleContext._key].length],
+      octave: 4 + Math.floor(index / SCALES[SimpleContext._key].length)
+    };
   }
 
-  start() {
-    SimpleContext.context?.resume();
+  static createContext() {
+    SimpleContext._context = new AudioContext();
+    SimpleContext._context?.suspend();
   }
 
-  pause() {
-    SimpleContext.context?.suspend();
+  static removeContext() {
+    SimpleContext._context?.close();
+    SimpleContext._context = null;
   }
 
-  nextBeat() {
-    if (++SimpleContext._current[1] === SimpleContext.timesig[0]) {
+  static start() {
+    SimpleContext._context?.resume();
+  }
+
+  static pause() {
+    SimpleContext._context?.suspend();
+  }
+
+  static nextBeat() {
+    if (++SimpleContext._current[1] === SimpleContext._timesig[0]) {
       SimpleContext._current[1] = 0;
       SimpleContext._current[0]++;
     }
@@ -42,11 +48,23 @@ export default class SimpleContext {
     }
   }
 
-  toSeconds(measure, beat) {
-    return (measure * SimpleContext.timesig[0] + beat) * 60 / SimpleContext.bpm;
+  static getTimesig() {
+    return SimpleContext._timesig;
   }
 
-  set bpm(bpm) {
-    SimpleContext.bpm = bpm;
+  static setBpm(bpm) {
+    SimpleContext._bpm = bpm;
+  }
+
+  static setKey(key) {
+    SimpleContext._key = key;
+  }
+
+  static setTimesig(timesig) {
+    SimpleContext._timesig = timesig;
+  }
+
+  static currentTime() {
+    return SimpleContext._context?.currentTime;
   }
 }
