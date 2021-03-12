@@ -10,7 +10,6 @@ export const play = () => {
   const state = store.getState();
 
   if (SimpleContext.context) {
-  // if (context) {
     context.resume();
     SimpleContext.start();
   } else {

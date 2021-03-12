@@ -33,16 +33,6 @@ const Controls = ({ globalSettings, tracks, setGlobalBPM, setGlobalTimesig, setG
       e.target.classList.add('btn-danger'); // TODO: fix
       e.target.classList.remove('btn-success');
 
-      const output = [];
-
-      tracks.forEach(t => {
-        if (t.settings.channel.length === 0) {
-          output.push(t);
-        } else {
-          // TODO: Do something
-        }
-      });
-
       (async () => await play())();
     }
   };
