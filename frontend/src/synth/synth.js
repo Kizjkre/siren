@@ -55,11 +55,6 @@ export const play = () => {
     });
 
     state.globalSettings.channels.forEach(c => {
-      const osc = new OscillatorNode(context, { type: 'sine' });
-      const gain = new GainNode(context);
-      const panner = new StereoPannerNode(context);
-      osc.connect(gain).connect(panner).connect(context.destination);
-
       const data = feature => {
         const controller = c.features.find(f => f.name === feature).controller;
         if (controller < 0) {
@@ -71,18 +66,33 @@ export const play = () => {
       const rawPitch = data('Pitch');
       const rawVolume = data('Volume');
       const rawPan = data('Pan');
-      const pitch = isNumerical(rawPitch) ? rawPitch : numerizeToNumber(rawPitch);
+
+      const pitch = isNumerical(rawPitch) ? rawPitch : numerizeToArray(rawPitch);
+
+      const osc = [];
+      const gain = new GainNode(context);
+      const panner = new StereoPannerNode(context);
+
+      const numOsc = pitch[0].length || 1;
+
+      for (let i = 0; i < numOsc; i++) {
+        const node = new OscillatorNode(context, { type: 'sine' });
+        node.connect(gain).connect(panner).connect(context.destination);
+        osc.push(node);
+      }
+
       const volume = isNumerical(rawVolume) ?
-        scale(rawVolume, 'logistic', 0.9, 0.1, average(rawVolume)) :
-        scale(numerizeToNumber(rawVolume), 'logistic', 0.9, 0.1, average(numerizeToNumber(rawVolume)));
+        scale(rawVolume, 'logistic', 0.9 / numOsc, 0.1 / numOsc, average(rawVolume)) :
+        scale(numerizeToNumber(rawVolume), 'logistic', 0.9 / numOsc, 0.1 / numOsc, average(numerizeToNumber(rawVolume)));
       const pan = isNumerical(rawPan) ?
         scale(rawPan, 'logistic', 1, -1, average(rawPan)) :
         scale(numerizeToNumber(rawPan), 'logistic', 1, -1, average(numerizeToNumber(rawPan)));
 
-      const maxPitch = Math.max(...pitch);
-      const minPitch = Math.min(...pitch);
+      const maxPitch = Math.max(...pitch.flat());
+      const minPitch = Math.min(...pitch.flat());
       const num = SCALES[key].length * 2;
       const normalize = x => Math.round(num / (maxPitch - minPitch) * (x - minPitch));
+
 
       const masterLength = Math.min(pitch.length || Infinity, volume.length || Infinity, pan.length || Infinity);
       const length = now + masterLength * 60 / bpm;
@@ -94,22 +104,38 @@ export const play = () => {
       pan.forEach((datum, i) => panner.pan.linearRampToValueAtTime(datum, now + i / pan.length * length));
 
       if (pitch.length === 0) {
-        osc.frequency.value = calculateFrequency(SCALES[key][0], 4);
+        osc[0].frequency.value = calculateFrequency(SCALES[key][0], 4);
       }
       if (c.continuous) {
         pitch.forEach((datum, i) => {
-          const index = normalize(datum);
-          osc.frequency.linearRampToValueAtTime(calculateFrequency(SCALES[key][index % SCALES[key].length], 4 + Math.floor(index / SCALES[key].length)), now + i * 60 / bpm);
+          if (typeof datum === 'object') {
+            datum.forEach((d, j) => {
+              const index = normalize(d);
+              osc[j].frequency.linearRampToValueAtTime(calculateFrequency(SCALES[key][index % SCALES[key].length], 4 + Math.floor(index / SCALES[key].length)), now + i * 60 / bpm);
+            });
+          } else {
+            const index = normalize(datum);
+            osc[0].frequency.linearRampToValueAtTime(calculateFrequency(SCALES[key][index % SCALES[key].length], 4 + Math.floor(index / SCALES[key].length)), now + i * 60 / bpm);
+          }
         });
       } else {
         pitch.forEach((datum, i) => {
-          const index = normalize(datum);
-          osc.frequency.setValueAtTime(calculateFrequency(SCALES[key][index % SCALES[key].length], 4 + Math.floor(index / SCALES[key].length)), now + i * 60 / bpm);
+          if (typeof datum === 'object') {
+            datum.forEach((d, j) => {
+              const index = normalize(d);
+              osc[j].frequency.setValueAtTime(calculateFrequency(SCALES[key][index % SCALES[key].length], 4 + Math.floor(index / SCALES[key].length)), now + i * 60 / bpm);
+            });
+          } else {
+            const index = normalize(datum);
+            osc[0].frequency.setValueAtTime(calculateFrequency(SCALES[key][index % SCALES[key].length], 4 + Math.floor(index / SCALES[key].length)), now + i * 60 / bpm);
+          }
         });
       }
 
-      osc.start();
-      osc.stop(length);
+      osc.forEach(o => {
+        o.start();
+        o.stop(length);
+      });
     });
 
     SimpleContext.start();
