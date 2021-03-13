@@ -57,13 +57,13 @@ const Channel = ({ anchor, title, i, tracks, channels, setGlobalChannels }) => {
       <div className={ state.selected === -1 ? 'transparent' : '' }>
         <h5 className="font-weight-bold">Channel { state.selected } Controlled Features</h5>
         {
-          channels.find(c => c.id === state.selected)?.features.map(feature =>
-            {
-              return [-1, i].includes(feature.controller) ?
-                <button key={ feature.name } className="btn ml-5" onClick={ handleFeature }>{ feature.name }</button> :
+          channels.find(c => c.id === state.selected)?.features.map(feature => {
+            return feature.controller === -1 ?
+              <button key={ feature.name } className="btn ml-5" onClick={ handleFeature }>{ feature.name }</button> :
+              feature.controller === i ?
+                <button key={ feature.name } className="btn ml-5 btn-primary" onClick={ handleFeature }>{ feature.name }</button> :
                 <button key={ feature.name } className="btn ml-5 disabled" disabled>{ feature.name }</button>
-            }
-          )
+          })
         }
       </div>
     </Window>

@@ -119,7 +119,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
         </h5>
         <div className="w-full">
           <button className="btn btn-square btn-primary m-5" onClick={ handleAdd }>+</button>
-          { [...globalSettings.channels].map((_, i) => <button key={ `channel-${ i }` } className="btn btn-square m-5" onClick={ handleChannel(i) }>{ i }</button>) }
+          { [...globalSettings.channels].map((_, i) => <button key={ `channel-${ i }` } className={ `btn btn-square m-5 ${ tracks[trackno].settings.channel.includes(i) ? 'btn-primary' : '' }` } onClick={ handleChannel(i) }>{ i }</button>) }
         </div>
         {
           tracks[trackno].settings.channel.length === 0 ? null : (
