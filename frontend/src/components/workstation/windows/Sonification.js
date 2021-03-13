@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createRef } from 'react';
 import Window from './Window';
 import Info from './Info';
 import Channel from './Channel';
 import { connect } from 'react-redux';
-import { setGlobalSettings, setSettings, focusWindow, setData } from '../../../actions';
+import { setSettings, focusWindow, setData, setGlobalChannels } from '../../../actions';
 import { channel, data as dataInfo } from '../../../helper/info';
 import { chunkify, removeOutliers } from '../../../helper/processing';
 import { INITIAL_CHANNEL_SETTINGS } from '../../../constants/state';
@@ -22,8 +22,27 @@ const select = (e, dark) => {
   }
 };
 
-const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, setGlobalSettings, focusWindow, setData, files }) => {
+const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, setGlobalChannels, focusWindow, setData, files }) => {
   const [state, setState] = useState({ title: '', children: null, segment: '', data: [...tracks[trackno].data] });
+
+  const data = createRef();
+
+  useEffect(() => {
+    Array.from(data.current.children).forEach(datum => {
+      let value = datum.innerText.trim();
+      if (!isNaN(value)) {
+        value = parseFloat(value);
+      }
+      if (tracks[trackno].data.includes(value)) {
+        select(datum, globalSettings.dark);
+      } else {
+        datum.style.background = null;
+        datum.style.color = null;
+        datum.style.rowBorder = null;
+        datum.style.cellBorder = null;
+      }
+    });
+  }, [tracks[trackno].data]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     Array.from(document.getElementsByClassName('datum-selected')).forEach(e => select(e, globalSettings.dark));
@@ -31,7 +50,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
 
   const handleContinuousOrDiscrete = e => setSettings(trackno, { continuous: e.target.checked });
 
-  const handleAdd = () => setGlobalSettings({ channels: [...globalSettings.channels, { ...INITIAL_CHANNEL_SETTINGS, id: globalSettings.channels.length }] });
+  const handleAdd = () => setGlobalChannels([...globalSettings.channels, { ...INITIAL_CHANNEL_SETTINGS, id: globalSettings.channels.length }]);
 
   const handleChannel = i => e => {
     if (e.target.classList.contains('btn-primary')) {
@@ -43,14 +62,14 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
 
       const temp2 = [...globalSettings.channels];
       temp2[i].tracks.splice(temp2[i].tracks.indexOf(trackno), 1);
-      setGlobalSettings({ channels: temp2 });
+      setGlobalChannels(temp2);
     } else {
       e.target.classList.add('btn-primary');
       setSettings(trackno, { channel: [...tracks[trackno].settings.channel, i].sort((a, b) => a - b) });
 
       const temp = [...globalSettings.channels];
       temp[i].tracks = [...temp[i].tracks, trackno];
-      setGlobalSettings({ channels: temp });
+      setGlobalChannels(temp);
     }
   };
 
@@ -82,12 +101,12 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
   const handleOutliers = () => setData(trackno, removeOutliers(tracks[trackno].data));
 
   const handleRestore = () => {
-    setData(trackno, files.find(f => f.name === tracks[trackno].file).csv.map(row => isNaN(row[tracks[trackno].name]) ? row[tracks[trackno].name] : parseFloat(row[tracks[trackno].name])));
+    setData(trackno, files.find(f => f.name === tracks[trackno].file).data.map(row => isNaN(row[tracks[trackno].name]) ? row[tracks[trackno].name] : parseFloat(row[tracks[trackno].name])));
     setState({ ...state, segment: '' });
   };
 
   const handleSegment = e => {
-    setData(trackno, chunkify(tracks[trackno].data, e.target.value));
+    setData(trackno, chunkify(tracks[trackno].data, parseInt(e.target.value)));
     setState({ ...state, segment: e.target.value });
   };
 
@@ -107,7 +126,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
             <>
               <br />
               <div className="w-full">
-                <button className="btn btn-primary ml-5" data-toggle="modal" data-target={ `channel-${ tracks[trackno].name }-${ trackno }` } onClick={ () => focusWindow(`#channel-${ tracks[trackno].name }-${ trackno }`) }>Channel Settings</button>
+                <button className="btn btn-primary ml-5" data-toggle="modal" data-target={ `channel-${ tracks[trackno].name.replace(/\s/g, '-') }-${ trackno }` } onClick={ () => focusWindow(`#channel-${ tracks[trackno].name }-${ trackno }`) }>Channel Settings</button>
               </div>
             </>
           )
@@ -122,9 +141,13 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
         <div className="w-full overflow-scroll">
           <table className="table">
             <tbody>
-              <tr>
+              <tr ref={ data }>
                 <th>{ tracks[trackno].name }</th>
-                { state.data.map((datum, i) => <td key={ `data-${ i }` } className="anchor sonification-data-point is-primary datum-selected" onClick={ handlePoint(datum, i) }>{ datum }</td>) }
+                {
+                  state.data.map((datum, i) =>
+                    <td key={ `data-${ i }` } className="anchor sonification-data-point datum-selected" onClick={ handlePoint(datum, i) }>{ datum }</td>
+                  )
+                }
               </tr>
             </tbody>
           </table>
@@ -135,7 +158,11 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
             <button className="btn btn-primary" onClick={ handleOutliers }>Remove Outliers</button>
           </div>
           <div className="col-6">
-            <input className="form-control" placeholder="Segmentation Size" type="number" min="1" value={ state.segment } onChange={ handleSegment } />
+            {
+              state.data.every(datum => !isNaN(datum)) ?
+                <></> :
+                <input className="form-control" placeholder="Segmentation Size" type="number" min="1" value={ state.segment } onChange={ handleSegment } />
+            }
           </div>
         </div>
         <br />
@@ -176,9 +203,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setSettings: (id, settings) => dispatch(setSettings(id, settings)),
-  setGlobalSettings: settings => dispatch(setGlobalSettings(settings)),
   focusWindow: window => dispatch(focusWindow(window)),
-  setData: (id, data) => dispatch(setData(id, data))
+  setData: (id, data) => dispatch(setData(id, data)),
+  setGlobalChannels: channels => dispatch(setGlobalChannels(channels))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sonification);

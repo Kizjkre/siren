@@ -1,9 +1,5 @@
-import { INITIAL_CHANNEL_SETTINGS } from './state';
-
 export const TRACK_CONTROLS_WIDTH = 4;
 export const TRACK_WIDTH = 12 - TRACK_CONTROLS_WIDTH;
-
-export const FEATURES = INITIAL_CHANNEL_SETTINGS.features.map(f => f.name);
 
 export const KEYS = {
   'C': 'C Major',
@@ -35,6 +31,30 @@ export const KEYS = {
   'penta': 'Pentatonic', // TODO: More keys
   'harmonic': 'Harmonic Minor', // TODO: More keys
   'none': 'None'
+};
+
+export const NOTES = {
+  'a': 0,
+  'a#': 1,
+  'bb': 1,
+  'b': 2,
+  'cb': 2,
+  'b#': 3,
+  'c': 3,
+  'c#': 4,
+  'db': 4,
+  'd': 5,
+  'd#': 6,
+  'eb': 6,
+  'e': 7,
+  'fb': 7,
+  'e#': 8,
+  'f': 8,
+  'f#': 9,
+  'gb': 9,
+  'g': 10,
+  'g#': 11,
+  'ab': 11
 };
 
 export const SCALES = {

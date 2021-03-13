@@ -1,22 +1,22 @@
 import { connect } from 'react-redux';
-import { setGlobalSettings } from '../../actions';
+import { setGlobalBPM, setGlobalKey, setGlobalTimesig } from '../../actions';
 import { KEYS } from '../../constants/workstation';
 import { play, pause, stop } from '../../synth/synth';
 
-const Controls = ({ globalSettings, setGlobalSettings, tracks }) => {
+const Controls = ({ globalSettings, tracks, setGlobalBPM, setGlobalTimesig, setGlobalKey }) => {
   const hasTracks = tracks.length !== 0;
 
-  const handleBPM = e => setGlobalSettings({ bpm: e.target.value.length === 0 ? 30 : parseInt(e.target.value) });
+  const handleBPM = e => setGlobalBPM(e.target.value.length === 0 ? 30 : parseInt(e.target.value));
 
-  const handleKey = e => setGlobalSettings({ key: e.target.value });
+  const handleKey = e => setGlobalKey(e.target.value);
 
-  const handleTimesig = top => e => setGlobalSettings({
-    timesig: top ? [e.target.value, globalSettings.timesig[1]] : Number.isInteger(Math.log(e.target.value) / Math.log(2)) ? [globalSettings.timesig[0], e.target.value] : [...globalSettings.timesig]
-  });
+  const handleTimesig = top => e => setGlobalTimesig(
+    top ? [e.target.value, globalSettings.timesig[1]] : Number.isInteger(Math.log(e.target.value) / Math.log(2)) ? [globalSettings.timesig[0], e.target.value] : [...globalSettings.timesig]
+  );
 
-  const handleBPMToggle = () => setGlobalSettings({ bpm: globalSettings.bpm > 0 ? -1 : 120 });
+  const handleBPMToggle = () => setGlobalBPM(globalSettings.bpm > 0 ? -1 : 120);
 
-  const handleTimesigToggle = () => setGlobalSettings({ timesig: globalSettings.timesig[0] > 0 ? [-1, -1] : [4, 4] });
+  const handleTimesigToggle = () => setGlobalTimesig(globalSettings.timesig[0] > 0 ? [-1, -1] : [4, 4]);
 
   const handlePlay = e => {
     if (e.target.classList.contains('btn-danger')) {
@@ -33,19 +33,7 @@ const Controls = ({ globalSettings, setGlobalSettings, tracks }) => {
       e.target.classList.add('btn-danger'); // TODO: fix
       e.target.classList.remove('btn-success');
 
-      const output = [];
-
-      tracks.forEach(t => {
-        if (t.settings.channel.length === 0) {
-          output.push(t);
-        } else {
-          // TODO: Do something
-        }
-      });
-
-      (async () => {
-        await play(output, globalSettings);
-      })();
+      (async () => await play())();
     }
   };
 
@@ -114,7 +102,7 @@ const Controls = ({ globalSettings, setGlobalSettings, tracks }) => {
               <div className="col-12 d-flex justify-content-center">
                 <div className="h-full w-full d-flex justify-content-center">
                   <div className="dropdown dropup with-arrow align-self-center">
-                    <button className="btn btn-lg d-flex align-items-center" data-toggle="dropdown" type="button" id="timesig-dropup">
+                    <button className="btn btn-lg d-flex align-items-center transparent" data-toggle="dropdown" type="button" id="timesig-dropup">
                       <i className="fa fa-stopwatch"/>
                       &emsp;Time Signature:&nbsp;
                       <span className="supsub">
@@ -154,7 +142,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setGlobalSettings: payload => dispatch(setGlobalSettings(payload))
+  setGlobalBPM: bpm => dispatch(setGlobalBPM(bpm)),
+  setGlobalTimesig: timesig => dispatch(setGlobalTimesig(timesig)),
+  setGlobalKey: key => dispatch(setGlobalKey(key))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Controls);

@@ -28,7 +28,7 @@ const Settings = ({ column, i, tracks, setSettings, deleteTrack, focusWindow }) 
                 </div>
                 <div className="col-9">
                   <div className="h-full d-flex align-content-start">
-                    <input disabled={ tracks[i].settings.mute } className={ tracks[i].settings.mute ? 'disabled' : '' } type="range" min="0" max="100" defaultValue="100" onMouseUp={ handleVolume } />
+                    <input disabled={ tracks[i].settings.mute } className={ tracks[i].settings.mute ? 'disabled' : '' } type="range" min="0" max="100" defaultValue="50" onMouseUp={ handleVolume } />
                   </div>
                 </div>
               </div>
