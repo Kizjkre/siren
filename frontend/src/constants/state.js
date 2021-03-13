@@ -24,7 +24,7 @@ export const INITIAL_STATE = {
 
 export const INITIAL_SETTINGS = {
   mute: false,
-  volume: 100,
+  volume: 50,
   pan: 0,
   continuous: false,
   channel: []

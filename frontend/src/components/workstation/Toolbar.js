@@ -109,7 +109,7 @@ const Toolbar = ({ uploadFile, setGlobalDark, dark, setGlobalState }) => {
         </li>
       </ul>
       <div className="navbar-content ml-auto">
-        <a href="https://github.com/Kizjkre/siren/issues/new" target="_blank" className="btn btn-danger mr-10">
+        <a href="https://github.com/Kizjkre/siren/issues/new" target="_blank" rel="noreferrer" className="btn btn-danger mr-10">
           <i className="fa fa-bug" />
           &emsp;Report Bug
         </a>

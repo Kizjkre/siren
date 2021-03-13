@@ -72,21 +72,25 @@ export const play = () => {
       const rawVolume = data('Volume');
       const rawPan = data('Pan');
       const pitch = isNumerical(rawPitch) ? rawPitch : numerizeToNumber(rawPitch);
-      const volume = scale(rawVolume, 'logistic', 1, 0, average(rawVolume));
-      const pan = scale(rawPan, 'logistic', 1, -1, average(rawPan));
+      const volume = isNumerical(rawVolume) ?
+        scale(rawVolume, 'logistic', 0.9, 0.1, average(rawVolume)) :
+        scale(numerizeToNumber(rawVolume), 'logistic', 0.9, 0.1, average(numerizeToNumber(rawVolume)));
+      const pan = isNumerical(rawPan) ?
+        scale(rawPan, 'logistic', 1, -1, average(rawPan)) :
+        scale(numerizeToNumber(rawPan), 'logistic', 1, -1, average(numerizeToNumber(rawPan)));
 
       const maxPitch = Math.max(...pitch);
       const minPitch = Math.min(...pitch);
       const num = SCALES[key].length * 2;
       const normalize = x => Math.round(num / (maxPitch - minPitch) * (x - minPitch));
 
-      const length = now + pitch.length * 60 / bpm;
-
+      const masterLength = Math.min(pitch.length || Infinity, volume.length || Infinity, pan.length || Infinity);
+      const length = now + masterLength * 60 / bpm;
       if (volume.length === 0) {
         gain.gain.value = 1 / (state.tracks.length + state.globalSettings.channels.length);
       }
 
-      volume.forEach((datum, i) => gain.gain.linearRampToValueAtTime(datum, now + i / pitch.length * length));
+      volume.forEach((datum, i) => gain.gain.linearRampToValueAtTime(datum, now + i / volume.length * length));
       pan.forEach((datum, i) => panner.pan.linearRampToValueAtTime(datum, now + i / pan.length * length));
 
       if (pitch.length === 0) {

@@ -16,14 +16,14 @@ export const chunkify = (data, size) => {
 
 export const isNumerical = data => data.every(d => typeof d === 'number');
 
-export const scale = (data, type, max = 1, min = -1, center = 0) => {
+export const scale = (data, type, max, min, center) => {
   if (!isNumerical(data)) {
     return null;
   }
   return data.map(d => {
     switch (type) {
       case 'logistic':
-        return (max - min) / (1 + Math.E ** (-1 * (d - center))) - 1 + (max + min) / 2;
+        return (max - min) / (1 + Math.E ** (-1 * (d - center))) + min;
       case 'tanh':
         return (max - min) * Math.tanh(d - center) + (max + min) / 2;
       case 'arctan':

@@ -29,7 +29,7 @@ export default class SimpleSynth {
       this._osc.push(osc);
     }
 
-    this._gain.gain.value = options.gain / options.num;
+    this._gain.gain.value = options.gain / options.num / 2;
     this._panner.pan.value = options.pan;
 
     this._continuous = options.continuous;
