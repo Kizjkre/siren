@@ -28,8 +28,8 @@ export const play = () => {
       if (t.settings.channel.length === 0) {
         const data = isNumerical(t.data) ? t.data : numerizeToArray(t.data);
 
-        const synth = new SimpleSynth(context, {
-          gain: t.settings.mute ? 0 : t.settings.volume / 100 / (state.tracks.length + state.globalSettings.channels.length),
+        const synth = new SimpleSynth({
+          gain: t.settings.mute ? 0 : t.settings.volume / 100,
           pan: t.settings.pan / 50,
           continuous: t.settings.continuous,
           num: data[0].length || 1

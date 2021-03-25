@@ -6,6 +6,8 @@ export default class SimpleContext {
   static _timesig = [4, 4];
   static _context = null;
   static _current = [0, 0];
+  static _synths = 0;
+  static _master = null;
 
   static toSeconds(measure, beat) {
     return (measure * SimpleContext._timesig[0] + beat) * 60 / SimpleContext._bpm;
@@ -21,11 +23,13 @@ export default class SimpleContext {
   static createContext() {
     SimpleContext._context = new AudioContext();
     SimpleContext._context?.suspend();
+    SimpleContext._master = new GainNode(SimpleContext._context);
   }
 
   static removeContext() {
     SimpleContext._context?.close();
     SimpleContext._context = null;
+    SimpleContext._master = null;
   }
 
   static start() {
@@ -52,6 +56,17 @@ export default class SimpleContext {
     return SimpleContext._timesig;
   }
 
+  static getContext() {
+    if (!SimpleContext._context) {
+      SimpleContext.createContext();
+    }
+    return SimpleContext._context;
+  }
+
+  static getMasterGain() {
+    return SimpleContext._master;
+  }
+
   static setBpm(bpm) {
     SimpleContext._bpm = bpm;
   }
@@ -64,7 +79,9 @@ export default class SimpleContext {
     SimpleContext._timesig = timesig;
   }
 
-  static currentTime() {
-    return SimpleContext._context?.currentTime;
+  static addSynth() {
+    if (SimpleContext._master) {
+      SimpleContext._master.gain.value = 1 / ++SimpleContext._synths;
+    }
   }
 }
