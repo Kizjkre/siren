@@ -9,11 +9,12 @@ const s = (h, w) => s => {
     inconsolata = s.loadFont('https://fonts.gstatic.com/s/inconsolata/v21/QldgNThLqRwH-OJ1UHjlKENVzkWGVkL3GZQmAwLYxYWI2qfdm7Lpp4U8WR32kXWdycuJDA.woff');
     s.textFont(inconsolata, 36);
     nodes.oscillator(100, 100);
+    nodes.oscillator(200, 200);
     nodes.panner(800, 400);
+    s.noLoop();
   };
 
   s.draw = () => {
-    s.noLoop();
     s.clear();
     nodes.show();
   };

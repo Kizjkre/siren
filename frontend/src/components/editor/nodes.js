@@ -5,21 +5,37 @@ export default class Nodes {
     this._s = s;
     this._nodes = [];
     this._selected = -1;
+    this._dragging = false;
+    this._groups = [];
 
     s.mouseDragged = () => {
-      s.redraw();
-      s.loop();
+      if (!this._dragging) {
+        s.redraw();
+        s.loop();
+        this._dragging = true;
+      }
       this.drag();
+      this.connect();
     };
 
     s.mouseReleased = () => {
-      this.connect();
       this._selected = -1;
+      this._dragging = false;
+      s.noLoop();
       return false;
     };
   }
 
   show() {
+    this._groups.forEach(group =>
+      [...group].slice(0, group.size - 1).forEach((n1, i) =>
+        [...group].slice(i + 1).forEach(n2 => {
+          this._s.stroke(255);
+          this._s.strokeWeight(10000 / (10 * this._s.dist(this._nodes[n1].x, this._nodes[n1].y, this._nodes[n2].x, this._nodes[n2].y)));
+          this._s.line(this._nodes[n1].x, this._nodes[n1].y, this._nodes[n2].x, this._nodes[n2].y);
+        })
+      )
+    );
     this._nodes.forEach(node => this._node(node.x, node.y, node.name));
   }
 
@@ -32,6 +48,7 @@ export default class Nodes {
   }
 
   _node(x, y, name) {
+    this._s.strokeWeight(0);
     this._s.fill(255);
     this._s.circle(x, y, size);
     this._s.fill(0);
@@ -54,7 +71,7 @@ export default class Nodes {
   }
 
   connect() {
-    let min = [-1, 1000];
+    let min = [-1, 500];
     this._nodes.forEach((node, i) => {
       if (this._selected === i) return;
       const d = this._s.dist(node.x, node.y, this._s.mouseX, this._s.mouseY);
@@ -64,9 +81,23 @@ export default class Nodes {
       }
     });
     if (min[0] >= 0) {
-      this._s.strokeWeight(5);
-      this._s.stroke(255);
-      this._s.line(this._nodes[min[0]].x, this._nodes[min[0]].y, this._nodes[this._selected].x, this._nodes[this._selected].y);
+      let exists = false;
+      // TODO: Fix
+      this._groups.forEach(group => {
+        if (group.has(min[0])) {
+          if (group.has(this._selected)) return;
+          group.delete(min[0]);
+        } else if (group.has(this._selected)) {
+          group.add(min[0]);
+          exists = true;
+        }
+      });
+      if (!exists) {
+        this._groups.push(new Set([min[0], this._selected]));
+      }
+    } else {
+      this._groups.forEach(group => group.delete(this._selected));
     }
+    console.log(this._groups);
   }
 }
