@@ -105,6 +105,11 @@ const Toolbar = ({ uploadFile, setGlobalDark, dark, setGlobalState }) => {
               <i className={ `fa fa-${ dark ? 'sun' : 'moon' }` } />
               &emsp;Toggle { dark ? 'light' : 'dark' } mode
             </span>
+            <div className="dropdown-divider" />
+            <Link to="/editor" className="dropdown-item anchor">
+              <i className="fa fa-code" />
+              &emsp;Code Editor
+            </Link>
           </div>
         </li>
       </ul>
