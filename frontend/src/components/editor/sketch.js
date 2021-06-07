@@ -1,22 +1,26 @@
-import Nodes from './nodes';
+import { NodeDisplay, Oscillator, Panner, Gain } from './node';
 
 const s = (h, w) => s => {
+  let font;
+  const display = new NodeDisplay(s);
 
-  let inconsolata;
-  const nodes = new Nodes(s);
+  s.preload = () => {
+    font = s.loadFont('https://fonts.gstatic.com/s/jetbrainsmono/v6/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTOlOTk6OThhvA.woff');
+  };
+
   s.setup = () => {
     s.createCanvas(w, h);
-    inconsolata = s.loadFont('https://fonts.gstatic.com/s/inconsolata/v21/QldgNThLqRwH-OJ1UHjlKENVzkWGVkL3GZQmAwLYxYWI2qfdm7Lpp4U8WR32kXWdycuJDA.woff');
-    s.textFont(inconsolata, 36);
-    nodes.oscillator(100, 100);
-    nodes.oscillator(200, 200);
-    nodes.panner(800, 400);
+    s.textFont(font, 36);
+    display.nodes.push(new Oscillator(100, 100));
+    display.nodes.push(new Panner(200, 200));
+    display.nodes.push(new Gain(400, 400));
     s.noLoop();
   };
 
   s.draw = () => {
     s.clear();
-    nodes.show();
+    display.show();
+    // nodes.show();
   };
 };
 
