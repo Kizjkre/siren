@@ -158,7 +158,6 @@ export class NodeDisplay {
 
     s.mouseDragged = () => {
       if (!this._dragging) {
-        s.redraw();
         s.loop();
         this._dragging = true;
       }
@@ -183,22 +182,26 @@ export class NodeDisplay {
         this._s.line(group[0].x, group[0].y, node.x, node.y);
       });
     });
-    this._nodes.forEach(node => this._node(node.x, node.y, node.name));
+    this._nodes.forEach(node => this._node(node));
   }
 
-  _node(x, y, name) {
+  _node(node) {
     this._s.strokeWeight(0);
     this._s.fill(255);
-    this._s.circle(x, y, size);
+    if (node.type === NodeType.SOURCE) {
+      this._s.circle(node.x, node.y, size);
+    } else {
+      this._s.square(node.x - size / 2, node.y - size / 2, size);
+    }
     this._s.fill(0);
     this._s.textAlign(this._s.CENTER, this._s.CENTER);
-    this._s.text(name, x, y);
+    this._s.text(node.name, node.x, node.y);
   }
 
   _drag() {
     if (!this._selected) {
       this._nodes.forEach(node => {
-        if (this._s.dist(this._s.mouseX, this._s.mouseY, node.x, node.y) < size) {
+        if (this._s.dist(this._s.mouseX, this._s.mouseY, node.x, node.y) < size - 10) {
           this._selected = this._nodes.get(node.id);
         }
       });
