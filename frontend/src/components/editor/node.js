@@ -119,6 +119,7 @@ class NodeList extends Array {
   }
 }
 
+// TODO: fix
 class NodeGroup extends Array {
   constructor(...args) {
     super(...args.filter(node => node.type === NodeType.SOURCE).map(node => [node]));
@@ -144,7 +145,7 @@ class NodeGroup extends Array {
   remove(node) {
     const i = super.findIndex(n => n.includes(node));
     if (i < 0) return;
-    this[i].splice(this[i].findIndex(n => n === node), 1);
+    this[i].splice(this[i].length === 2 ? 1 : this[i].findIndex(n => n === node), 1);
   }
 }
 
@@ -208,20 +209,23 @@ export class NodeDisplay {
   }
 
   _connect() {
-    let min = [-1, 500];
+    if (!this._selected || this._selected?.type === NodeType.SOURCE) {
+      return;
+    }
+
+    let min = [undefined, 500];
     this._nodes.forEach(node => {
       if (this._selected === node) return;
       const d = this._s.dist(node.x, node.y, this._s.mouseX, this._s.mouseY);
-      if (min[1] > d) {
-        min[0] = node.id;
+      if (min[1] > d && node.type === NodeType.SOURCE) {
+        min[0] = node;
         min[1] = d;
       }
     });
-    const node = this._nodes.get(min[0]);
-    if (!node) {
-      this._nodes.groups.remove(this._selected);
+    if (min[0]?.type === NodeType.SOURCE) {
+      this._nodes.groups.add(min[0].id, this._selected);
     } else {
-      this._nodes.groups.add(min[0], this._selected);
+      this._nodes.groups.remove(this._selected);
     }
   }
 

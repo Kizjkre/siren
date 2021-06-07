@@ -14,13 +14,14 @@ const s = (h, w) => s => {
     display.nodes.push(new Oscillator(100, 100));
     display.nodes.push(new Panner(200, 200));
     display.nodes.push(new Gain(400, 400));
+    display.nodes.push(new Oscillator(100, 100));
     s.noLoop();
   };
 
   s.draw = () => {
     s.clear();
     display.show();
-    // nodes.show();
+    console.table(Array.from(display.nodes.groups));
   };
 };
 
