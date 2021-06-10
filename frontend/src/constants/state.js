@@ -8,6 +8,7 @@ export const FOCUS_WINDOW = 'FOCUS_WINDOW';
 export const DELETE_TRACK = 'DELETE_TRACK';
 export const SET_DATA = 'SET_DATA';
 export const SET_STATE = 'SET_STATE';
+export const SET_EDITOR = 'SET_EDITOR';
 
 export const INITIAL_STATE = {
   files: [],
@@ -19,7 +20,11 @@ export const INITIAL_STATE = {
     dark: ['dark-mode', 'not-set'].includes(halfmoon.getPreferredMode()),
     channels: []
   },
-  windows: []
+  windows: [],
+  editor: {
+    synth: [],
+    open: null
+  }
 };
 
 export const INITIAL_SETTINGS = {

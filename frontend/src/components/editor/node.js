@@ -9,7 +9,7 @@ const SourceType = Object.freeze({
   GAIN: 3
 });
 
-const size = 150;
+export const size = 150;
 
 class Node {
   static _id = 0;

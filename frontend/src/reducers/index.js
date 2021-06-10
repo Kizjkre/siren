@@ -2,7 +2,7 @@ import {
   UPLOAD_FILE,
   ADD_TRACK,
   SET_SETTINGS,
-  SET_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, INITIAL_STATE, INITIAL_SETTINGS, SET_DATA, SET_STATE
+  SET_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, INITIAL_STATE, INITIAL_SETTINGS, SET_DATA, SET_STATE, SET_EDITOR
 } from '../constants/state';
 import globalSettingsReducer from './globalSettings';
 
@@ -56,6 +56,10 @@ const rootReducer = (state = INITIAL_STATE, action) => {
       });
     case SET_STATE:
       return Object.assign({}, action.payload);
+    case SET_EDITOR:
+      return Object.assign({}, state, {
+        editor: { ...state.editor, ...action.payload }
+      });
     default:
       return state;
   }

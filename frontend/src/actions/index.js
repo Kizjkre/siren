@@ -2,7 +2,7 @@ import {
   UPLOAD_FILE,
   ADD_TRACK,
   SET_SETTINGS,
-  SET_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, SET_DATA, SET_STATE
+  SET_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, SET_DATA, SET_STATE, SET_EDITOR
 } from '../constants/state';
 import * as d3 from 'd3';
 import { formatCSV, typeify } from '../helper/processing';
@@ -69,4 +69,14 @@ export const setData = (id, data) => ({
 export const setState = state => ({
   type: SET_STATE,
   payload: state
+});
+
+export const setSynth = synth => ({
+  type: SET_EDITOR,
+  payload: { synth }
+});
+
+export const setEditorOpen = open => ({
+  type: SET_EDITOR,
+  payload: { open }
 });

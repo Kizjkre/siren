@@ -1,10 +1,11 @@
 import p5 from 'p5';
 import Sketch from './editor/sketch';
+import { connect } from 'react-redux'
 import { createRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Gain, Oscillator, Panner } from './editor/node';
 
-const Editor = () => {
+const Editor = ({ synth, open }) => {
   const editor = createRef();
   const sketch = new Sketch();
 
@@ -49,4 +50,9 @@ const Editor = () => {
   );
 };
 
-export default Editor;
+const mapStateToProps = state => ({
+  synth: state.editor?.synth,
+  open: state.editor?.open
+});
+
+export default connect(mapStateToProps)(Editor);
