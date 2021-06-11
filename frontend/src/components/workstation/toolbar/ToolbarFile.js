@@ -35,36 +35,32 @@ const ToolbarFile = ({ selected, setSelected, fowardRef, uploadFile, setGlobalSt
     <div className={ `navbar-item has-dropdown ${ selected ? 'is-active' : '' }` } ref={ ref }>
       <span className="navbar-link is-arrowless" onClick={ () => setSelected(!selected) }>File</span>
       <div className="navbar-dropdown">
-        <a href="#!" className="navbar-item">
-          <label htmlFor="open" className="navbar-label">
-            <input type="file" id="open" className="is-hidden" accept="text/csv" onChange={ handleOpen } />
-            <div className="icon-text">
-              <div className="icon">
-                <i className="fa fa-folder-open"/>
-              </div>
-              <span>Open</span>
+        <label htmlFor="open" className="navbar-item">
+          <input type="file" id="open" className="is-hidden" accept="text/csv" onChange={ handleOpen } />
+          <div className="icon-text">
+            <div className="icon">
+              <i className="fa fa-folder-open"/>
             </div>
-          </label>
-        </a>
-        <a href="#!" className="navbar-item">
-          <label htmlFor="import" className="navbar-label">
-            <input type="file" id="import" className="is-hidden" accept="application/json" onChange={ handleImport } />
-            <div className="icon-text">
-              <div className="icon">
-                <i className="fa fa-file-import"/>
-              </div>
-              <span>Import</span>
+            <span>Open</span>
+          </div>
+        </label>
+        <label htmlFor="import" className="navbar-item">
+          <input type="file" id="import" className="is-hidden" accept="application/json" onChange={ handleImport } />
+          <div className="icon-text">
+            <div className="icon">
+              <i className="fa fa-file-import"/>
             </div>
-          </label>
-        </a>
-        <a href="#!" className="navbar-item" onClick={ handleExport }>
+            <span>Import</span>
+          </div>
+        </label>
+        <div className="navbar-item" onClick={ handleExport }>
           <div className="icon-text">
             <div className="icon">
               <i className="fa fa-file-export"/>
             </div>
             <span>Export</span>
           </div>
-        </a>
+        </div>
       </div>
     </div>
   );

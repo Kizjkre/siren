@@ -5,8 +5,10 @@
   width: max-content;
 }
 
-.navbar-label {
+.navbar-item {
   cursor: pointer;
-  height: 100%;
-  width: 100%;
+  &:hover {
+    background: $navbar-dropdown-item-hover-background-color;
+    color: $navbar-dropdown-item-hover-color;
+  }
 }
