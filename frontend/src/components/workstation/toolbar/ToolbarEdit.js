@@ -1,8 +1,6 @@
-import { forwardRef } from 'react';
-
-const ToolbarEdit = ({ selected, setSelected }, ref) => {
+const ToolbarEdit = ({ selected, setSelected }) => {
   return (
-    <div className={ `navbar-item has-dropdown ${ selected ? 'is-active' : '' }` } ref={ ref }>
+    <div className={ `navbar-item has-dropdown ${ selected ? 'is-active' : '' }` }>
       <span className="navbar-link is-arrowless" onClick={ () => setSelected(!selected) }>Edit</span>
       <div className="navbar-dropdown">
         <div className="navbar-item">
@@ -26,4 +24,4 @@ const ToolbarEdit = ({ selected, setSelected }, ref) => {
   );
 };
 
-export default forwardRef(ToolbarEdit);
+export default ToolbarEdit;

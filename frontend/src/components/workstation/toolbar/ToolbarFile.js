@@ -1,9 +1,8 @@
 import { setState, uploadFile } from '../../../actions';
 import { connect } from 'react-redux';
 import store from '../../../store';
-import { forwardRef } from 'react';
 
-const ToolbarFile = ({ selected, setSelected, fowardRef, uploadFile, setGlobalState }, ref) => {
+const ToolbarFile = ({ selected, setSelected, uploadFile, setGlobalState }) => {
   const handleOpen = async e => {
     if (e.target.files.length) {
       const url = URL.createObjectURL(e.target.files[0]);
@@ -32,7 +31,7 @@ const ToolbarFile = ({ selected, setSelected, fowardRef, uploadFile, setGlobalSt
   };
 
   return (
-    <div className={ `navbar-item has-dropdown ${ selected ? 'is-active' : '' }` } ref={ ref }>
+    <div className={ `navbar-item has-dropdown ${ selected ? 'is-active' : '' }` }>
       <span className="navbar-link is-arrowless" onClick={ () => setSelected(!selected) }>File</span>
       <div className="navbar-dropdown">
         <label htmlFor="open" className="navbar-item">
@@ -71,4 +70,4 @@ const mapDispatchToProps = dispatch => ({
   setGlobalState: state => dispatch(setState(state))
 });
 
-export default connect(null, mapDispatchToProps, null, { forwardRef: true })(forwardRef(ToolbarFile));
+export default connect(null, mapDispatchToProps)(ToolbarFile);

@@ -1,9 +1,8 @@
-import { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 
-const ToolbarView = ({ selected, setSelected }, ref) => {
+const ToolbarView = ({ selected, setSelected }) => {
   return (
-    <div className={ `navbar-item has-dropdown ${ selected ? 'is-active' : '' }` } ref={ ref }>
+    <div className={ `navbar-item has-dropdown ${ selected ? 'is-active' : '' }` }>
       <span className="navbar-link is-arrowless" onClick={ () => setSelected(!selected) }>View</span>
       <div className="navbar-dropdown">
         <div className="navbar-item">
@@ -35,4 +34,4 @@ const ToolbarView = ({ selected, setSelected }, ref) => {
   );
 };
 
-export default forwardRef(ToolbarView);
+export default ToolbarView;
