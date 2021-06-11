@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+// TODO: Doesn't work on mobile
 const Navbar = ({ children }) => {
   const [open, setOpen] = useState(false);
 
@@ -8,11 +9,11 @@ const Navbar = ({ children }) => {
       <div className="container">
         <div className="navbar-brand">
           <span className="navbar-item">SIREN</span>
-          <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" onClick={ () => setOpen(!open) }>
+          <span role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" onClick={ () => setOpen(!open) }>
             <span aria-hidden="true" />
             <span aria-hidden="true" />
             <span aria-hidden="true" />
-          </a>
+          </span>
         </div>
         <div className={ `navbar-menu ${ open ? 'is-active' : '' }` }>
           <div className="navbar-start">

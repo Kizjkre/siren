@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { createRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Gain, Oscillator, Panner } from './editor/node';
+import Navbar from './Navbar';
 
 const Editor = ({ synth, open }) => {
   const editor = createRef();
@@ -29,16 +30,11 @@ const Editor = ({ synth, open }) => {
   return (
     <>
       <div className="page-wrapper with-navbar">
-        <nav className="navbar">
-        <span className="navbar-brand anchor">
-          SIREN
-        </span>
-          <ul className="navbar-nav d-none d-md-flex">
-            <li className="nav-item">
-              <Link to="/workstation" className="nav-link">Workstation</Link>
-            </li>
-          </ul>
-        </nav>
+        <Navbar>
+          <Link className="navbar-item" to="/workstation">
+            Workstation
+          </Link>
+        </Navbar>
         <div className="content-wrapper">
           <button className="btn btn-primary" type="button" onClick={ () => addOsc() }>Add Oscillator</button>
           <button className="btn btn-primary" type="button" onClick={ () => addPan() }>Add Panner</button>

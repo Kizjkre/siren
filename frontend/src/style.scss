@@ -1,2 +1,12 @@
 @charset "utf-8";
 @import "../node_modules/bulma/bulma";
+
+.navbar-dropdown {
+  width: max-content;
+}
+
+.navbar-label {
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+}

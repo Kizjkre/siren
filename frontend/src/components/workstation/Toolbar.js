@@ -1,15 +1,21 @@
-import { createRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import halfmoon from 'halfmoon';
+import store from '../../store/';
+import Navbar from '../Navbar';
+import ToolbarFile from './toolbar/ToolbarFile';
+import ToolbarEdit from './toolbar/ToolbarEdit';
+import ToolbarView from './toolbar/ToolbarView';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setGlobalDark, setState, uploadFile } from '../../actions';
-import store from '../../store/';
+import useClickOutside from './toolbar/useClickOutside';
 
 const Toolbar = ({ uploadFile, setGlobalDark, dark, setGlobalState }) => {
-  const file = createRef();
-  const edit = createRef();
-  const view = createRef();
+  const file = useRef();
+  const edit = useRef();
+  const view = useRef();
   const [state, setState] = useState({ sidebar: true });
+  const [selected, setSelected] = useState({ file: false, edit: false, view: false });
 
   const handleUpload = async e => {
     if (e.target.files.length) {
@@ -36,6 +42,20 @@ const Toolbar = ({ uploadFile, setGlobalDark, dark, setGlobalState }) => {
     a.setAttribute('download', 'omsonification.json');
     a.click();
   };
+
+  useClickOutside(e => {
+    if (!file.current.contains(e.target) && !edit.current.contains(e.target) && !view.current.contains(e.target)) {
+      setSelected({ file: false, edit: false, view: false });
+    }
+  });
+
+  return (
+    <Navbar>
+      <ToolbarFile selected={ selected.file } setSelected={ file => setSelected({ file, edit: false, view: false }) } ref={ file } />
+      <ToolbarEdit selected={ selected.edit } setSelected={ edit => setSelected({ file: false, edit, view: false }) } ref={ edit } />
+      <ToolbarView selected={ selected.view } setSelected={ view => setSelected({ file: false, edit: false, view }) } ref={ view } />
+    </Navbar>
+  );
 
   return (
     <nav className="navbar">
