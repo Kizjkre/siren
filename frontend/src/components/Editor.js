@@ -29,19 +29,27 @@ const Editor = ({ synth, open }) => {
 
   return (
     <>
-      <div className="page-wrapper with-navbar">
-        <Navbar>
-          <Link className="navbar-item" to="/workstation">
-            Workstation
-          </Link>
-        </Navbar>
-        <div className="content-wrapper">
-          <button className="btn btn-primary" type="button" onClick={ () => addOsc() }>Add Oscillator</button>
-          <button className="btn btn-primary" type="button" onClick={ () => addPan() }>Add Panner</button>
-          <button className="btn btn-primary" type="button" onClick={ () => addGain() }>Add Gain</button>
+      <Navbar>
+        <Link className="navbar-item" to="/workstation">
+          Workstation
+        </Link>
+      </Navbar>
+      <section className="section">
+        <div className="container">
+          <div className="columns">
+            <div className="column">
+              <button className="button is-primary" type="button" onClick={ () => addOsc() }>Add Oscillator</button>
+            </div>
+            <div className="column">
+              <button className="button is-primary" type="button" onClick={ () => addPan() }>Add Panner</button>
+            </div>
+            <div className="column">
+              <button className="button is-primary" type="button" onClick={ () => addGain() }>Add Gain</button>
+            </div>
+          </div>
           <div id="editor" ref={ editor } />
         </div>
-      </div>
+      </section>
     </>
   );
 };

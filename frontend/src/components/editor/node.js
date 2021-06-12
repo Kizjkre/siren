@@ -176,7 +176,7 @@ export class NodeDisplay {
   show() {
     this._nodes.groups.forEach(group => {
       if (group.length === 1) return;
-      this._s.stroke(255);
+      this._s.stroke(0);
       group.forEach(node => {
         this._s.strokeWeight(10000 / (10 * this._s.dist(group[0].x, group[0].y, node.x, node.y)));
         this._s.line(group[0].x, group[0].y, node.x, node.y);
@@ -187,13 +187,13 @@ export class NodeDisplay {
 
   _node(node) {
     this._s.strokeWeight(0);
-    this._s.fill(255);
+    this._s.fill(0);
     if (node.type === NodeType.SOURCE) {
       this._s.circle(node.x, node.y, size);
     } else {
       this._s.square(node.x - size / 2, node.y - size / 2, size);
     }
-    this._s.fill(0);
+    this._s.fill(255);
     this._s.textAlign(this._s.CENTER, this._s.CENTER);
     this._s.text(node.name, node.x, node.y);
   }

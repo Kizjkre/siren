@@ -1,9 +1,15 @@
 @charset "utf-8";
-@import "../node_modules/bulma/bulma";
+@import "node_modules/bulma/sass/utilities/initial-variables";
 
 .navbar-dropdown {
   width: max-content;
 }
+
+#editor {
+  height: 100vh;
+}
+
+@import "node_modules/bulma/bulma";
 
 .navbar-item {
   cursor: pointer;
