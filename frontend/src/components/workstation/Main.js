@@ -13,23 +13,32 @@ const Main = ({ files, tracks }) => {
   });
 
   return (
-    <div className="content-wrapper">
-      <div className={ `container-fluid ${ tracks.length ? '' : 'h-full' }` }>
+    <section className="hero is-fullheight-with-navbar">
+      <div className="hero-body is-align-content-center is-justify-content-center">
         {
           t.length ?
             t.map(({ file, column, id }, i) =>
               <Track key={ `${ column }-row-${ i }` } i={ i } id={ id } column={ column } name={ file.name } />
             ) : (
-              <div className="d-flex justify-content-center align-items-center h-full">
-                <div className="text-center">
-                  <i className="fa fa-music icon-lg" />
-                  <p className="font-size-20">Nothing to see here..., open a <kbd>.csv</kbd> file to get started!</p>
+              <div className="content">
+                <div className="is-flex is-justify-content-center is-align-content-center is-flex-direction-column">
+                  <span className="icon is-large is-flex is-align-self-center">
+                    <i className="fa fa-music placeholder" />
+                  </span>
+                  <div className="is-flex is-align-self-center">
+                    <p className="subtitle is-block">
+                      &emsp;<br />
+                      Nothing to see here..., open a <kbd>.csv</kbd> file to get started!
+                      <br />&emsp;
+                      <br />&emsp;
+                    </p>
+                  </div>
                 </div>
               </div>
             )
         }
       </div>
-    </div>
+    </section>
   );
 };
 

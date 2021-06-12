@@ -1,8 +1,18 @@
 @charset "utf-8";
 @import "node_modules/bulma/sass/utilities/initial-variables";
 
+@media screen and (min-width: $desktop) {
+  html {
+    overflow: hidden !important;
+  }
+}
+
 .navbar-dropdown {
   width: max-content;
+}
+
+.placeholder {
+  font-size: $size-1;
 }
 
 #editor {

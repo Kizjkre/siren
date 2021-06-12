@@ -5,8 +5,7 @@ const Navbar = ({ children }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="navbar" role="navigation" aria-label="main navigation">
-      <div className="container">
+    <nav className="navbar is-fixed-top" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
           <span className="navbar-item">SIREN</span>
           <span role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" onClick={ () => setOpen(!open) }>
@@ -20,7 +19,6 @@ const Navbar = ({ children }) => {
             { children }
           </div>
         </div>
-      </div>
     </nav>
   );
 };

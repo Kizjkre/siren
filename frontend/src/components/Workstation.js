@@ -39,15 +39,22 @@ const Workstation = ({ files, tracks, setGlobalDark, setGlobalState }) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="page-wrapper with-navbar with-sidebar with-navbar-fixed-bottom">
-      <div className="sticky-alerts" />
+    <>
       { files.map(({ name }) => <AddTrack key={ `modal-${ name }` } anchor={ `modal-${ name }` } track={ name } />) }
       { tracks.map(({ file, name }, i) => <Sonification key={ `sonification-${ name }-${ i }` } anchor={ `sonification-${ name.replace(/\s/g, '-') }-${ i }` } trackno={ i } />) }
       <Toolbar />
-      <FileBrowser />
-      <Main />
+      <div className="columns">
+        <div className="column is-2">
+          <section className="section">
+            <FileBrowser />
+          </section>
+        </div>
+        <div className="column">
+          <Main />
+        </div>
+      </div>
       <Controls />
-    </div>
+    </>
   );
 };
 
