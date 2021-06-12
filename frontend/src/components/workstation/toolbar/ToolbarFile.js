@@ -52,14 +52,14 @@ const ToolbarFile = ({ selected, setSelected, uploadFile, setGlobalState }) => {
             <span>Import</span>
           </div>
         </label>
-        <div className="navbar-item" onClick={ handleExport }>
+        <a className="navbar-item" onClick={ handleExport }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
           <div className="icon-text">
             <div className="icon">
               <i className="fa fa-file-export"/>
             </div>
             <span>Export</span>
           </div>
-        </div>
+        </a>
       </div>
     </div>
   );
