@@ -1,41 +1,38 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { focusWindow } from '../../actions';
 
-const FileBrowser = ({ files, focusWindow }) => {
-  const [state, setState] = useState({ content: null });
-
-  const handleFocus = name => () => focusWindow(name);
+const FileBrowser = ({ files }) => {
+  const [content, setContent] = useState();
 
   useEffect(() => {
-    if (files.length) {
-      setState({
-        ...state,
-        content: (
-          files.map(file => (
-            <span key={ `anchor-${ file.name }` } data-toggle="modal" data-target={ `modal-${ file.name }` } onClick={ handleFocus(`#modal-${ file.name }`) } className="sidebar-link sidebar-link-with-icon anchor">
-              <span className="sidebar-icon">
-                <i className="fa fa-file-csv" />
-              </span>
-              { file.name }
+    setContent(files.map(file => (
+      <li key={ file.name }>
+        <a> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
+          <span className="icon-text">
+            <span className="icon">
+              <i className="fa fa-file-csv" />
             </span>
-          ))
-        )
-      })
-    }
+            <span>{ file.name }</span>
+          </span>
+        </a>
+      </li>
+    )))
   }, [files]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="sidebar">
-      <div className="sidebar-menu">
-        <h5 className="sidebar-title">
-          <i className="fa fa-folder"/>
-          &emsp;Files
-        </h5>
-        <hr className="sidebar-divider"/>
-        { state.content }
-      </div>
-    </div>
+    <aside className="menu">
+      <p className="menu-label">
+        <span className="icon-text">
+          <span className="icon">
+            <i className="fa fa-folder" />
+          </span>
+          <span>Files</span>
+        </span>
+      </p>
+      <ul className="menu-list">
+        { content }
+      </ul>
+    </aside>
   );
 };
 
@@ -43,8 +40,4 @@ const mapStateToProps = state => ({
   files: state.files
 });
 
-const mapDispatchToProps = dispatch => ({
-  focusWindow: payload => dispatch(focusWindow(payload))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(FileBrowser);
+export default connect(mapStateToProps)(FileBrowser);
