@@ -51,6 +51,11 @@ export const setGlobalChannels = channels => ({
   payload: { channels }
 });
 
+export const setGlobalFileBrowser = fileBrowser => ({
+  type: SET_GLOBAL_SETTINGS,
+  payload: { fileBrowser }
+});
+
 export const focusWindow = window => ({
   type: FOCUS_WINDOW,
   payload: window

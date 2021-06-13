@@ -12,34 +12,30 @@ const Main = ({ files, tracks }) => {
     }
   });
 
-  return (
-    <section className="hero is-fullheight-with-navbar">
-      <div className="hero-body is-align-content-center is-justify-content-center">
-        {
-          t.length ?
-            t.map(({ file, column, id }, i) =>
-              <Track key={ `${ column }-row-${ i }` } i={ i } id={ id } column={ column } name={ file.name } />
-            ) : (
-              <div className="content">
-                <div className="is-flex is-justify-content-center is-align-content-center is-flex-direction-column">
-                  <span className="icon is-large is-flex is-align-self-center">
-                    <i className="fa fa-music placeholder" />
-                  </span>
-                  <div className="is-flex is-align-self-center">
-                    <p className="subtitle is-block">
-                      &emsp;<br />
-                      Nothing to see here..., open a <kbd>.csv</kbd> file to get started!
-                      <br />&emsp;
-                      <br />&emsp;
-                    </p>
-                  </div>
-                </div>
+  return t.length ?
+    t.map(({ file, column, id }, i) =>
+      <Track key={ `${ column }-row-${ i }` } i={ i } id={ id } column={ column } name={ file.name } />
+    ) : (
+      <section className="hero is-fullheight-with-navbar">
+        <div className="hero-body is-align-content-center is-justify-content-center">
+          <div className="content">
+            <div className="is-flex is-justify-content-center is-align-content-center is-flex-direction-column">
+              <span className="icon is-large is-flex is-align-self-center">
+                <i className="fa fa-music placeholder" />
+              </span>
+              <div className="is-flex is-align-self-center">
+                <p className="subtitle is-block">
+                  &emsp;<br />
+                  Nothing to see here..., open a <kbd>.csv</kbd> file to get started!
+                  <br />&emsp;
+                  <br />&emsp;
+                </p>
               </div>
-            )
-        }
-      </div>
-    </section>
-  );
+            </div>
+          </div>
+        </div>
+      </section>
+    );
 };
 
 const mapStateToProps = state => ({

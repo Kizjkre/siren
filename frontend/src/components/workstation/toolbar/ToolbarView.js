@@ -1,26 +1,33 @@
 import { Link } from 'react-router-dom';
+import { setGlobalFileBrowser } from '../../../actions';
+import { connect } from 'react-redux';
 
-const ToolbarView = ({ selected, setSelected }) => {
+const ToolbarView = ({ selected, setSelected, fileBrowser, setGlobalFileBrowser }) => {
+  const handleFileBrowser = () => {
+    setGlobalFileBrowser(!fileBrowser);
+    setSelected(false);
+  };
+
   return (
     <div className={ `navbar-item has-dropdown ${ selected ? 'is-active' : '' }` }>
       <span className="navbar-link is-arrowless" onClick={ () => setSelected(!selected) }>View</span>
       <div className="navbar-dropdown">
-        <div className="navbar-item">
+        <a className="navbar-item"> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
           <div className="icon-text">
             <span className="icon">
               <i className="fa fa-moon"/>
             </span>
             <span>Toggle Mode</span>
           </div>
-        </div>
-        <div className="navbar-item">
+        </a>
+        <a className="navbar-item" onClick={ handleFileBrowser }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
           <div className="icon-text">
             <span className="icon">
-              <i className="fa fa-toggle-on"/>
+              <i className={ `fa fa-toggle-${ fileBrowser ? 'on' : 'off' }` }/>
             </span>
-            <span>File Browser</span>
+            <span>Toggle File Browser</span>
           </div>
-        </div>
+        </a>
         <Link className="navbar-item" to="/editor">
           <div className="icon-text">
             <span className="icon">
@@ -34,4 +41,12 @@ const ToolbarView = ({ selected, setSelected }) => {
   );
 };
 
-export default ToolbarView;
+const mapStateToProps = state => ({
+  fileBrowser: state.globalSettings.fileBrowser
+});
+
+const mapDispatchToProps = dispatch => ({
+  setGlobalFileBrowser: fileBrowser => dispatch(setGlobalFileBrowser(fileBrowser))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ToolbarView);

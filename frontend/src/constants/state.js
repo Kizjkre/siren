@@ -18,7 +18,8 @@ export const INITIAL_STATE = {
     key: 'C',
     timesig: [4, 4],
     dark: ['dark-mode', 'not-set'].includes(halfmoon.getPreferredMode()),
-    channels: []
+    channels: [],
+    fileBrowser: true
   },
   windows: [],
   editor: {
