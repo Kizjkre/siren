@@ -7,11 +7,11 @@ import Sonification from './workstation/windows/Sonification';
 import Controls from './workstation/Controls';
 import { connect } from 'react-redux';
 import { setGlobalDark, setState } from '../actions';
-import demoData from '../helper/demo';
+// import demoData from '../helper/demo';
 
 let dark;
 
-const Workstation = ({ files, tracks, setGlobalDark, setGlobalState }) => {
+const Workstation = ({ files, tracks, fileBrowser, setGlobalDark, setGlobalState }) => {
   const keyPress = keys => {
     if (keys.length === 2 && keys[0] === 'shift' && keys[1] === 'd') {
       dark = !dark;
@@ -35,7 +35,7 @@ const Workstation = ({ files, tracks, setGlobalDark, setGlobalState }) => {
       }
     });
 
-    setGlobalState(demoData());
+    // setGlobalState(demoData());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -44,7 +44,7 @@ const Workstation = ({ files, tracks, setGlobalDark, setGlobalState }) => {
       { tracks.map(({ file, name }, i) => <Sonification key={ `sonification-${ name }-${ i }` } anchor={ `sonification-${ name.replace(/\s/g, '-') }-${ i }` } trackno={ i } />) }
       <Toolbar />
       <div className="columns">
-        <div className="column is-2">
+        <div className={ `column is-2 ${ fileBrowser ? '' : 'is-hidden' }` }>
           <section className="section">
             <FileBrowser />
           </section>
@@ -62,7 +62,8 @@ const mapStateToProps = state => {
   dark = state.globalSettings.dark;
   return ({
     files: state.files,
-    tracks: state.tracks
+    tracks: state.tracks,
+    fileBrowser: state.globalSettings.fileBrowser
   })
 };
 
