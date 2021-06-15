@@ -38,6 +38,50 @@ const Controls = ({ globalSettings, tracks, setGlobalBPM, setGlobalTimesig, setG
   };
 
   return (
+    <nav className="navbar is-fixed-bottom py-4" role="navigation" aria-label="main navigation">
+      <div className="container">
+        <nav className="level" id="controls">
+          <div className="level-left">
+            <p className="level-item">
+              <span className="icon-text">
+                <span className="icon">
+                  <i className="fa fa-drum" />
+                </span>
+                <span>BPM:&nbsp;<span className="text-monospace">{ globalSettings.bpm < 0 ? 'N/A' : globalSettings.bpm }</span></span>
+              </span>
+            </p>
+            <p className="level-item">
+              <span className="icon-text">
+                <span className="icon">
+                  <i className="fa fa-hashtag" />
+                </span>
+                <span>Key:&nbsp;{ <span dangerouslySetInnerHTML={ { __html: KEYS[globalSettings.key] } } /> }</span>
+              </span>
+            </p>
+          </div>
+          <p className="level-item">
+            <button className="button is-success is-rounded is-large" />
+          </p>
+          <div className="level-right">
+            <span className="icon-text timesig-wrap">
+              <span className="icon">
+                <i className="fa fa-stopwatch" />
+              </span>
+              <span className="timesig">
+                Time Signature:&nbsp;
+                <span>
+                  <sup>{ globalSettings.timesig[0] <= 0 ? 'N/A' : globalSettings.timesig[0] }</sup>
+                  <sub>{ globalSettings.timesig[1] <= 0 ? 'N/A' : globalSettings.timesig[1] }</sub>
+                </span>
+              </span>
+            </span>
+          </div>
+        </nav>
+      </div>
+    </nav>
+  );
+
+  return (
     <nav className="navbar navbar-fixed-bottom controls">
       <div className="navbar-content w-full">
         <div className="row w-full">
@@ -48,7 +92,7 @@ const Controls = ({ globalSettings, tracks, setGlobalBPM, setGlobalTimesig, setG
                   <div className="dropdown dropup with-arrow align-self-center">
                     <button className="btn btn-lg" data-toggle="dropdown" type="button" id="bpm-dropup">
                       <i className="fa fa-drum"/>
-                      &emsp;BPM: <span className="text-monospace">{ globalSettings.bpm < 0 ? 'N/A' : globalSettings.bpm }</span>
+                      &emsp;BPM:&nbsp;<span className="text-monospace">{ globalSettings.bpm < 0 ? 'N/A' : globalSettings.bpm }</span>
                     </button>
                     <div className="dropdown-menu" aria-labelledby="bpm-dropup">
                       <div className="container mt-15">

@@ -15,6 +15,24 @@
   font-size: $size-1;
 }
 
+.timesig-wrap {
+  align-items: center !important;
+}
+
+.timesig {
+  align-items: center;
+  display: flex;
+
+  span {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+#controls {
+  width: 100%;
+}
+
 #editor {
   height: 100vh;
 }
