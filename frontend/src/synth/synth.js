@@ -15,16 +15,16 @@ export const play = () => {
   } else {
     context = new AudioContext();
     SimpleContext.createContext();
-    SimpleContext.setBpm(state.globalSettings.bpm < 0 ? 60 : state.globalSettings.bpm);
-    SimpleContext.setKey(state.globalSettings.key === 'none' ? 'chromatic' : state.globalSettings.key);
-    SimpleContext.setTimesig(state.globalSettings.timesig);
+    SimpleContext.setBpm(state.workstation.settings.bpm < 0 ? 60 : state.workstation.settings.bpm);
+    SimpleContext.setKey(state.workstation.settings.key === 'none' ? 'chromatic' : state.workstation.settings.key);
+    SimpleContext.setTimesig(state.workstation.settings.timesig);
 
-    const bpm = state.globalSettings.bpm < 0 ? 60 : state.globalSettings.bpm;
-    const key = state.globalSettings.key === 'none' ? 'chromatic' : state.globalSettings.key;
+    const bpm = state.workstation.settings.bpm < 0 ? 60 : state.workstation.settings.bpm;
+    const key = state.workstation.settings.key === 'none' ? 'chromatic' : state.workstation.settings.key;
 
     const now = context.currentTime;
 
-    state.tracks.forEach(t => {
+    state.workstation.tracks.forEach(t => {
       if (t.settings.channel.length === 0) {
         const data = isNumerical(t.data) ? t.data : numerizeToArray(t.data);
 

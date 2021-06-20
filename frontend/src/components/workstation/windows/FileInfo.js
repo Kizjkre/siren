@@ -1,4 +1,4 @@
-import Window from './Window';
+import Window from '../../Window';
 
 const FileInfo = ({ anchor, filename }) => {
   return (

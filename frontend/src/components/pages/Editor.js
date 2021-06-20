@@ -1,10 +1,10 @@
 import p5 from 'p5';
-import Sketch from './editor/sketch';
+import Sketch from '../editor/sketch';
 import { connect } from 'react-redux'
 import { createRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Gain, Oscillator, Panner } from './editor/node';
-import Navbar from './Navbar';
+import { Gain, Oscillator, Panner } from '../editor/node';
+import Navbar from '../Navbar';
 
 const Editor = ({ synth, open }) => {
   const editor = createRef();
@@ -30,9 +30,11 @@ const Editor = ({ synth, open }) => {
   return (
     <>
       <Navbar>
-        <Link className="navbar-item" to="/workstation">
-          Workstation
-        </Link>
+        <div className="navbar-start">
+          <Link className="navbar-item" to="/workstation">
+            Workstation
+          </Link>
+        </div>
       </Navbar>
       <section className="section">
         <div className="container">

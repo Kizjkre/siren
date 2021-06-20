@@ -1,66 +1,103 @@
 import { connect } from 'react-redux';
-import { setSettings, deleteTrack, focusWindow } from '../../actions';
+import { editTrack, deleteTrack, focusWindow } from '../../actions';
 
-const Settings = ({ column, i, tracks, setSettings, deleteTrack, focusWindow }) => {
-  const handleMute = () => setSettings(i, { mute: !tracks[i].settings.mute });
-  const handleVolume = e => setSettings(i, { volume: e.target.value });
-  const handlePan = e => setSettings(i, { pan: Math.abs(e.target.value) < 5 ? 0 : parseInt(e.target.value) });
-  const handleDelete = () => deleteTrack(i);
-  const handleClick = () => focusWindow(`#sonification-${ tracks[i].name }-${ i }`);
+const Settings = ({ id, tracks, editTrack, deleteTrack, focusWindow }) => {
+  const i = tracks.findIndex(track => track.id === id);
+
+  const handleMute = () => editTrack(i, { mute: !tracks[i].settings.mute });
+  const handleVolume = e => editTrack(i, { volume: e.target.value });
+  const handlePan = e => editTrack(i, { pan: Math.abs(e.target.value) < 5 ? 0 : parseInt(e.target.value) });
+  const handleDelete = () => deleteTrack(id);
+  const handleClick = () => focusWindow(`sonification-${ tracks[i].name }-${ i }`);
 
   return (
-    <details className="collapse-panel">
-      <summary className="collapse-header">
-        <i className="fa fa-cog"/>
-        &emsp;Settings
+    <details className="message">
+      <summary className="message-header">
+        <span className="icon-text">
+          <span className="icon">
+            <i className="fa fa-cog" />
+          </span>
+          <span>Settings</span>
+        </span>
       </summary>
-      <div className="collapse-content">
+      <div className="message-body">
         {
           tracks[i].settings.channel.length > 0 ? null : (
             <>
-              <h6 className="font-weight-semi-bold">Volume</h6>
-              <div className="row">
-                <div className="col-3">
-                  <div className="custom-switch">
-                    <input type="checkbox" id={ `${ column }-row-${ i }-mute` } checked={ !tracks[i].settings.mute } onChange={ handleMute } />
-                    <label htmlFor={ `${ column }-row-${ i }-mute` }> </label>
+              <div className="box">
+                <h5 className="is-size-5">Volume</h5>
+                <div className="columns">
+                  <div className="column is-3">
+                    <div className="level h-100">
+                      <div className="level-item">
+                        <label className="checkbox">
+                          <input
+                            className="mr-2"
+                            type="checkbox"
+                            checked={ !tracks[i].settings.mute }
+                            onChange={ handleMute }
+                          />
+                          Mute
+                        </label>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="col-9">
-                  <div className="h-full d-flex align-content-start">
-                    <input disabled={ tracks[i].settings.mute } className={ tracks[i].settings.mute ? 'disabled' : '' } type="range" min="0" max="100" defaultValue="50" onMouseUp={ handleVolume } />
+                  <div className="column">
+                    <input
+                      className="slider is-fullwidth"
+                      disabled={ tracks[i].settings.mute }
+                      step="1"
+                      min="0"
+                      max="100"
+                      defaultValue="100"
+                      type="range"
+                      onMouseUp={ handleVolume }
+                    />
                   </div>
                 </div>
               </div>
-              <br />
-              <hr />
-              <h6 className="font-weight-semi-bold">Pan</h6>
-              <div className="h-full d-flex align-content-start">
-                <input type="range" min="-50" max="50" value={ tracks[i].settings.pan } onChange={ handlePan } />
+              <div className="box">
+                <h5 className="is-size-5">Pan</h5>
+                <input
+                  className="slider is-fullwidth"
+                  type="range"
+                  min="-50"
+                  max="50"
+                  value={ tracks[i].settings.pan }
+                  onChange={ handlePan }
+                />
               </div>
-              <br />
-              <hr />
             </>
           )
         }
-        <button onClick={ handleClick } data-toggle="modal" data-target={ `sonification-${ tracks[i].name.replace(/\s/g, '-') }-${ i }` } className="btn btn-block btn-primary">Sonification Settings (Advanced)</button>
-        <br />
-        <hr />
-        <button onClick={ handleDelete } className="btn btn-block btn-danger">
-          <i className="fa fa-trash" />
-          &emsp;Delete Track
-        </button>
+        <div className="level">
+          <div className="level-item">
+            <button onClick={ handleClick } className="button is-primary">
+              Sonification Settings<br />(Advanced)
+            </button>
+          </div>
+        </div>
+        <div className="level">
+          <div className="level-item">
+            <button onClick={ handleDelete } className="button is-danger is-small">
+              <span className="icon">
+                <i className="fa fa-trash" />
+              </span>
+              <span>Delete Track</span>
+            </button>
+          </div>
+        </div>
       </div>
     </details>
   );
 };
 
 const mapStateToProps = state => ({
-  tracks: state.tracks
+  tracks: state.workstation.tracks
 });
 
 const mapDispatchToProps = dispatch => ({
-  setSettings: (id, settings) => dispatch(setSettings(id, settings)),
+  editTrack: (id, settings) => dispatch(editTrack(id, settings)),
   deleteTrack: id => dispatch(deleteTrack(id)),
   focusWindow: window => dispatch(focusWindow(window))
 });

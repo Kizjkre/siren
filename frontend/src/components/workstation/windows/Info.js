@@ -1,4 +1,4 @@
-import Window from './Window';
+import Window from '../../Window';
 
 const Info = ({ title, children }) => {
   return (

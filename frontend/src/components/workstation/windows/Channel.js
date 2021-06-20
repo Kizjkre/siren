@@ -1,5 +1,5 @@
 import { useState, createRef, useEffect } from 'react';
-import Window from './Window';
+import Window from '../../Window';
 import { connect } from 'react-redux';
 import { setGlobalChannels } from '../../../actions';
 

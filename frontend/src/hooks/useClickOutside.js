@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 
 const useClickOutside = handleClick => {
   useEffect(() => {
-    document.addEventListener('mousedown', handleClick);
+    document.addEventListener('click', handleClick);
     return () => {
-      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener('click', handleClick);
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 };

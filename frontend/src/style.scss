@@ -1,10 +1,18 @@
 @charset "utf-8";
-@import "node_modules/bulma/sass/utilities/initial-variables";
+@import "node_modules/bulma/sass/utilities/all";
 
 @media screen and (min-width: $desktop) {
   html {
     overflow: hidden !important;
   }
+}
+
+summary {
+  cursor: pointer;
+}
+
+.h-100 {
+  height: 100%;
 }
 
 .navbar-dropdown {
@@ -29,6 +37,19 @@
   }
 }
 
+.track-graph, .track-table {
+  height: 100%;
+  width: 100%;
+}
+
+.window {
+  width: max-content !important;
+}
+
+.window-hook {
+  cursor: move;
+}
+
 #controls {
   width: 100%;
 }
@@ -39,10 +60,23 @@
 
 @import "node_modules/bulma/bulma";
 
-.navbar-item {
+$shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($scheme-invert, 0.02);
+
+.navbar-item:not(.is-unhoverable) {
   cursor: pointer;
   &:hover {
     background: $navbar-dropdown-item-hover-background-color;
     color: $navbar-dropdown-item-hover-color;
   }
 }
+
+.modal {
+  box-shadow: $shadow;
+}
+
+.track-container {
+  height: calc(100vh - 2 * #{ $navbar-height } - #{ map-get($spacing-values, '4') });
+  overflow-y: scroll;
+}
+
+@import '~bulma-slider';

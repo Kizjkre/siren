@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { focusWindow } from '../../actions';
 
-const FileBrowser = ({ files }) => {
+const FileBrowser = ({ files, focusWindow }) => {
   const [datasets, setDatasets] = useState();
   const [synths, setSynths] = useState();
 
   useEffect(() => {
     setDatasets(files.length ? files.map(file => (
-        <li key={ file.name }>
+        <li key={ file.name } onClick={ () => focusWindow(`window-${ file.name }`) }>
           <a> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
             <span className="icon-text">
               <span className="icon">
@@ -72,7 +73,11 @@ const FileBrowser = ({ files }) => {
 };
 
 const mapStateToProps = state => ({
-  files: state.files
+  files: state.workstation.files
 });
 
-export default connect(mapStateToProps)(FileBrowser);
+const mapDispatchToProps = dispatch => ({
+  focusWindow: window => dispatch(focusWindow(window))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(FileBrowser);

@@ -1,14 +1,14 @@
-import { useState, useEffect, createRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { connect } from 'react-redux';
 import { isNumerical } from '../../helper/processing';
 
 let height = -1;
 
-const TrackData = ({ dark, tracks, id }) => {
-  const svg = createRef();
-  const xAxis = createRef();
-  const yAxis = createRef();
+const TrackData = ({ tracks, id }) => {
+  const svg = useRef();
+  const xAxis = useRef();
+  const yAxis = useRef();
 
   const [state, setState] = useState({ graph: '' });
 
@@ -59,9 +59,9 @@ const TrackData = ({ dark, tracks, id }) => {
     return (
       <table className="table track-table">
         <tbody>
-        <tr>
-          { track.map((d, i) => <td key={ `table-${ i }` }>{ d }</td>) }
-        </tr>
+          <tr>
+            { track.map((d, i) => <td key={ `table-${ i }` }>{ d }</td>) }
+          </tr>
         </tbody>
       </table>
     );
@@ -69,12 +69,11 @@ const TrackData = ({ dark, tracks, id }) => {
 
   return (
     <svg className="track-graph" ref={ svg }>
-      <g className="graph-content">
+      <g>
         <g className="x" ref={ xAxis } />
         <g className="y" ref={ yAxis } />
         <g className="line">
-          {/* TODO: Make responsive */}
-          <path d={ state.graph } fill="none" stroke={ dark ? 'white' : 'black' } />
+          <path d={ state.graph } fill="none" stroke='black' />
         </g>
       </g>
     </svg>
@@ -82,8 +81,7 @@ const TrackData = ({ dark, tracks, id }) => {
 };
 
 const mapStateToProps = state => ({
-  dark: state.globalSettings.dark,
-  tracks: state.tracks
+  tracks: state.workstation.tracks
 });
 
 export default connect(mapStateToProps)(TrackData);

@@ -1,9 +1,4 @@
-import {
-  UPLOAD_FILE,
-  ADD_TRACK,
-  SET_SETTINGS,
-  SET_GLOBAL_SETTINGS, FOCUS_WINDOW, DELETE_TRACK, SET_DATA, SET_STATE, SET_EDITOR
-} from '../constants/state';
+import { ActionType } from '../constants/state';
 import * as d3 from 'd3';
 import { formatCSV, typeify } from '../helper/processing';
 
@@ -11,77 +6,75 @@ export const uploadFile = async (name, raw) => {
   const data = typeify(await d3.csvParse(formatCSV(raw)));
 
   return {
-    type: UPLOAD_FILE,
+    type: ActionType.UPLOAD_FILE,
     payload: { name, data }
   };
 };
 
-export const addTrack = (name, file, data) => ({
-  type: ADD_TRACK,
+export const createTrack = (name, file, data) => ({
+  type: ActionType.CREATE_TRACK,
   payload: { name, file, data }
 });
 
-export const setSettings = (id, settings) => ({
-  type: SET_SETTINGS,
+export const editTrack = (id, settings) => ({
+  type: ActionType.EDIT_TRACK,
   payload: { id, settings }
 });
 
-export const setGlobalBPM = bpm => ({
-  type: SET_GLOBAL_SETTINGS,
-  payload: { bpm }
-});
-
-export const setGlobalTimesig = timesig => ({
-  type: SET_GLOBAL_SETTINGS,
-  payload: { timesig }
-});
-
-export const setGlobalKey = key => ({
-  type: SET_GLOBAL_SETTINGS,
-  payload: { key }
-});
-
-export const setGlobalDark = dark => ({
-  type: SET_GLOBAL_SETTINGS,
-  payload: { dark }
-});
-
-export const setGlobalChannels = channels => ({
-  type: SET_GLOBAL_SETTINGS,
-  payload: { channels }
-});
-
-export const setGlobalFileBrowser = fileBrowser => ({
-  type: SET_GLOBAL_SETTINGS,
-  payload: { fileBrowser }
-});
-
-export const focusWindow = window => ({
-  type: FOCUS_WINDOW,
-  payload: window
-});
-
 export const deleteTrack = id => ({
-  type: DELETE_TRACK,
+  type: ActionType.DELETE_TRACK,
   payload: id
 });
 
-export const setData = (id, data) => ({
-  type: SET_DATA,
-  payload: { id, data }
+export const setBPM = bpm => ({
+  type: ActionType.SET_SETTINGS,
+  payload: { bpm }
+});
+
+export const setTimesig = timesig => ({
+  type: ActionType.SET_SETTINGS,
+  payload: { timesig }
+});
+
+export const setKey = key => ({
+  type: ActionType.SET_SETTINGS,
+  payload: { key }
+});
+
+export const setFileBrowser = fileBrowser => ({
+  type: ActionType.SET_SETTINGS,
+  payload: { fileBrowser }
+});
+
+// TODO: Add payload
+export const createChannel = () => ({
+  type: ActionType.CREATE_CHANNEL,
+  payload: null
 });
 
 export const setState = state => ({
-  type: SET_STATE,
+  type: ActionType.SET_STATE,
   payload: state
 });
 
-export const setSynth = synth => ({
-  type: SET_EDITOR,
-  payload: { synth }
+export const createWindow = id => ({
+  type: ActionType.CREATE_WINDOW,
+  payload: id
+});
+
+export const focusWindow = id => ({
+  type: ActionType.FOCUS_WINDOW,
+  payload: id
+});
+
+export const blurWindow = id => ({
+  type: ActionType.BLUR_WINDOW,
+  payload: id
 });
 
 export const setEditorOpen = open => ({
-  type: SET_EDITOR,
+  type: ActionType.SET_EDITOR,
   payload: { open }
 });
+
+// TODO: https://stackoverflow.com/questions/14552529/dynamic-sass-variables?

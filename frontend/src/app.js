@@ -1,7 +1,7 @@
 import { HashRouter, Route, Switch } from 'react-router-dom';
-import Index from './components/Index';
-import Workstation from './components/Workstation';
-import Editor from './components/Editor';
+import Index from './components/pages/Index';
+import Workstation from './components/pages/Workstation';
+import Editor from './components/pages/Editor';
 
 const App = () => {
   return (

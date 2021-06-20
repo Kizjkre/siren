@@ -15,9 +15,7 @@ const Navbar = ({ children }) => {
         </span>
       </div>
       <div className={ `navbar-menu ${ open ? 'is-active' : '' }` }>
-        <div className="navbar-start">
-          { children }
-        </div>
+        { children }
       </div>
     </nav>
   );

@@ -1,12 +1,14 @@
 import { useState, useEffect, createRef } from 'react';
-import Window from './Window';
+import Window from '../../Window';
 import Info from './Info';
 import Channel from './Channel';
 import { connect } from 'react-redux';
-import { setSettings, focusWindow, setData, setGlobalChannels } from '../../../actions';
+import { editTrack, focusWindow, setData, setGlobalChannels } from '../../../actions';
 import { channel, data as dataInfo } from '../../../helper/info';
 import { chunkify, removeOutliers } from '../../../helper/processing';
 import { INITIAL_CHANNEL_SETTINGS } from '../../../constants/state';
+
+// TODO: Reimplement channels
 
 const select = (e, dark) => {
   if (dark) {
@@ -22,7 +24,7 @@ const select = (e, dark) => {
   }
 };
 
-const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, setGlobalChannels, focusWindow, setData, files }) => {
+const Sonification = ({ anchor, trackno, tracks, editTrack, globalSettings, setGlobalChannels, focusWindow, setData, files }) => {
   const [state, setState] = useState({ title: '', children: null, segment: '', data: [...tracks[trackno].data] });
 
   const data = createRef();
@@ -48,7 +50,7 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
     Array.from(document.getElementsByClassName('datum-selected')).forEach(e => select(e, globalSettings.dark));
   }, [globalSettings.dark]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleContinuousOrDiscrete = e => setSettings(trackno, { continuous: e.target.checked });
+  const handleContinuousOrDiscrete = e => editTrack(trackno, { continuous: e.target.checked });
 
   const handleAdd = () => setGlobalChannels([...globalSettings.channels, { ...INITIAL_CHANNEL_SETTINGS, id: globalSettings.channels.length }]);
 
@@ -58,14 +60,14 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
 
       const temp = [...tracks[trackno].settings.channel];
       temp.splice(tracks[trackno].settings.channel.indexOf(i), 1);
-      setSettings(trackno, { channel: temp });
+      editTrack(trackno, { channel: temp });
 
       const temp2 = [...globalSettings.channels];
       temp2[i].tracks.splice(temp2[i].tracks.indexOf(trackno), 1);
       setGlobalChannels(temp2);
     } else {
       e.target.classList.add('btn-primary');
-      setSettings(trackno, { channel: [...tracks[trackno].settings.channel, i].sort((a, b) => a - b) });
+      editTrack(trackno, { channel: [...tracks[trackno].settings.channel, i].sort((a, b) => a - b) });
 
       const temp = [...globalSettings.channels];
       temp[i].tracks = [...temp[i].tracks, trackno];
@@ -196,13 +198,13 @@ const Sonification = ({ anchor, trackno, tracks, setSettings, globalSettings, se
 };
 
 const mapStateToProps = state => ({
-  tracks: state.tracks,
+  tracks: state.workstation.tracks,
   globalSettings: state.globalSettings,
-  files: state.files
+  files: state.workstation.files
 });
 
 const mapDispatchToProps = dispatch => ({
-  setSettings: (id, settings) => dispatch(setSettings(id, settings)),
+  editTrack: (id, settings) => dispatch(editTrack(id, settings)),
   focusWindow: window => dispatch(focusWindow(window)),
   setData: (id, data) => dispatch(setData(id, data)),
   setGlobalChannels: channels => dispatch(setGlobalChannels(channels))

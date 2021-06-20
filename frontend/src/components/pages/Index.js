@@ -1,5 +1,5 @@
 import { Link, Redirect } from 'react-router-dom';
-import Navbar from './Navbar';
+import Navbar from '../Navbar';
 
 const Index = () => {
   return (
@@ -7,8 +7,10 @@ const Index = () => {
       <Redirect to="workstation" />
       <div>
         <Navbar>
-          <div className="navbar-item">
-            <Link to="/workstation" className="nav-link">Workstation</Link>
+          <div className="navbar-start">
+            <div className="navbar-item">
+              <Link to="/workstation" className="nav-link">Workstation</Link>
+            </div>
           </div>
         </Navbar>
       </div>

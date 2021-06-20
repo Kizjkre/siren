@@ -2,7 +2,7 @@ import { setState, uploadFile } from '../../../actions';
 import { connect } from 'react-redux';
 import store from '../../../store';
 
-const ToolbarFile = ({ selected, setSelected, uploadFile, setGlobalState }) => {
+const ToolbarFile = ({ selected, setSelected, uploadFile, setState }) => {
   const handleOpen = async e => {
     if (e.target.files.length) {
       const url = URL.createObjectURL(e.target.files[0]);
@@ -14,8 +14,7 @@ const ToolbarFile = ({ selected, setSelected, uploadFile, setGlobalState }) => {
 
   const handleImport = async e => {
     if (e.target.files.length) {
-      const url = URL.createObjectURL(e.target.files[0]);
-      setGlobalState(await (await fetch(url)).json());
+      setState(await (await fetch(URL.createObjectURL(e.target.files[0]))).json());
       e.target.value = '';
       setSelected(false);
     }
@@ -67,7 +66,7 @@ const ToolbarFile = ({ selected, setSelected, uploadFile, setGlobalState }) => {
 
 const mapDispatchToProps = dispatch => ({
   uploadFile: async (name, raw) => dispatch(await uploadFile(name, raw)),
-  setGlobalState: state => dispatch(setState(state))
+  setState: state => dispatch(setState(state))
 });
 
 export default connect(null, mapDispatchToProps)(ToolbarFile);

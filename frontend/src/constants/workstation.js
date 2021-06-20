@@ -1,6 +1,12 @@
 export const TRACK_CONTROLS_WIDTH = 4;
 export const TRACK_WIDTH = 12 - TRACK_CONTROLS_WIDTH;
 
+export const PLAYING_STATUS = Object.freeze({
+  STOPPED: 0,
+  PLAYING: 1,
+  PAUSED: 2
+});
+
 export const KEYS = {
   'C': 'C Major',
   'c': 'C Minor',

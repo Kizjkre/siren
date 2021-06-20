@@ -1,194 +1,143 @@
+import { useState } from 'react';
+import BPMWindow from './windows/BPMWindow';
+import KeyWindow from './windows/KeyWindow';
+import TimesigWindow from './windows/TimesigWindow';
 import { connect } from 'react-redux';
-import { setGlobalBPM, setGlobalKey, setGlobalTimesig } from '../../actions';
-import { KEYS } from '../../constants/workstation';
+import { focusWindow } from '../../actions';
+import { KEYS, PLAYING_STATUS } from '../../constants/workstation';
 import { play, pause, stop } from '../../synth/synth';
+import ChannelWindow from './windows/ChannelWindow';
 
-const Controls = ({ globalSettings, tracks, setGlobalBPM, setGlobalTimesig, setGlobalKey }) => {
-  const hasTracks = tracks.length !== 0;
-
-  const handleBPM = e => setGlobalBPM(e.target.value.length === 0 ? 30 : parseInt(e.target.value));
-
-  const handleKey = e => setGlobalKey(e.target.value);
-
-  const handleTimesig = top => e => setGlobalTimesig(
-    top ? [e.target.value, globalSettings.timesig[1]] : Number.isInteger(Math.log(e.target.value) / Math.log(2)) ? [globalSettings.timesig[0], e.target.value] : [...globalSettings.timesig]
-  );
-
-  const handleBPMToggle = () => setGlobalBPM(globalSettings.bpm > 0 ? -1 : 120);
-
-  const handleTimesigToggle = () => setGlobalTimesig(globalSettings.timesig[0] > 0 ? [-1, -1] : [4, 4]);
+const Controls = ({ settings, focusWindow, disabled }) => {
+  const [status, setStatus] = useState(PLAYING_STATUS.STOPPED);
 
   const handlePlay = e => {
-    if (e.target.classList.contains('btn-danger')) {
-      e.target.classList.add('btn-success');
-      e.target.classList.remove('btn-danger');
-
-      stop();
-    } else if (e.target.classList.contains('btn-secondary')) {
-      e.target.classList.add('btn-danger');
-      e.target.classList.remove('btn-secondary');
-
-      pause();
-    } else {
-      e.target.classList.add('btn-danger'); // TODO: fix
-      e.target.classList.remove('btn-success');
-
-      (async () => await play())();
+    switch (e.target.getAttribute('data-status')) {
+      case PLAYING_STATUS.STOPPED + '':
+        // stop();
+        setStatus(PLAYING_STATUS.STOPPED);
+        break;
+      case PLAYING_STATUS.PLAYING + '':
+        // (async () => await play())();
+        setStatus(PLAYING_STATUS.PLAYING);
+        break;
+      case PLAYING_STATUS.PAUSED + '':
+        // pause();
+        setStatus(PLAYING_STATUS.PAUSED);
+        break;
+      default:
+        break;
     }
   };
 
-  return (
-    <nav className="navbar is-fixed-bottom py-4" role="navigation" aria-label="main navigation">
-      <div className="container">
-        <nav className="level" id="controls">
-          <div className="level-left">
-            <p className="level-item">
-              <span className="icon-text">
-                <span className="icon">
-                  <i className="fa fa-drum" />
-                </span>
-                <span>BPM:&nbsp;<span className="text-monospace">{ globalSettings.bpm < 0 ? 'N/A' : globalSettings.bpm }</span></span>
-              </span>
-            </p>
-            <p className="level-item">
-              <span className="icon-text">
-                <span className="icon">
-                  <i className="fa fa-hashtag" />
-                </span>
-                <span>Key:&nbsp;{ <span dangerouslySetInnerHTML={ { __html: KEYS[globalSettings.key] } } /> }</span>
-              </span>
-            </p>
-          </div>
-          <p className="level-item">
-            <button className="button is-success is-rounded is-large" />
-          </p>
-          <div className="level-right">
-            <span className="icon-text timesig-wrap">
-              <span className="icon">
-                <i className="fa fa-stopwatch" />
-              </span>
-              <span className="timesig">
-                Time Signature:&nbsp;
-                <span>
-                  <sup>{ globalSettings.timesig[0] <= 0 ? 'N/A' : globalSettings.timesig[0] }</sup>
-                  <sub>{ globalSettings.timesig[1] <= 0 ? 'N/A' : globalSettings.timesig[1] }</sub>
-                </span>
-              </span>
-            </span>
-          </div>
-        </nav>
-      </div>
-    </nav>
-  );
+  const buttons = {
+    [PLAYING_STATUS.STOPPED]: (
+      <button
+        data-status={ PLAYING_STATUS.STOPPED }
+        className="button is-danger is-large mx-1"
+        onClick={ handlePlay }
+        disabled={ disabled }
+      >
+        <span className="icon" data-status={ PLAYING_STATUS.STOPPED }>
+          <i className="fa fa-stop" data-status={ PLAYING_STATUS.STOPPED } />
+        </span>
+      </button>
+    ),
+    [PLAYING_STATUS.PLAYING]: (
+      <button
+        data-status={ PLAYING_STATUS.PLAYING }
+        className="button is-success is-large mx-1"
+        onClick={ handlePlay }
+        disabled={ disabled }
+      >
+        <span className="icon" data-status={ PLAYING_STATUS.PLAYING }>
+          <i className="fa fa-play" data-status={ PLAYING_STATUS.PLAYING } />
+        </span>
+      </button>
+    ),
+    [PLAYING_STATUS.PAUSED]: (
+      <button
+        data-status={ PLAYING_STATUS.PAUSED }
+        className="button is-warning is-large mx-1"
+        onClick={ handlePlay }
+        disabled={ disabled }
+      >
+        <span className="icon" data-status={ PLAYING_STATUS.PAUSED }>
+          <i className="fa fa-pause" data-status={ PLAYING_STATUS.PAUSED } />
+        </span>
+      </button>
+    )
+  };
 
   return (
-    <nav className="navbar navbar-fixed-bottom controls">
-      <div className="navbar-content w-full">
-        <div className="row w-full">
-          <div className="col-4">
-            <div className="row h-full">
-              <div className="col-6 d-flex justify-content-center">
-                <div className="h-full w-full d-flex justify-content-center">
-                  <div className="dropdown dropup with-arrow align-self-center">
-                    <button className="btn btn-lg" data-toggle="dropdown" type="button" id="bpm-dropup">
-                      <i className="fa fa-drum"/>
-                      &emsp;BPM:&nbsp;<span className="text-monospace">{ globalSettings.bpm < 0 ? 'N/A' : globalSettings.bpm }</span>
-                    </button>
-                    <div className="dropdown-menu" aria-labelledby="bpm-dropup">
-                      <div className="container mt-15">
-                        <div className="form-group w-full">
-                          <label htmlFor="bpm">Set BPM</label>
-                          <br />
-                          <div className="custom-switch align-self-center">
-                            <input type="checkbox" id="bpm-toggle" checked={ globalSettings.bpm > 0 } onChange={ handleBPMToggle } />
-                            <label htmlFor="bpm-toggle" />
-                          </div>
-                          <br />
-                          <input type={ globalSettings.bpm < 0 ? 'text' : 'number' } className="form-control" id="bpm" min="30" max="240" value={ globalSettings.bpm < 0 ? 'N/A' : globalSettings.bpm } disabled={ globalSettings.bpm < 0 } placeholder="BPM" onChange={ handleBPM } />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-6 d-flex justify-content-center">
-                <div className="h-full w-full d-flex justify-content-center">
-                  <div className="dropdown dropup with-arrow align-self-center">
-                    <button className="btn btn-lg" data-toggle="dropdown" type="button" id="key-dropup">
-                      <i className="fa fa-hashtag"/>
-                      &emsp;Key: { <span dangerouslySetInnerHTML={ { __html: KEYS[globalSettings.key] } } /> }
-                    </button>
-                    <div className="dropdown-menu" aria-labelledby="key-dropup">
-                      <div className="container mt-15">
-                        <div className="form-group">
-                          <label htmlFor="key">Set Key</label>
-                          <select className="form-control" id="key" onChange={ handleKey }>
-                            { Object.keys(KEYS).map(k => <option value={ k } key={ k } dangerouslySetInnerHTML={ { __html: KEYS[k] } } />) }
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    <>
+      <nav className="navbar is-fixed-bottom py-4" role="navigation" aria-label="main navigation">
+        <div className="container">
+          <nav className="level" id="controls">
+            <div className="level-left">
+              <p className="level-item">
+                <button className="button is-white" onClick={ () => focusWindow('window-bpm') }>
+                  <span className="icon">
+                    <i className="fa fa-drum" />
+                  </span>
+                  <span>BPM:&nbsp;<span className="text-monospace">{ settings.bpm < 0 ? 'N/A' : settings.bpm }</span></span>
+                </button>
+              </p>
+              <p className="level-item">
+                <button className="button is-white" onClick={ () => focusWindow('window-key') }>
+                  <span className="icon">
+                    <i className="fa fa-hashtag" />
+                  </span>
+                  <span>Key:&nbsp;{ <span dangerouslySetInnerHTML={ { __html: KEYS[settings.key] } } /> }</span>
+                </button>
+              </p>
             </div>
-          </div>
-          <div className="col-4">
-            <div className="w-full d-flex justify-content-center">
-              <button className="btn btn-square rounded-circle btn-success play font-size-24" type="button" disabled={ !hasTracks } onClick={ handlePlay }>
-                { /*<i className="fa fa-play" />*/ }
-                { /* TODO: Toggle button color */ }
-              </button>
-            </div>
-          </div>
-          <div className="col-4">
-            <div className="row h-full">
-              <div className="col-12 d-flex justify-content-center">
-                <div className="h-full w-full d-flex justify-content-center">
-                  <div className="dropdown dropup with-arrow align-self-center">
-                    <button className="btn btn-lg d-flex align-items-center transparent" data-toggle="dropdown" type="button" id="timesig-dropup">
-                      <i className="fa fa-stopwatch"/>
-                      &emsp;Time Signature:&nbsp;
-                      <span className="supsub">
-                        <sup>{ globalSettings.timesig[0] <= 0 ? 'N/A' : globalSettings.timesig[0] }</sup>
-                        <sub>{ globalSettings.timesig[1] <= 0 ? 'N/A' : globalSettings.timesig[1] }</sub>
-                      </span>
-                    </button>
-                    <div className="dropdown-menu" aria-labelledby="timesig-dropup">
-                      <div className="container mt-15">
-                        <div className="form-group">
-                          <label htmlFor="timesig">Set Time Signature</label>
-                          <br />
-                          <div className="custom-switch align-self-center">
-                            <input type="checkbox" id="timesig-toggle" checked={ globalSettings.timesig[0] > 0 } onChange={ handleTimesigToggle } />
-                            <label htmlFor="timesig-toggle"> </label>
-                          </div>
-                          <br />
-                          <input type="number" className="form-control" id="timesig" min="1" max="20" placeholder={ globalSettings.timesig[0] <= 0 ? 'N/A' : globalSettings.timesig[0] } onChange={ handleTimesig(true) } />
-                          <input type="number" className="form-control" id="timesig-bottom" min="1" max="32" placeholder={ globalSettings.timesig[1] <= 0 ? 'N/A' : globalSettings.timesig[1] } onChange={ handleTimesig(false) } />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            <p className="level-item">
+              { status === PLAYING_STATUS.PLAYING ? buttons[PLAYING_STATUS.PAUSED] : buttons[PLAYING_STATUS.PLAYING] }
+              { buttons[PLAYING_STATUS.STOPPED] }
+            </p>
+            <div className="level-right">
+              <div className="level-item">
+                <button className="button is-primary" onClick={ () => focusWindow('window-channel') }>
+                  <span className="icon">
+                    <i className="fa fa-code-branch" />
+                  </span>
+                  <span>Add Channel</span>
+                </button>
+              </div>
+              <div className="level-item">
+                <button className="button is-white timesig-wrap" onClick={ () => focusWindow('window-timesig') }>
+                  <span className="icon">
+                    <i className="fa fa-stopwatch" />
+                  </span>
+                  <span className="timesig">
+                    Time Signature:&nbsp;
+                    <span>
+                      <sup>{ settings.timesig[0] <= 0 ? 'N/A' : settings.timesig[0] }</sup>
+                      <sub>{ settings.timesig[1] <= 0 ? 'N/A' : settings.timesig[1] }</sub>
+                    </span>
+                  </span>
+                </button>
               </div>
             </div>
-          </div>
+          </nav>
         </div>
-      </div>
-    </nav>
+      </nav>
+      <BPMWindow />
+      <KeyWindow />
+      <TimesigWindow />
+      <ChannelWindow />
+    </>
   );
 };
 
 const mapStateToProps = state => ({
-  globalSettings: state.globalSettings,
-  tracks: state.tracks
+  settings: state.workstation.settings,
+  disabled: !state.workstation.tracks.length
 });
 
 const mapDispatchToProps = dispatch => ({
-  setGlobalBPM: bpm => dispatch(setGlobalBPM(bpm)),
-  setGlobalTimesig: timesig => dispatch(setGlobalTimesig(timesig)),
-  setGlobalKey: key => dispatch(setGlobalKey(key))
+  focusWindow: id => dispatch(focusWindow(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Controls);

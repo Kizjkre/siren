@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import { setGlobalFileBrowser } from '../../../actions';
+import { setFileBrowser } from '../../../actions';
 import { connect } from 'react-redux';
 
-const ToolbarView = ({ selected, setSelected, fileBrowser, setGlobalFileBrowser }) => {
+const ToolbarView = ({ selected, setSelected, fileBrowser, setFileBrowser }) => {
   const handleFileBrowser = () => {
-    setGlobalFileBrowser(!fileBrowser);
+    setFileBrowser(!fileBrowser);
     setSelected(false);
   };
 
@@ -42,11 +42,11 @@ const ToolbarView = ({ selected, setSelected, fileBrowser, setGlobalFileBrowser 
 };
 
 const mapStateToProps = state => ({
-  fileBrowser: state.globalSettings.fileBrowser
+  fileBrowser: state.workstation.settings.fileBrowser
 });
 
 const mapDispatchToProps = dispatch => ({
-  setGlobalFileBrowser: fileBrowser => dispatch(setGlobalFileBrowser(fileBrowser))
+  setFileBrowser: fileBrowser => dispatch(setFileBrowser(fileBrowser))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ToolbarView);

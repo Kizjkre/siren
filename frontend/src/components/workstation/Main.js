@@ -1,20 +1,15 @@
 import { connect } from 'react-redux';
 import Track from './Track';
 
-const Main = ({ files, tracks }) => {
-  let t = [];
-  tracks.forEach(({ file, name, id }) => {
-    for (const f of files) {
-      if (f.name === file) {
-        t.push({ file: f, column: name, id });
-        break;
+const Main = ({ tracks }) => {
+  return tracks.length ? (
+    <section className="section track-container">
+      {
+        tracks.map(({ file, name, id }, i) =>
+          <Track key={ `${ name }-row-${ i }` } i={ i } id={ id } column={ name } name={ file } />
+        )
       }
-    }
-  });
-
-  return t.length ?
-    t.map(({ file, column, id }, i) =>
-      <Track key={ `${ column }-row-${ i }` } i={ i } id={ id } column={ column } name={ file.name } />
+    </section>
     ) : (
       <section className="hero is-fullheight-with-navbar">
         <div className="hero-body is-align-content-center is-justify-content-center">
@@ -39,8 +34,8 @@ const Main = ({ files, tracks }) => {
 };
 
 const mapStateToProps = state => ({
-  files: state.files,
-  tracks: state.tracks
+  files: state.workstation.files,
+  tracks: state.workstation.tracks
 });
 
 export default connect(mapStateToProps)(Main);
