@@ -10,11 +10,21 @@ const Track = ({ i, id, column, name, tracks }) => (
         <div className="block">
           <h2 className="subtitle">Track { i + 1 }: { column }</h2>
           <p className="has-text-weight-light">{ name }</p>
+        </div>
+        <div className="block">
           {
-            tracks.find(t => t.id === id).settings.channel.length > 0 ?
-              <p className="has-text-weight-light">
-                Connected to channel { tracks.find(t => t.id === id).settings.channel }
-              </p> : <></>
+            tracks[id].settings.channel.length === 0 ? null : (
+              <>
+                <h6 className="is-6 pb-2">Channels:</h6>
+                <div className="tags">
+                  {
+                    tracks[id].settings.channel.map(channel =>
+                      <span key={ channel } className="tag is-primary">{ channel }</span>
+                    )
+                  }
+                </div>
+              </>
+            )
           }
         </div>
         <Settings column={ column } i={ i } id={ id } />

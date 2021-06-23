@@ -2,10 +2,10 @@ import { connect } from 'react-redux';
 import Track from './Track';
 
 const Main = ({ tracks }) => {
-  return tracks.length ? (
+  return Object.keys(tracks).length ? (
     <section className="section track-container">
       {
-        tracks.map(({ file, name, id }, i) =>
+        Object.entries(tracks).map(([id, { file, name }], i) =>
           <Track key={ `${ name }-row-${ i }` } i={ i } id={ id } column={ name } name={ file } />
         )
       }

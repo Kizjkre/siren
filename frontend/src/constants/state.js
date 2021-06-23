@@ -9,7 +9,8 @@ export const ActionType = Object.freeze({
   EDIT_TRACK: { type: 'EDIT_TRACK', reducer: 'WORKSTATION' },
   DELETE_TRACK: { type: 'DELETE_TRACK', reducer: 'WORKSTATION' },
   CREATE_CHANNEL: { type: 'CREATE_CHANNEL', reducer: 'WORKSTATION' },
-  EDIT_CHANNEL: { type: 'MODIFY_CHANNEL', reducer: 'WORKSTATION' },
+  EDIT_CHANNEL: { type: 'EDIT_CHANNEL', reducer: 'WORKSTATION' },
+  EDIT_CHANNEL_FEATURES: { type: 'EDIT_CHANNEL_FEATURES', reducer: 'WORKSTATION' },
   SET_SETTINGS: { type: 'SET_SETTINGS', reducer: 'WORKSTATION' },
   SET_EDITOR: { type: 'SET_EDITOR', reducer: 'EDITOR' },
   CREATE_WINDOW: { type: 'CREATE_WINDOW', reducer: 'GENERAL' },
@@ -21,8 +22,8 @@ export const ActionType = Object.freeze({
 export const INITIAL_STATE = {
   workstation: {
     files: [],
-    tracks: [],
-    channels: [],
+    tracks: {},
+    channels: {},
     settings: {
       bpm: 120,
       key: 'C',
@@ -48,22 +49,10 @@ export const INITIAL_SETTINGS = {
 export const INITIAL_CHANNEL_SETTINGS = {
   continuous: false,
   tracks: [],
-  features: [
-    {
-      name: 'Volume',
-      controller: -1
-    },
-    {
-      name: 'Pitch',
-      controller: -1
-    },
-    {
-      name: 'Pan',
-      controller: -1
-    },
-    {
-      name: 'Tempo',
-      controller: -1
-    }
-  ]
+  features: {
+    Volume: -1,
+    Pitch: -1,
+    Pan: -1,
+    Tempo: -1
+  }
 };

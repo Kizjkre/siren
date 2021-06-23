@@ -1,6 +1,8 @@
 @charset "utf-8";
 @import "node_modules/bulma/sass/utilities/all";
 
+$window-min-width: 25vw;
+
 @media screen and (min-width: $desktop) {
   html {
     overflow: hidden !important;
@@ -9,6 +11,20 @@
 
 summary {
   cursor: pointer;
+}
+
+.channel-feature {
+  cursor: pointer;
+}
+
+.channel-feature-checked {
+  background: $success;
+  color: $white;
+}
+
+.channel-feature-disabled {
+  background: $grey-lighter;
+  color: $white;
 }
 
 .h-100 {
@@ -43,11 +59,19 @@ summary {
 }
 
 .window {
+  min-width: $window-min-width;
   width: max-content !important;
 }
 
 .window-hook {
   cursor: move;
+}
+
+.window-wrap {
+  height: max-content;
+  max-height: 70vh;
+  min-width: $window-min-width;
+  width: max-content;
 }
 
 #controls {

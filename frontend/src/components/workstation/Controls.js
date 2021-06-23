@@ -102,7 +102,7 @@ const Controls = ({ settings, focusWindow, disabled }) => {
                   <span className="icon">
                     <i className="fa fa-code-branch" />
                   </span>
-                  <span>Add Channel</span>
+                  <span>Edit Channels</span>
                 </button>
               </div>
               <div className="level-item">
@@ -133,7 +133,7 @@ const Controls = ({ settings, focusWindow, disabled }) => {
 
 const mapStateToProps = state => ({
   settings: state.workstation.settings,
-  disabled: !state.workstation.tracks.length
+  disabled: !Object.keys(state.workstation.tracks).length
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -3,16 +3,19 @@ import FileBrowser from '../workstation/FileBrowser';
 import Main from '../workstation/Main';
 import CreateTrackWindow from '../workstation/windows/CreateTrackWindow';
 import Controls from '../workstation/Controls';
-import { connect } from 'react-redux';
 import useDemoData from '../../hooks/useDemoData';
+import ChannelSettingsWindow from '../workstation/windows/ChannelSettingsWindow';
+import TrackSettingsWindow from '../workstation/windows/TrackSettingsWindow';
+import { connect } from 'react-redux';
 
-const Workstation = ({ files, fileBrowser }) => {
+const Workstation = ({ files, tracks, channels, fileBrowser }) => {
   useDemoData();
 
   return (
     <>
       { files.map(({ name }) => <CreateTrackWindow key={ name } track={ name } id={ `window-${ name }` } />) }
-      {/*{ tracks.map(({ file, name }, i) => <Sonification key={ `sonification-${ name }-${ i }` } anchor={ `sonification-${ name.replace(/\s/g, '-') }-${ i }` } trackno={ i } />) }*/}
+      { Object.keys(channels).map(name => <ChannelSettingsWindow key={ name } id={ `window-channel-settings-${ name }` } name={ name } />) }
+      { Object.entries(tracks).map(([id, { name }]) => <TrackSettingsWindow key={ name } id={ `window-sonification-${ name }` } trackId={ id } />) }
       <Toolbar />
       <div className="columns">
         <div className={ `column is-2 ${ fileBrowser ? '' : 'is-hidden' }` }>
@@ -31,6 +34,8 @@ const Workstation = ({ files, fileBrowser }) => {
 
 const mapStateToProps = state => ({
   files: state.workstation.files,
+  tracks: state.workstation.tracks,
+  channels: state.workstation.channels,
   fileBrowser: state.workstation.settings.fileBrowser
 });
 

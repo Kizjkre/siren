@@ -24,7 +24,7 @@ const KeyWindow = ({ currentKey, setKey }) => {
         }
       ] }
     >
-      <div className="select">
+      <div className="select is-fullwidth">
         <select onChange={ e => setTempKey(e.target.value) } defaultValue={ currentKey }>
           { Object.keys(KEYS).map(k => <option value={ k } key={ k } dangerouslySetInnerHTML={ { __html: KEYS[k] } } />) }
         </select>

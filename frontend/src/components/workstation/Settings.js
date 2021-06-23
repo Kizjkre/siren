@@ -2,13 +2,12 @@ import { connect } from 'react-redux';
 import { editTrack, deleteTrack, focusWindow } from '../../actions';
 
 const Settings = ({ id, tracks, editTrack, deleteTrack, focusWindow }) => {
-  const i = tracks.findIndex(track => track.id === id);
 
-  const handleMute = () => editTrack(i, { mute: !tracks[i].settings.mute });
-  const handleVolume = e => editTrack(i, { volume: e.target.value });
-  const handlePan = e => editTrack(i, { pan: Math.abs(e.target.value) < 5 ? 0 : parseInt(e.target.value) });
+  const handleMute = () => editTrack(id, { mute: !tracks[id].settings.mute });
+  const handleVolume = e => editTrack(id, { volume: e.target.value });
+  const handlePan = e => editTrack(id, { pan: Math.abs(e.target.value) < 5 ? 0 : parseInt(e.target.value) });
   const handleDelete = () => deleteTrack(id);
-  const handleClick = () => focusWindow(`sonification-${ tracks[i].name }-${ i }`);
+  const handleClick = () => focusWindow(`window-sonification-${ tracks[id].name }`);
 
   return (
     <details className="message">
@@ -22,7 +21,7 @@ const Settings = ({ id, tracks, editTrack, deleteTrack, focusWindow }) => {
       </summary>
       <div className="message-body">
         {
-          tracks[i].settings.channel.length > 0 ? null : (
+          tracks[id].settings.channel.length > 0 ? null : (
             <>
               <div className="box">
                 <h5 className="is-size-5">Volume</h5>
@@ -34,7 +33,7 @@ const Settings = ({ id, tracks, editTrack, deleteTrack, focusWindow }) => {
                           <input
                             className="mr-2"
                             type="checkbox"
-                            checked={ !tracks[i].settings.mute }
+                            checked={ tracks[id].settings.mute }
                             onChange={ handleMute }
                           />
                           Mute
@@ -45,7 +44,7 @@ const Settings = ({ id, tracks, editTrack, deleteTrack, focusWindow }) => {
                   <div className="column">
                     <input
                       className="slider is-fullwidth"
-                      disabled={ tracks[i].settings.mute }
+                      disabled={ tracks[id].settings.mute }
                       step="1"
                       min="0"
                       max="100"
@@ -63,7 +62,7 @@ const Settings = ({ id, tracks, editTrack, deleteTrack, focusWindow }) => {
                   type="range"
                   min="-50"
                   max="50"
-                  value={ tracks[i].settings.pan }
+                  value={ tracks[id].settings.pan }
                   onChange={ handlePan }
                 />
               </div>

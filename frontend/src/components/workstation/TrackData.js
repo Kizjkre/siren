@@ -12,7 +12,7 @@ const TrackData = ({ tracks, id }) => {
 
   const [state, setState] = useState({ graph: '' });
 
-  const track = tracks.find(t => t.id === id).data;
+  const track = tracks[id].data;
 
   const data = track.map((d, i) => [i, d]);
 

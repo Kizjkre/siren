@@ -100,3 +100,5 @@ export const numerizeToArray = data => data.map(d => {
   }
   return values;
 });
+
+export const deepClone = obj => JSON.parse(JSON.stringify(obj));

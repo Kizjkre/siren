@@ -46,10 +46,19 @@ export const setFileBrowser = fileBrowser => ({
   payload: { fileBrowser }
 });
 
-// TODO: Add payload
-export const createChannel = () => ({
+export const createChannel = name => ({
   type: ActionType.CREATE_CHANNEL,
-  payload: null
+  payload: name
+});
+
+export const editChannel = (name, trackId) => ({
+  type: ActionType.EDIT_CHANNEL,
+  payload: { name, trackId }
+});
+
+export const editChannelFeatures = (channel, feature, track) => ({
+  type: ActionType.EDIT_CHANNEL_FEATURES,
+  payload: { channel, feature, track }
 });
 
 export const setState = state => ({

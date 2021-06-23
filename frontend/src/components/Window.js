@@ -22,9 +22,6 @@ const Window = ({ buttons, children, title, windows, focusWindow, id, createWind
 
     const rect = win.current.children[0].getBoundingClientRect();
 
-    win.current.style.height = `${ rect.height }px`;
-    win.current.style.width = `${ rect.width }px`;
-
     win.current.style.left = `${ (window.innerWidth - rect.width) / 2 }px`;
     win.current.style.top = `${ (window.innerHeight - rect.height) / 2 }px`;
 
@@ -41,7 +38,7 @@ const Window = ({ buttons, children, title, windows, focusWindow, id, createWind
 
   return (
     <div
-      className={ `modal ${ zIndex > 0 ? 'is-active' : '' }` }
+      className={ `modal window-wrap ${ zIndex > 0 ? 'is-active' : '' }` }
       id={ id }
       ref={ win }
       onMouseDown={ () => focusWindow(id) }
