@@ -13,7 +13,7 @@ const Workstation = ({ files, tracks, channels, fileBrowser }) => {
 
   return (
     <>
-      { files.map(({ name }) => <CreateTrackWindow key={ name } track={ name } id={ `window-${ name }` } />) }
+      { Object.keys(files).map(name => <CreateTrackWindow key={ name } track={ name } id={ `window-${ name }` } />) }
       { Object.keys(channels).map(name => <ChannelSettingsWindow key={ name } id={ `window-channel-settings-${ name }` } name={ name } />) }
       { Object.entries(tracks).map(([id, { name }]) => <TrackSettingsWindow key={ name } id={ `window-sonification-${ name }` } trackId={ id } />) }
       <Toolbar />
@@ -23,7 +23,7 @@ const Workstation = ({ files, tracks, channels, fileBrowser }) => {
             <FileBrowser />
           </section>
         </div>
-        <div className="column">
+        <div className="column is-10">
           <Main />
         </div>
       </div>

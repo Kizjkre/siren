@@ -63,6 +63,10 @@ export default class SimpleContext {
     return SimpleContext._context;
   }
 
+  static getKey() {
+    return SimpleContext._key;
+  }
+
   static getMasterGain() {
     return SimpleContext._master;
   }

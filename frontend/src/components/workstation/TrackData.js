@@ -57,13 +57,15 @@ const TrackData = ({ tracks, id }) => {
 
   if (!isNumerical(track)) {
     return (
-      <table className="table track-table">
-        <tbody>
-          <tr>
-            { track.map((d, i) => <td key={ `table-${ i }` }>{ d }</td>) }
-          </tr>
-        </tbody>
-      </table>
+      <div className="table-container">
+        <table className="table track-table">
+          <tbody>
+            <tr>
+              { track.map((d, i) => <td key={ `table-${ i }` }>{ d }</td>) }
+            </tr>
+          </tbody>
+        </table>
+      </div>
     );
   }
 

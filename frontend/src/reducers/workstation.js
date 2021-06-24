@@ -5,7 +5,10 @@ const workstationReducer = (state, action) => {
   switch (action.type.type) {
     case ActionType.UPLOAD_FILE.type:
       return Object.assign({}, state, {
-        files: [...state.files, action.payload]
+        files: {
+          ...state.files,
+          [action.payload.name]: action.payload.data
+        }
       });
     case ActionType.CREATE_TRACK.type:
       let idCreateTrack = Math.max(...Object.keys(state.tracks));
@@ -23,6 +26,16 @@ const workstationReducer = (state, action) => {
           }
         }
       });
+    case ActionType.EDIT_TRACK_DATA.type:
+      return Object.assign({}, state, {
+        tracks: {
+          ...state.tracks,
+          [action.payload.id]: {
+            ...state.tracks[action.payload.id],
+            data: action.payload.data
+          }
+        }
+      });
     case ActionType.DELETE_TRACK.type:
       const tracksDeleteTrack = Object.assign({}, state.tracks);
       delete tracksDeleteTrack[action.payload];
@@ -31,7 +44,7 @@ const workstationReducer = (state, action) => {
       for (const name in channelsDeleteTrack) {
         if (channelsDeleteTrack.hasOwnProperty(name)) {
           channelsDeleteTrack[name].tracks = channelsDeleteTrack[name].tracks.filter(track =>
-            track.id === parseInt(action.payload)
+            track.id !== parseInt(action.payload)
           );
         }
       }

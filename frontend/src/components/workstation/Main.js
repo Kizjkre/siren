@@ -34,7 +34,6 @@ const Main = ({ tracks }) => {
 };
 
 const mapStateToProps = state => ({
-  files: state.workstation.files,
   tracks: state.workstation.tracks
 });
 

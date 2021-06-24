@@ -7,6 +7,7 @@ export const ActionType = Object.freeze({
   UPLOAD_FILE: { type: 'UPLOAD_FILE', reducer: 'WORKSTATION' },
   CREATE_TRACK: { type: 'CREATE_TRACK', reducer: 'WORKSTATION' },
   EDIT_TRACK: { type: 'EDIT_TRACK', reducer: 'WORKSTATION' },
+  EDIT_TRACK_DATA: { type: 'EDIT_TRACK_DATA', reducer: 'WORKSTATION' },
   DELETE_TRACK: { type: 'DELETE_TRACK', reducer: 'WORKSTATION' },
   CREATE_CHANNEL: { type: 'CREATE_CHANNEL', reducer: 'WORKSTATION' },
   EDIT_CHANNEL: { type: 'EDIT_CHANNEL', reducer: 'WORKSTATION' },
@@ -21,7 +22,7 @@ export const ActionType = Object.freeze({
 
 export const INITIAL_STATE = {
   workstation: {
-    files: [],
+    files: {},
     tracks: {},
     channels: {},
     settings: {

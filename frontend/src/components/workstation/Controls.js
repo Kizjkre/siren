@@ -14,15 +14,15 @@ const Controls = ({ settings, focusWindow, disabled }) => {
   const handlePlay = e => {
     switch (e.target.getAttribute('data-status')) {
       case PLAYING_STATUS.STOPPED + '':
-        // stop();
+        stop();
         setStatus(PLAYING_STATUS.STOPPED);
         break;
       case PLAYING_STATUS.PLAYING + '':
-        // (async () => await play())();
+        (async () => await play())();
         setStatus(PLAYING_STATUS.PLAYING);
         break;
       case PLAYING_STATUS.PAUSED + '':
-        // pause();
+        pause();
         setStatus(PLAYING_STATUS.PAUSED);
         break;
       default:

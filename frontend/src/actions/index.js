@@ -21,6 +21,11 @@ export const editTrack = (id, settings) => ({
   payload: { id, settings }
 });
 
+export const editTrackData = (id, data) => ({
+  type: ActionType.EDIT_TRACK_DATA,
+  payload: { id, data }
+});
+
 export const deleteTrack = id => ({
   type: ActionType.DELETE_TRACK,
   payload: id

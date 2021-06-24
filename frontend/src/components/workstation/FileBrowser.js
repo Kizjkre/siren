@@ -7,14 +7,14 @@ const FileBrowser = ({ files, focusWindow }) => {
   const [synths, setSynths] = useState();
 
   useEffect(() => {
-    setDatasets(files.length ? files.map(file => (
-        <li key={ file.name } onClick={ () => focusWindow(`window-${ file.name }`) }>
+    setDatasets(Object.keys(files).length ? Object.keys(files).map(name => (
+        <li key={ name } onClick={ () => focusWindow(`window-${ name }`) }>
           <a> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
             <span className="icon-text">
               <span className="icon">
                 <i className="fa fa-file-csv" />
               </span>
-              <span>{ file.name }</span>
+              <span>{ name }</span>
             </span>
           </a>
         </li>

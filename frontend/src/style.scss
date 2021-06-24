@@ -2,6 +2,7 @@
 @import "node_modules/bulma/sass/utilities/all";
 
 $window-min-width: 25vw;
+$window-max-width: 70vw;
 
 @media screen and (min-width: $desktop) {
   html {
@@ -19,7 +20,7 @@ summary {
 
 .channel-feature-checked {
   background: $success;
-  color: $white;
+  color: $primary-invert;
 }
 
 .channel-feature-disabled {
@@ -59,6 +60,7 @@ summary {
 }
 
 .window {
+  max-width: $window-max-width;
   min-width: $window-min-width;
   width: max-content !important;
 }
@@ -70,6 +72,7 @@ summary {
 .window-wrap {
   height: max-content;
   max-height: 70vh;
+  max-width: $window-max-width;
   min-width: $window-min-width;
   width: max-content;
 }
@@ -96,6 +99,19 @@ $shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($schem
 
 .modal {
   box-shadow: $shadow;
+}
+
+.settings-data {
+  cursor: pointer;
+  &:hover {
+    background: $table-row-hover-background-color;
+    color: $table-color;
+  }
+}
+
+.settings-data-selected {
+  background: $table-row-active-background-color;
+  color: $table-row-active-color;
 }
 
 .track-container {

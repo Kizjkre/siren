@@ -6,13 +6,11 @@ import Window from '../../Window';
 const CreateTrackWindow = ({ track, files, createTrack, id }) => {
   const [column, setColumn] = useState('');
 
-  const file = files.find(file => file.name === track);
-
   const handleSelect = e => setColumn(e.target.value);
 
   const handleSubmit = () => {
     if (column !== '') {
-      createTrack(column, file.name, file.data.map(row => row[column]));
+      createTrack(column, track, files[track].map(row => row[column]));
       setColumn('');
     }
   };
@@ -29,12 +27,15 @@ const CreateTrackWindow = ({ track, files, createTrack, id }) => {
           text: 'Add Track'
         }
       ] }
-      title={ `Add Track: ${ file.name }` }
+      title={ `Add Track: ${ track }` }
     >
       <div className="select is-fullwidth">
         <select value={ column } onChange={ handleSelect }>
           <option value="" disabled>Select a column</option>
-          { Object.keys(file.data[0]).map(column => <option key={ `column-${ column }` } value={ column }>{ column }</option>) }
+          {
+            Object.keys(files[track][0])
+              .map(column => <option key={ `column-${ column }` } value={ column }>{ column }</option>)
+          }
         </select>
       </div>
     </Window>

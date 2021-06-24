@@ -62,11 +62,7 @@ export const typeify = data => {
   return data;
 };
 
-export const average = data => {
-  let sum = 0;
-  data.forEach(datum => sum += datum);
-  return sum / data.length;
-};
+export const average = data => data.reduce((acc, curr) => acc + curr) / data.length;
 
 export const isOutlier = (datum, q1, q3) => !(datum < q1 -  1.5 * (q3 - q1) || datum > q3 + 1.5 * (q3 - q1));
 
