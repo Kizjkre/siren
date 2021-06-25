@@ -1,6 +1,7 @@
 @charset "utf-8";
 @import "node_modules/bulma/sass/utilities/all";
 
+$window-max-height: 70vh;
 $window-min-width: 25vw;
 $window-max-width: 70vw;
 
@@ -71,7 +72,7 @@ summary {
 
 .window-wrap {
   height: max-content;
-  max-height: 70vh;
+  max-height: $window-max-height;
   max-width: $window-max-width;
   min-width: $window-min-width;
   width: max-content;
@@ -88,6 +89,11 @@ summary {
 @import "node_modules/bulma/bulma";
 
 $shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($scheme-invert, 0.02);
+
+.about {
+  height: calc(100vh - #{ $navbar-height });
+  overflow: scroll;
+}
 
 .navbar-item:not(.is-unhoverable) {
   cursor: pointer;

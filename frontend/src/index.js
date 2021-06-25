@@ -4,12 +4,7 @@ import App from './app';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import store from './store';
-import halfmoon from 'halfmoon';
-// import 'halfmoon/css/halfmoon-variables.min.css';
-// import './style.css';
 import './style.scss'
-
-window.onload = () => halfmoon.onDOMContentLoaded();
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,10 +1,15 @@
 import { Link } from 'react-router-dom';
-import { setFileBrowser } from '../../../actions';
+import { focusWindow, setFileBrowser } from '../../../actions';
 import { connect } from 'react-redux';
 
-const ToolbarView = ({ selected, setSelected, fileBrowser, setFileBrowser }) => {
+const ToolbarView = ({ selected, setSelected, fileBrowser, setFileBrowser, focusWindow }) => {
   const handleFileBrowser = () => {
     setFileBrowser(!fileBrowser);
+    setSelected(false);
+  };
+
+  const handleView = () => {
+    focusWindow('window-view');
     setSelected(false);
   };
 
@@ -36,6 +41,14 @@ const ToolbarView = ({ selected, setSelected, fileBrowser, setFileBrowser }) => 
             <span>Code Editor</span>
           </div>
         </Link>
+        <a className="navbar-item" onClick={ handleView }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
+          <div className="icon-text">
+            <span className="icon">
+              <i className="fa fa-file-csv" />
+            </span>
+            <span>View CSV File</span>
+          </div>
+        </a>
       </div>
     </div>
   );
@@ -46,7 +59,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setFileBrowser: fileBrowser => dispatch(setFileBrowser(fileBrowser))
+  setFileBrowser: fileBrowser => dispatch(setFileBrowser(fileBrowser)),
+  focusWindow: id => dispatch(focusWindow(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ToolbarView);

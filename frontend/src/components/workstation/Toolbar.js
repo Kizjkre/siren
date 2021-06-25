@@ -11,7 +11,7 @@ const Toolbar = () => {
   const [selected, setSelected] = useState({ file: false, edit: false, view: false });
 
   useClickOutside(e => {
-    if (!navbar.current.contains(e.target)) {
+    if (!navbar.current?.contains(e.target)) {
       setSelected({ file: false, edit: false, view: false });
     }
   });

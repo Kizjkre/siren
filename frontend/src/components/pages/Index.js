@@ -1,24 +1,40 @@
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Navbar from '../Navbar';
+import IndexHeader from '../index/IndexHeader';
+import IndexFeatures from '../index/IndexFeatures';
+import IndexUseCases from '../index/IndexUseCases';
+import IndexTutorial from '../index/IndexTutorial';
 
 const Index = () => {
+  const components = [IndexHeader, IndexFeatures, IndexUseCases, IndexTutorial];
+
   return (
     <>
-      <Redirect to="workstation" />
-      <div>
-        <Navbar>
-          <div className="navbar-start">
-            <div className="navbar-item">
-              <Link to="/workstation" className="nav-link">Workstation</Link>
-            </div>
-          </div>
-        </Navbar>
-      </div>
-      <section className="section">
-        <div className="container">
-          Homepage
+      <Navbar>
+        <div className="navbar-start">
+          <Link to="/workstation" className="navbar-item">
+            Workstation
+          </Link>
         </div>
-      </section>
+        <div className="navbar-end">
+          <div className="navbar-item is-unhoverable">
+            <a
+              href="https://github.com/Kizjkre/siren/issues/new"
+              target="_blank"
+              rel="noreferrer"
+              className="button is-danger"
+            >
+              <span className="icon">
+                <i className="fa fa-bug" />
+              </span>
+              <span>Report Bug</span>
+            </a>
+          </div>
+        </div>
+      </Navbar>
+      <div className="about pb-6">
+        { components.map((Component, i) => <Component key={ i } offset={ i % 2 } />) }
+      </div>
     </>
   );
 };
