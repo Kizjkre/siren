@@ -1,21 +1,16 @@
-import { Link } from 'react-router-dom';
 import Navbar from '../Navbar';
-import IndexHeader from '../index/IndexHeader';
-import IndexFeatures from '../index/IndexFeatures';
-import IndexUseCases from '../index/IndexUseCases';
+import { Link } from 'react-router-dom';
 
-const Index = () => {
-  const components = [IndexHeader, IndexFeatures, IndexUseCases];
-
+const Presentation = () => {
   return (
     <>
       <Navbar>
         <div className="navbar-start">
+          <Link to="/" className="navbar-item">
+            Home
+          </Link>
           <Link to="/workstation" className="navbar-item">
             Workstation
-          </Link>
-          <Link to="/presentation" className="navbar-item">
-            Presentation
           </Link>
         </div>
         <div className="navbar-end">
@@ -34,11 +29,13 @@ const Index = () => {
           </div>
         </div>
       </Navbar>
-      <div className="about pb-6">
-        { components.map((Component, i) => <Component key={ i } offset={ i % 2 } />) }
-      </div>
+      <iframe
+        className="presentation"
+        src="https://docs.google.com/presentation/d/e/2PACX-1vS9C0omz8jLBQXPreW2nSxONloNqF71Ltuj8yvamGTRlPFUo0BSwwB1zQF2iEon6tmCi603SbRR2Ef3/embed?start=false&loop=true&delayms=60000"
+        frameBorder="0"
+      />
     </>
   );
 };
 
-export default Index;
+export default Presentation;

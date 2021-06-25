@@ -1,7 +1,8 @@
 const IndexSectionTemplate = ({ offset, title, subtitle, color, children }) => (
   <div className="block">
-    <div className="columns">
-      <div className={ `column ${ offset ? 'is-offset-1-desktop' : '' } is-11-desktop is-12` }>
+    <div className="columns is-gapless">
+      { offset ? <div className="column is-1-desktop" /> : null }
+      <div className="column is-11-desktop is-12">
         <section className={ `hero is-${ color }` }>
           <div className="hero-body">
             <h1 className="title">{ title }</h1>
