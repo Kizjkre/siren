@@ -54,7 +54,13 @@ export default class SimpleSynth {
   }
 
   queueGain(gain, start) {
-    this._gain.gain.setValueAtTime(gain, start);
+    const time = SimpleContext.toSeconds(start[0], start[1]);
+    this._gain.gain.linearRampToValueAtTime(gain, time);
+  }
+
+  queuePan(pan, start) {
+    const time = SimpleContext.toSeconds(start[0], start[1]);
+    this._panner.pan.linearRampToValueAtTime(pan, time);
   }
 
   play() {

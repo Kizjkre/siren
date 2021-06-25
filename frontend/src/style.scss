@@ -1,0 +1,133 @@
+@charset "utf-8";
+@import "node_modules/bulma/sass/utilities/all";
+
+$window-max-height: 70vh;
+$window-min-width: 25vw;
+$window-max-width: 70vw;
+
+@media screen and (min-width: $desktop) {
+  html {
+    overflow: hidden !important;
+  }
+}
+
+summary {
+  cursor: pointer;
+}
+
+.channel-feature {
+  cursor: pointer;
+}
+
+.channel-feature-checked {
+  background: $success;
+  color: $primary-invert;
+}
+
+.channel-feature-disabled {
+  background: $grey-lighter;
+  color: $white;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.navbar-dropdown {
+  width: max-content;
+}
+
+.placeholder {
+  font-size: $size-1;
+}
+
+.timesig-wrap {
+  align-items: center !important;
+}
+
+.timesig {
+  align-items: center;
+  display: flex;
+
+  span {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.track-graph, .track-table {
+  height: 100%;
+  width: 100%;
+}
+
+.window {
+  max-width: $window-max-width;
+  min-width: $window-min-width;
+  width: max-content !important;
+}
+
+.window-hook {
+  cursor: move;
+}
+
+.window-wrap {
+  height: max-content;
+  max-height: $window-max-height;
+  max-width: $window-max-width;
+  min-width: $window-min-width;
+  width: max-content;
+}
+
+#controls {
+  width: 100%;
+}
+
+#editor {
+  height: 100vh;
+}
+
+@import "node_modules/bulma/bulma";
+
+$shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($scheme-invert, 0.02);
+
+.about {
+  height: calc(100vh - #{ $navbar-height });
+  overflow: scroll;
+}
+
+.navbar-item:not(.is-unhoverable) {
+  cursor: pointer;
+  &:hover {
+    background: $navbar-dropdown-item-hover-background-color;
+    color: $navbar-dropdown-item-hover-color;
+  }
+}
+
+.modal {
+  box-shadow: $shadow;
+}
+
+.presentation {
+  height: calc(100vh - #{ $navbar-height });
+  width: 100%;
+}
+
+.settings-data {
+  cursor: pointer;
+  &:hover {
+    background: $table-row-hover-background-color;
+    color: $table-color;
+  }
+}
+
+.settings-data-selected {
+  background: $table-row-active-background-color;
+  color: $table-row-active-color;
+}
+
+.track-container {
+  height: calc(100vh - 2 * #{ $navbar-height } - #{ map-get($spacing-values, '4') });
+  overflow-y: scroll;
+}
+
+@import '~bulma-slider';

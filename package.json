@@ -1,8 +1,8 @@
 {
-  "name": "ocean-memory",
-  "version": "0.0.1",
-  "description": "Ocean Memory Sonification Project",
-  "repository": "https://github.com/Kizjkre/ocean-memory.git",
+  "name": "siren",
+  "version": "1.0.0",
+  "description": "Sonification Interface for REmapping Nature",
+  "repository": "https://github.com/Kizjkre/siren.git",
   "author": "Tristan Peng <tristan.peng@stanford.edu>",
   "license": "MIT",
   "private": true,
