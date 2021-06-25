@@ -31,6 +31,7 @@ const Presentation = () => {
       </Navbar>
       <iframe
         className="presentation"
+        title="presentation"
         src="https://docs.google.com/presentation/d/e/2PACX-1vS9C0omz8jLBQXPreW2nSxONloNqF71Ltuj8yvamGTRlPFUo0BSwwB1zQF2iEon6tmCi603SbRR2Ef3/embed?start=false&loop=true&delayms=60000"
         frameBorder="0"
       />
