@@ -1,25 +1,33 @@
 import Window from '../../Window';
 import { connect } from 'react-redux';
 import { editTrack, editTrackData } from '../../../actions';
-import { deepClone, removeOutliers } from '../../../helper/processing';
+import { deepClone, isNumerical, removeOutliers } from '../../../helper/processing';
 
 const TrackSettingsWindow = ({ id, trackId, files, tracks, editTrack, editTrackData }) => {
   const data = files[tracks[trackId].file].map(row => row[tracks[trackId].name]);
+  const numerical = isNumerical(tracks[trackId].data);
+  const worker = new Worker('workers/worker.js');
+
+  worker.onmessage = e => editTrackData(trackId, e.data);
 
   return (
     <Window id={ id } title={ `Track Settings: ${ tracks[trackId].name }` }>
       <div className="box">
         <h5 className="subtitle is-5">Data Processing</h5>
         <div className="buttons has-addons">
-          <button
-            className="button is-primary"
-            onClick={ () => editTrackData(trackId, removeOutliers(tracks[trackId].data)) }
-          >
-            <span className="icon">
-              <i className="fa fa-chart-line" />
-            </span>
-            <span>Remove Outliers</span>
-          </button>
+          {
+            !numerical ? null : (
+              <button
+                className="button is-primary"
+                onClick={ () => editTrackData(trackId, removeOutliers(tracks[trackId].data)) }
+              >
+                <span className="icon">
+                  <i className="fa fa-chart-line" />
+                </span>
+                <span>Remove Outliers</span>
+              </button>
+            )
+          }
           <button
             className="button is-primary"
             onClick={ () => editTrackData(trackId, data) }
@@ -61,6 +69,21 @@ const TrackSettingsWindow = ({ id, trackId, files, tracks, editTrack, editTrackD
             </tbody>
           </table>
         </div>
+        {
+          numerical ? null : (
+            <input
+              className="input"
+              type="number"
+              placeholder="Segmentation Size"
+              onChange={ e =>
+                worker.postMessage({
+                  type: 'chunkify',
+                  params: [tracks[trackId].data, parseInt(e.target.value)]
+                })
+              }
+            />
+          )
+        }
       </div>
       <div className="box">
         <h5 className="subtitle is-5">
