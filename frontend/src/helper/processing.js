@@ -74,21 +74,6 @@ export const numerizeToNumber = data => data.map(d => {
   return sum / d.length;
 });
 
-// export const numerizeToArray = data => {
-//   data = data.map(d => {
-//     const values = [];
-//     for (let i = 0; i < d.length; i++) {
-//       values.push(d.charCodeAt(i));
-//     }
-//     return values;
-//   });
-//
-//   const q1 = d3.quantile(data.flat(), 0.25);
-//   const q3 = d3.quantile(data.flat(), 0.75);
-//
-//   return data.map(d => isOutlier(d, q1, q3) ? d - (q3 + 1.5 * (q3 - q1)) : d);
-// };
-
 export const numerizeToArray = data => data.map(d => {
   const values = [];
   for (let i = 0; i < d.length; i++) {

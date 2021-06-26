@@ -3,6 +3,7 @@ import { ActionType } from '../constants/state';
 const generalReducer = (state, action) => {
   switch (action.type.type) {
     case ActionType.CREATE_WINDOW.type:
+      if (state.windows.findIndex(window => window.id === action.payload) >= 0) return state;
       return Object.assign({}, state, {
         windows: [...state.windows, { id: action.payload, zIndex: 0 }]
       });

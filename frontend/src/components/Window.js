@@ -18,6 +18,8 @@ const Window = ({ buttons, children, title, windows, focusWindow, id, createWind
   useEffect(() => {
     createWindow(id);
 
+    const isActive = win.current.classList.contains('is-active');
+
     win.current.classList.add('is-active');
 
     const rect = win.current.children[0].getBoundingClientRect();
@@ -25,7 +27,9 @@ const Window = ({ buttons, children, title, windows, focusWindow, id, createWind
     win.current.style.left = `${ (window.innerWidth - rect.width) / 2 }px`;
     win.current.style.top = `${ (window.innerHeight - rect.height) / 2 }px`;
 
-    win.current.classList.remove('is-active');
+    if (!isActive) {
+      win.current.classList.remove('is-active');
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
