@@ -4,7 +4,6 @@
   "description": "Ocean Memory backend",
   "main": "bin/www",
   "repository": "https://github.com/Kizjkre/ocean-memory.git",
-  "author": "tristan.peng@stanford.edu",
   "license": "MIT",
   "private": true,
   "dependencies": {
