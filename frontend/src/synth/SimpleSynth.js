@@ -5,7 +5,8 @@ const OPTIONS = {
   gain: 1,
   pan: 0,
   continuous: false,
-  num: 1
+  num: 1,
+  type: 'sine'
 };
 
 const calculateFrequency = (note, octave) => 440 * 2 ** (octave - (NOTES[note] > 2 ? 5 : 4)) * 2 ** (NOTES[note] / 12);
@@ -21,7 +22,7 @@ export default class SimpleSynth {
     this._panner = new StereoPannerNode(this._context);
 
     for (let i = 0; i < options.num; i++) {
-      const osc = new OscillatorNode(this._context, { type: 'sine' });
+      const osc = new OscillatorNode(this._context, { type: options.type });
       osc
         .connect(this._gain)
         .connect(this._panner)

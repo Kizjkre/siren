@@ -14,7 +14,7 @@ export const chunkify = (data, size) => {
   return temp;
 };
 
-export const isNumerical = data => data.every(d => typeof d === 'number');
+export const isNumerical = data => data.every(d => typeof d === 'number' || d === null);
 
 export const scale = (data, type, max, min, center) => {
   if (!isNumerical(data)) {
@@ -42,19 +42,21 @@ export const removeOutliers = data => {
   return data.filter(d => !(d < first -  1.5 * (third - first) || d > third + 1.5 * (third - first)));
 };
 
+// TODO: fix
 export const formatCSV = raw => {
-  let lines = raw.split(/\n/g);
-  const columns = lines[lines.length / 2].split(',').length;
-  lines = lines.filter(line => line.split(',').length === columns);
-  return lines.join('\n');
+  return raw;
+  // let lines = raw.split(/\n/g);
+  // const columns = lines[lines.length / 2].split(',').length;
+  // lines = lines.filter(line => line.split(',').length === columns);
+  // return lines.join('\n');
 };
 
 export const typeify = data => {
   // TODO: more data types
   data.forEach(row => {
     Object.keys(row).forEach(col => {
-      if (!isNaN(row[col])) {
-        row[col] = parseFloat(row[col]);
+      if (!isNaN(row[col].replace(/,/g, ''))) {
+        row[col] = parseFloat(row[col].replace(/,/g, ''));
       }
     });
   });
