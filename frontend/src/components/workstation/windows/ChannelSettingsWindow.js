@@ -15,7 +15,7 @@ const ChannelSettingsWindow = ({ id, name, tracks, channels, editChannelFeatures
         </thead>
         <tbody>
           {
-            Object.entries(INITIAL_CHANNEL_SETTINGS.features).map(([feature, _]) =>
+            Object.keys(INITIAL_CHANNEL_SETTINGS.features).map(feature =>
               <tr key={ feature }>
                 <td>{ feature }</td>
                 {
@@ -24,23 +24,19 @@ const ChannelSettingsWindow = ({ id, name, tracks, channels, editChannelFeatures
                       key={ t }
                       className={
                         `channel-feature ${
-                          channels[name].features[feature] !== t ? 
-                            Object.keys(tracks).includes(channels[name].features[feature] + '') ? 
-                              'channel-feature-disabled' : ''
+                          !channels[name].features[feature].includes(t) ? 
+                              'channel-feature-disabled'
                             : 'channel-feature-checked' 
                         }`
                       }
                       onClick={ () => editChannelFeatures(name, feature, t) }
                     >
                       {
-                        channels[name].features[feature] !== t ?
-                          Object.keys(tracks).includes(channels[name].features[feature] + '') ?
-                            (
-                              <span className="icon">
-                                <i className="fa fa-times" />
-                              </span>
-                            ) : null
-                          : (
+                        !channels[name].features[feature].includes(t) ? (
+                            <span className="icon">
+                              <i className="fa fa-times" />
+                            </span>
+                          ) : (
                             <span className="icon">
                               <i className="fa fa-check" />
                             </span>

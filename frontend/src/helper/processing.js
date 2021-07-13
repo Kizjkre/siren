@@ -44,11 +44,11 @@ export const removeOutliers = data => {
 
 // TODO: fix
 export const formatCSV = raw => {
-  return raw;
-  // let lines = raw.split(/\n/g);
-  // const columns = lines[lines.length / 2].split(',').length;
-  // lines = lines.filter(line => line.split(',').length === columns);
-  // return lines.join('\n');
+  // return raw;
+  let lines = raw.split(/\n/g);
+  const columns = lines[lines.length / 2].split(',').length;
+  lines = lines.filter(line => line.split(',').length === columns);
+  return lines.join('\n');
 };
 
 export const typeify = data => {

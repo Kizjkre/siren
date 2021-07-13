@@ -6,7 +6,7 @@ const Main = ({ tracks }) => {
     <section className="section track-container">
       {
         Object.entries(tracks).map(([id, { file, name }], i) =>
-          <Track key={ `${ name }-row-${ i }` } i={ i } id={ id } column={ name } name={ file } />
+          <Track key={ `${ name }-row-${ i }` } id={ id } column={ name } name={ file } />
         )
       }
     </section>

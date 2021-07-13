@@ -1,3 +1,5 @@
+import { deepClone } from '../helper/processing';
+
 export const ActionType = Object.freeze({
   reducer: {
     WORKSTATION: 'WORKSTATION',
@@ -20,11 +22,30 @@ export const ActionType = Object.freeze({
   SET_STATE: { type: 'SET_STATE', reducer: 'GENERAL' }
 });
 
+export const INITIAL_SETTINGS = {
+  mute: false,
+  volume: 50,
+  pan: 0,
+  continuous: false,
+  channel: ['Main']
+};
+
+export const INITIAL_CHANNEL_SETTINGS = {
+  continuous: false,
+  tracks: [],
+  features: {
+    Volume: [],
+    Pitch: [],
+    Pan: [],
+    Tempo: []
+  }
+};
+
 export const INITIAL_STATE = {
   workstation: {
     files: {},
     tracks: {},
-    channels: {},
+    channels: { Main: deepClone(INITIAL_CHANNEL_SETTINGS) },
     settings: {
       bpm: 120,
       key: 'C',
@@ -37,23 +58,4 @@ export const INITIAL_STATE = {
     open: null
   },
   windows: []
-};
-
-export const INITIAL_SETTINGS = {
-  mute: false,
-  volume: 50,
-  pan: 0,
-  continuous: false,
-  channel: []
-};
-
-export const INITIAL_CHANNEL_SETTINGS = {
-  continuous: false,
-  tracks: [],
-  features: {
-    Volume: -1,
-    Pitch: -1,
-    Pan: -1,
-    Tempo: -1
-  }
 };

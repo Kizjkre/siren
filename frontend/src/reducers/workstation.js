@@ -14,7 +14,11 @@ const workstationReducer = (state, action) => {
       let idCreateTrack = Math.max(...Object.keys(state.tracks));
       idCreateTrack = idCreateTrack === -Infinity ? 0 : idCreateTrack + 1;
       return Object.assign({}, state, {
-        tracks: { ...state.tracks, [idCreateTrack]: { ...action.payload, settings: deepClone(INITIAL_SETTINGS) } }
+        tracks: { ...state.tracks, [idCreateTrack]: { ...action.payload, settings: deepClone(INITIAL_SETTINGS) } },
+        channels: {
+          ...state.channels,
+          Main: { ...state.channels.Main, tracks: [...state.channels.Main.tracks, idCreateTrack] }
+        }
       });
     case ActionType.EDIT_TRACK.type:
       return Object.assign({}, state, {
@@ -76,10 +80,13 @@ const workstationReducer = (state, action) => {
       });
     case ActionType.EDIT_CHANNEL_FEATURES.type:
       const channelEditChannelFeatures = deepClone(state.channels);
-      if (channelEditChannelFeatures[action.payload.channel].features[action.payload.feature] === action.payload.track) {
-        channelEditChannelFeatures[action.payload.channel].features[action.payload.feature] = -1;
+      if (channelEditChannelFeatures[action.payload.channel].features[action.payload.feature].includes(action.payload.track)) {
+        channelEditChannelFeatures[action.payload.channel].features[action.payload.feature].splice(
+          channelEditChannelFeatures[action.payload.channel].features[action.payload.feature].indexOf(action.payload.track),
+          1
+        );
       } else {
-        channelEditChannelFeatures[action.payload.channel].features[action.payload.feature] = action.payload.track
+        channelEditChannelFeatures[action.payload.channel].features[action.payload.feature].push(action.payload.track);
       }
       return Object.assign({}, state, {
         channels: Object.assign({}, state.channels, channelEditChannelFeatures)
