@@ -3,31 +3,44 @@ import Settings from './Settings';
 import TrackData from './TrackData';
 import { connect } from 'react-redux';
 
-const Track = ({ i, id, column, name, tracks }) => (
+const Track = ({ id, column, name, tracks }) => (
   <div className="columns">
     <div className={ `column is-${ TRACK_CONTROLS_WIDTH }` }>
       <div className="box h-100">
         <div className="block">
-          <h2 className="subtitle">Track { i + 1 }: { column }</h2>
-          <p className="has-text-weight-light">{ name }</p>
+          <nav className="breadcrumb track-header">
+            <ul>
+              <li className="is-active">
+                <a className="is-size-6 has-text-weight-light"> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
+                  Track { id }
+                </a>
+              </li>
+              <li className="is-active">
+                <a className="is-size-5"> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
+                  { name }
+                </a>
+              </li>
+              <li className="is-active">
+                <a className="is-size-5"> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
+                  { column }
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
         <div className="block">
-          {
-            tracks[id].settings.channel.length === 0 ? null : (
-              <>
-                <h6 className="is-6 pb-2">Channels:</h6>
-                <div className="tags">
-                  {
-                    tracks[id].settings.channel.map(channel =>
-                      <span key={ channel } className="tag is-primary">{ channel }</span>
-                    )
-                  }
-                </div>
-              </>
-            )
-          }
+          <div className="tags">
+            <h6 className="is-6 pr-2">Channels:</h6>
+            {
+              tracks[id].settings.channel.length === 0 ? <span className="tag m-0">No connected channels</span>
+                : tracks[id].settings.channel.map(channel =>
+                  <span key={ channel } className="tag is-primary m-0">{ channel }</span>
+                )
+            }
+          </div>
+
         </div>
-        <Settings column={ column } i={ i } id={ id } />
+        <Settings column={ column } id={ id } />
       </div>
     </div>
     <div className={ `column is-${ TRACK_WIDTH }` }>
