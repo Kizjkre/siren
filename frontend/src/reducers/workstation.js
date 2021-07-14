@@ -11,15 +11,17 @@ const workstationReducer = (state, action) => {
         }
       });
     case ActionType.CREATE_TRACK.type:
-      let idCreateTrack = Math.max(...Object.keys(state.tracks));
-      idCreateTrack = idCreateTrack === -Infinity ? 0 : idCreateTrack + 1;
-      return Object.assign({}, state, {
-        tracks: { ...state.tracks, [idCreateTrack]: { ...action.payload, settings: deepClone(INITIAL_SETTINGS) } },
-        channels: {
-          ...state.channels,
-          Main: { ...state.channels.Main, tracks: [...state.channels.Main.tracks, idCreateTrack] }
-        }
-      });
+      return (() => {
+        let id = Math.max(...Object.keys(state.tracks));
+        id = id === -Infinity ? 0 : id + 1;
+        return Object.assign({}, state, {
+          tracks: { ...state.tracks, [id]: { ...action.payload, settings: deepClone(INITIAL_SETTINGS) } },
+          channels: {
+            ...state.channels,
+            Main: { ...state.channels.Main, tracks: [...state.channels.Main.tracks, id] }
+          }
+        });
+      })();
     case ActionType.EDIT_TRACK.type:
       return Object.assign({}, state, {
         tracks: {
@@ -41,19 +43,21 @@ const workstationReducer = (state, action) => {
         }
       });
     case ActionType.DELETE_TRACK.type:
-      const tracksDeleteTrack = Object.assign({}, state.tracks);
-      delete tracksDeleteTrack[action.payload];
+      return (() => {
+        const tracks = Object.assign({}, state.tracks);
+        delete tracks[action.payload];
 
-      const channelsDeleteTrack = deepClone(state.channels);
-      for (const name in channelsDeleteTrack) {
-        if (channelsDeleteTrack.hasOwnProperty(name)) {
-          channelsDeleteTrack[name].tracks = channelsDeleteTrack[name].tracks.filter(track =>
-            track.id !== parseInt(action.payload)
-          );
+        const channels = deepClone(state.channels);
+        for (const name in channels) {
+          if (channels.hasOwnProperty(name)) {
+            channels[name].tracks = channels[name].tracks.filter(track =>
+              track.id !== parseInt(action.payload)
+            );
+          }
         }
-      }
 
-      return Object.assign({}, state, { tracks: tracksDeleteTrack, channels: channelsDeleteTrack });
+        return Object.assign({}, state, { tracks, channels });
+      })();
     case ActionType.CREATE_CHANNEL.type:
       return Object.assign({}, state, {
         channels: Object.assign({}, state.channels, {
@@ -61,36 +65,40 @@ const workstationReducer = (state, action) => {
         })
       });
     case ActionType.EDIT_CHANNEL.type:
-      const channelEditChannel = deepClone(state.channels[action.payload.name]);
-      const index = channelEditChannel.tracks.indexOf(action.payload.trackId);
-      const tracksEditChannel = deepClone(state.tracks);
-      if (index === -1) {
-        channelEditChannel.tracks.push(action.payload.trackId);
-        tracksEditChannel[action.payload.trackId].settings.channel.push(action.payload.name);
-      } else {
-        channelEditChannel.tracks.splice(index, 1);
-        tracksEditChannel[action.payload.trackId].settings.channel.splice(
-          tracksEditChannel[action.payload.trackId].settings.channel.indexOf(action.payload.name),
-          1
-        );
-      }
-      return Object.assign({}, state, {
-        tracks: tracksEditChannel,
-        channels: Object.assign({}, state.channels, { [action.payload.name]: channelEditChannel })
-      });
+      return (() => {
+        const channel = deepClone(state.channels[action.payload.name]);
+        const index = channel.tracks.indexOf(action.payload.trackId);
+        const tracks = deepClone(state.tracks);
+        if (index === -1) {
+          channel.tracks.push(action.payload.trackId);
+          tracks[action.payload.trackId].settings.channel.push(action.payload.name);
+        } else {
+          channel.tracks.splice(index, 1);
+          tracks[action.payload.trackId].settings.channel.splice(
+            tracks[action.payload.trackId].settings.channel.indexOf(action.payload.name),
+            1
+          );
+        }
+        return Object.assign({}, state, {
+          tracks,
+          channels: Object.assign({}, state.channels, { [action.payload.name]: channel })
+        });
+      })();
     case ActionType.EDIT_CHANNEL_FEATURES.type:
-      const channelEditChannelFeatures = deepClone(state.channels);
-      if (channelEditChannelFeatures[action.payload.channel].features[action.payload.feature].includes(action.payload.track)) {
-        channelEditChannelFeatures[action.payload.channel].features[action.payload.feature].splice(
-          channelEditChannelFeatures[action.payload.channel].features[action.payload.feature].indexOf(action.payload.track),
-          1
-        );
-      } else {
-        channelEditChannelFeatures[action.payload.channel].features[action.payload.feature].push(action.payload.track);
-      }
-      return Object.assign({}, state, {
-        channels: Object.assign({}, state.channels, channelEditChannelFeatures)
-      });
+      return (() => {
+        const channel = deepClone(state.channels);
+        if (channel[action.payload.channel].features[action.payload.feature].includes(action.payload.track)) {
+          channel[action.payload.channel].features[action.payload.feature].splice(
+            channel[action.payload.channel].features[action.payload.feature].indexOf(action.payload.track),
+            1
+          );
+        } else {
+          channel[action.payload.channel].features[action.payload.feature].push(action.payload.track);
+        }
+        return Object.assign({}, state, {
+          channels: Object.assign({}, state.channels, channel)
+        });
+      })();
     case ActionType.SET_SETTINGS.type:
       return Object.assign({}, state, {
         settings: {
