@@ -1,4 +1,4 @@
-import { deepClone } from '../helper/processing';
+import cloneDeep from 'lodash.clonedeep';
 
 export const ActionType = Object.freeze({
   reducer: {
@@ -45,7 +45,7 @@ export const INITIAL_STATE = {
   workstation: {
     files: {},
     tracks: {},
-    channels: { Main: deepClone(INITIAL_CHANNEL_SETTINGS) },
+    channels: { Main: cloneDeep(INITIAL_CHANNEL_SETTINGS) },
     settings: {
       bpm: 120,
       key: 'C',
