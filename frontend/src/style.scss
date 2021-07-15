@@ -133,9 +133,13 @@ $shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($schem
   color: $table-row-active-color;
 }
 
-.track-container {
+.workstation-body {
   height: calc(100vh - 2 * #{ $navbar-height } - #{ map-get($spacing-values, '4') });
   overflow-y: scroll;
+}
+
+.workstation-empty {
+  height: 100%;
 }
 
 @import '~bulma-slider';

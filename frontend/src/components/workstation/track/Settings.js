@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { editTrack, deleteTrack, focusWindow } from '../../actions';
+import { editTrack, deleteTrack, focusWindow } from '../../../actions';
 
 const Settings = ({ id, tracks, editTrack, deleteTrack, focusWindow }) => {
 

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { connect } from 'react-redux';
-import { isNumerical } from '../../helper/processing';
+import { isNumerical } from '../../../helper/processing';
 
 let height = -1;
 
@@ -53,7 +53,7 @@ const TrackData = ({ tracks, id }) => {
       xAxis.current.style.transform = `translateY(calc(${ height } - 20px))`;
       yAxis.current.style.transform = 'translateX(30px)';
     }
-  }, [tracks]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isNumerical(track)) {
     return (

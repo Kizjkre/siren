@@ -1,4 +1,5 @@
 import cloneDeep from 'lodash.clonedeep';
+import { median, scale } from '../helper/processing';
 
 export const ActionType = Object.freeze({
   reducer: {
@@ -41,11 +42,17 @@ export const INITIAL_CHANNEL_SETTINGS = {
   }
 };
 
+export const INITIAL_PROFILE_SETTINGS = {
+  map: data => scale(data, 'logistic', 1, 0, median(data)),
+  filter: () => true
+};
+
 export const INITIAL_STATE = {
   workstation: {
     files: {},
     tracks: {},
     channels: { Main: cloneDeep(INITIAL_CHANNEL_SETTINGS) },
+    profiles: { Default: cloneDeep(INITIAL_PROFILE_SETTINGS) },
     settings: {
       bpm: 120,
       key: 'C',

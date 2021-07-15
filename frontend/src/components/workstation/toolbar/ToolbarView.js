@@ -30,7 +30,7 @@ const ToolbarView = ({ selected, setSelected, fileBrowser, setFileBrowser, focus
             <span className="icon">
               <i className={ `fa fa-toggle-${ fileBrowser ? 'on' : 'off' }` }/>
             </span>
-            <span>Toggle File Browser</span>
+            <span>Toggle Sidebar</span>
           </div>
         </a>
         <Link className="navbar-item" to="/editor">

@@ -1,5 +1,5 @@
 import Toolbar from '../workstation/Toolbar';
-import FileBrowser from '../workstation/FileBrowser';
+import FileBrowser from '../workstation/Sidebar';
 import Main from '../workstation/Main';
 import CreateTrackWindow from '../workstation/windows/CreateTrackWindow';
 import Controls from '../workstation/Controls';
@@ -20,12 +20,12 @@ const Workstation = ({ files, tracks, channels, fileBrowser }) => {
       <ViewWindow />
       <Toolbar />
       <div className="columns">
-        <div className={ `column is-2 ${ fileBrowser ? '' : 'is-hidden' }` }>
+        <div className={ `column is-2 ${ fileBrowser ? '' : 'is-hidden' } workstation-body` }>
           <section className="section">
             <FileBrowser />
           </section>
         </div>
-        <div className="column is-10">
+        <div className="column is-10 workstation-body">
           <Main />
         </div>
       </div>

@@ -55,7 +55,7 @@ const Window = ({ buttons, children, title, windows, focusWindow, id, createWind
         <section className="modal-card-body">
           { children }
         </section>
-        <footer className="modal-card-foot">
+        <footer className={ `modal-card-foot ${ buttons.length ? '' : 'is-hidden' }` }>
           {
             buttons.map(({ close, color, onClick, disabled, text }, i) =>
               <button

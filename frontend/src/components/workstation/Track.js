@@ -1,6 +1,6 @@
 import { TRACK_CONTROLS_WIDTH, TRACK_WIDTH } from '../../constants/workstation';
-import Settings from './Settings';
-import TrackData from './TrackData';
+import Settings from './track/Settings';
+import TrackData from './track/TrackData';
 import { connect } from 'react-redux';
 
 const Track = ({ id, column, name, tracks }) => (

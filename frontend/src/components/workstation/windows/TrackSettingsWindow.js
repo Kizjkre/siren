@@ -1,7 +1,8 @@
 import Window from '../../Window';
 import { connect } from 'react-redux';
 import { editTrack, editTrackData } from '../../../actions';
-import { deepClone, isNumerical, removeOutliers } from '../../../helper/processing';
+import { isNumerical, removeOutliers } from '../../../helper/processing';
+import cloneDeep from 'lodash.clonedeep';
 
 const TrackSettingsWindow = ({ id, trackId, files, tracks, editTrack, editTrackData }) => {
   const data = files[tracks[trackId].file].map(row => row[tracks[trackId].name]);
@@ -51,7 +52,7 @@ const TrackSettingsWindow = ({ id, trackId, files, tracks, editTrack, editTrackD
                         key={ i }
                         className={ `settings-data ${ selected ? 'settings-data-selected' : '' }` }
                         onClick={ () => {
-                          const temp = deepClone(tracks[trackId].data);
+                          const temp = cloneDeep(tracks[trackId].data);
                           if (selected) {
                             temp.splice(i, 1);
                           } else {
