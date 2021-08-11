@@ -16,6 +16,15 @@ export const chunkify = (data, size) => {
 
 export const isNumerical = data => data.every(d => typeof d === 'number' || d === null);
 
+export const extremes = data => {
+  let [min, max] = [Infinity, -Infinity];
+  data.forEach(datum => {
+    if (datum < min) min = datum;
+    if (datum > max) max = datum;
+  });
+  return [min, max];
+}
+
 export const scale = (data, type, max, min, center) => {
   if (!isNumerical(data)) {
     return null;

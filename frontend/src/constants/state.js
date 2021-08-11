@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash.clonedeep';
-import { median, scale } from '../helper/processing';
+import { extremes } from '../helper/processing';
 
 export const ActionType = Object.freeze({
   reducer: {
@@ -43,7 +43,10 @@ export const INITIAL_CHANNEL_SETTINGS = {
 };
 
 export const INITIAL_PROFILE_SETTINGS = {
-  map: data => scale(data, 'logistic', 1, 0, median(data)),
+  map: data => {
+    const [min, max] = extremes(data);
+    return data.map(datum => (datum - min) / (max - min));
+  },
   filter: () => true
 };
 

@@ -1,13 +1,8 @@
 import { useState } from 'react';
-import BPMWindow from './windows/BPMWindow';
-import KeyWindow from './windows/KeyWindow';
-import TimesigWindow from './windows/TimesigWindow';
 import { connect } from 'react-redux';
 import { focusWindow } from '../../actions';
 import { KEYS, PLAYING_STATUS } from '../../constants/workstation';
 import { play, pause, stop } from '../../synth/synth';
-import ChannelWindow from './windows/ChannelWindow';
-import ProfileWindow from './windows/ProfileWindow';
 
 const Controls = ({ settings, focusWindow, disabled }) => {
   const [status, setStatus] = useState(PLAYING_STATUS.STOPPED);
@@ -99,14 +94,6 @@ const Controls = ({ settings, focusWindow, disabled }) => {
             </p>
             <div className="level-right">
               <div className="level-item">
-                <button className="button is-primary" onClick={ () => focusWindow('window-edit-profile') }>
-                  <span className="icon">
-                    <i className="fa fa-map-signs" />
-                  </span>
-                  <span>Edit Profiles</span>
-                </button>
-              </div>
-              <div className="level-item">
                 <button className="button is-primary" onClick={ () => focusWindow('window-channel') }>
                   <span className="icon">
                     <i className="fa fa-code-branch" />
@@ -114,29 +101,24 @@ const Controls = ({ settings, focusWindow, disabled }) => {
                   <span>Edit Channels</span>
                 </button>
               </div>
-              {/*<div className="level-item">*/}
-              {/*  <button className="button is-white timesig-wrap" onClick={ () => focusWindow('window-timesig') }>*/}
-              {/*    <span className="icon">*/}
-              {/*      <i className="fa fa-stopwatch" />*/}
-              {/*    </span>*/}
-              {/*    <span className="timesig">*/}
-              {/*      Time Signature:&nbsp;*/}
-              {/*      <span>*/}
-              {/*        <sup>{ settings.timesig[0] <= 0 ? 'N/A' : settings.timesig[0] }</sup>*/}
-              {/*        <sub>{ settings.timesig[1] <= 0 ? 'N/A' : settings.timesig[1] }</sub>*/}
-              {/*      </span>*/}
-              {/*    </span>*/}
-              {/*  </button>*/}
-              {/*</div>*/}
+              <div className="level-item">
+                <button className="button is-white timesig-wrap" onClick={ () => focusWindow('window-timesig') }>
+                  <span className="icon">
+                    <i className="fa fa-stopwatch" />
+                  </span>
+                  <span className="timesig">
+                    Time Signature:&nbsp;
+                    <span>
+                      <sup>{ settings.timesig[0] <= 0 ? 'N/A' : settings.timesig[0] }</sup>
+                      <sub>{ settings.timesig[1] <= 0 ? 'N/A' : settings.timesig[1] }</sub>
+                    </span>
+                  </span>
+                </button>
+              </div>
             </div>
           </nav>
         </div>
       </nav>
-      <BPMWindow />
-      <KeyWindow />
-      {/*<TimesigWindow />*/}
-      <ChannelWindow />
-      <ProfileWindow />
     </>
   );
 };

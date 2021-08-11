@@ -1,6 +1,8 @@
 @charset "utf-8";
 @import "node_modules/bulma/sass/utilities/all";
 
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
+
 $window-max-height: 70vh;
 $window-min-width: 25vw;
 $window-max-width: 70vw;
@@ -39,6 +41,23 @@ summary {
 
 .placeholder {
   font-size: $size-1;
+}
+
+.profile-editor {
+  background: $grey-lighter;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13pt;
+  line-height: 1.2;
+  textarea {
+    background: $grey-lighter;
+    border: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13pt;
+    line-height: 1.2;
+    resize: horizontal;
+    outline: none;
+    max-width: 100%;
+  }
 }
 
 .timesig-wrap {

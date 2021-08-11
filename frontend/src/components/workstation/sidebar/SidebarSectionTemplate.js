@@ -12,7 +12,7 @@ const SidebarSectionTemplate = ({ title, icon, empty, children }) => (
       {
         !empty ? children : (
           <li>
-            <a className="is-active"> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
+            <a className="has-text-weight-light has-text-info"> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
               <span className="icon-text">
                 <span className="icon">
                   <i className="fa fa-folder-open" />

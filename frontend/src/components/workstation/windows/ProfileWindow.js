@@ -1,16 +1,21 @@
 import Window from '../../Window';
+import ProfileEditor from '../ProfileEditor';
 
 const ProfileWindow = () => {
   return (
-    <Window title="Edit Profiles" id="window-edit-profile">
-      <article className="panel is-primary">
-        <p className="panel-heading">
-          Primary
-        </p>
-        <p className="panel-tabs"> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
-          <a onClick={  }>+ Add Profile</a> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
-        </p>
-      </article>
+    <Window
+      title="Add Profile"
+      id="window-profile"
+      buttons={ [{
+        close: true,
+        color: 'is-success',
+        text: 'Add Profile'
+      }] }
+    >
+      <div className="box">
+        <h5 className="subtitle is-5">Mapping Function</h5>
+        <ProfileEditor />
+      </div>
     </Window>
   );
 };
