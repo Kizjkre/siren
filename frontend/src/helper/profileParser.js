@@ -1,9 +1,3 @@
-const TOKENS = Object.freeze({
-  number: /^\d*.?\d+$/,
-  operation: /^[+\-*/^()]$/,
-  keyword: /^MAX|MIN|MEAN|MEDIAN|MODE|Q1|Q3|x$/
-});
-
 class SimpleStream {
   constructor(string) {
     this._string = string;
@@ -37,39 +31,28 @@ class SimpleStream {
 
 class SimpleLexicalAnalyzer {
   constructor(code) {
-    this._code = new SimpleStream(code);
+    this._code = code;
     this._tokens = [];
   }
 
-  _() {
-
-  }
-
   analyze() {
-    let current = '';
-    let type = null;
-    while (this._code.more()) {
-      if (!type && TOKENS.number.test(current + this._code.peek())) {
-        type = SLAToken.TYPES.number;
-      } else if (!type && TOKENS.operation.test(current + this._code.peek())) {
-        type = SLAToken.TYPES.operation;
-      } else if (!type && TOKENS.keyword.test(current + this._code.peek())) {
-        type = SLAToken.TYPES.keyword;
-      } else {
-        if (!/^\s*$/.test(current)) {
-          this._tokens.push(new SLAToken(type, current));
-          current = '';
+    let code;
+    let offset;
+    for (const type of Object.values(SLAToken.TYPES)) {
+      code = this._code;
+      offset = 0;
+      while (code) {
+        const token = code.match(type);
+        if (!token) {
+          break;
         }
-        type = null;
-        continue;
+        this._tokens.push(new SLAToken(type, token[0], token.index + offset));
+        code = code.substr(token.index + token[0].length);
+        offset += token.index + token[0].length;
       }
-
-      current += this._code.next();
     }
 
-    if (!/^\s*$/.test(current)) {
-      this._tokens.push(new SLAToken(type, current));
-    }
+    this._tokens.sort((a, b) => a.index - b.index);
 
     return this;
   }
@@ -80,18 +63,19 @@ class SimpleLexicalAnalyzer {
 }
 
 class SLAToken {
-  constructor(type, value) {
+  constructor(type, value, index = -1) {
     if (!Object.values(SLAToken.TYPES).includes(type)) {
       throw new TypeError(`Expected a SLAToken type, received ${ type } instead.`);
     }
     this._type = type;
     this._value = value;
+    this._index = index;
   }
 
   static TYPES = {
-    number: 1,
-    operation: 2,
-    keywords: 3
+    number: /\d*\.?\d+/,
+    operation: /[+\-*/^()]/,
+    keyword: /MAX|MIN|MEAN|MEDIAN|MODE|Q1|Q3|x/
   };
 
   get type() {
@@ -100,6 +84,14 @@ class SLAToken {
 
   get value() {
     return this._value;
+  }
+
+  get index() {
+    return this._index;
+  }
+
+  set index(value) {
+    this._index = value;
   }
 }
 
