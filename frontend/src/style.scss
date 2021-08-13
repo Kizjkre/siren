@@ -48,6 +48,16 @@ summary {
   font-family: 'JetBrains Mono', monospace;
   font-size: 13pt;
   line-height: 1.2;
+
+  .columns {
+    margin: 0;
+    width: 100%;
+  }
+
+  .notification {
+    font-size: 10pt;
+  }
+
   textarea {
     background: $grey-lighter;
     border: none;
