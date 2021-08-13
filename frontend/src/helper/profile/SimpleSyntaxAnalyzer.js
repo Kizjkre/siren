@@ -15,6 +15,12 @@ export default class SimpleSyntaxAnalyzer {
     return expression;
   }
 
+  _skipWhitespace() {
+    if (this._tokens.more() && this._tokens.peek().type === SLAToken.TYPES.whitespace) {
+      this._tokens.next();
+    }
+  }
+
   _expression() {
     const term = this._term();
     if (this._tokens.more() && this._tokens.peek().type === SLAToken.TYPES.additive) {
@@ -49,11 +55,19 @@ export default class SimpleSyntaxAnalyzer {
           this._tokens.next();
           const expression = this._expression();
           this._tokens.next();
+          this._skipWhitespace();
           return expression;
         case SLAToken.TYPES.number:
-          return new NumberNode(this._tokens.next().value);
+          const numNode = new NumberNode(this._tokens.next().value);
+          this._skipWhitespace();
+          return numNode;
         case SLAToken.TYPES.keyword:
-          return new KeywordNode(this._tokens.next().value);
+          const keyNode = new KeywordNode(this._tokens.next().value);
+          this._skipWhitespace();
+          return keyNode;
+        case SLAToken.TYPES.whitespace:
+          this._tokens.next();
+          return this._base();
         default:
           const next = this._tokens.next();
           throw new SyntaxError(`Unexpected token ${ next.value } in expression at position ${ next.index + 1 }.`);

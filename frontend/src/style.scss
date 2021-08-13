@@ -43,31 +43,6 @@ summary {
   font-size: $size-1;
 }
 
-.profile-editor {
-  background: $grey-dark;
-  border-radius: 10px;
-  color: $white-ter;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13pt;
-  line-height: 1.2;
-
-  .columns {
-    margin: 0;
-    width: 100%;
-  }
-
-  .profile-editor-editor {
-    height: 20vh;
-    overflow: scroll;
-    white-space: nowrap;
-    width: 100%;
-
-    &:focus {
-      outline: none;
-    }
-  }
-}
-
 .timesig-wrap {
   align-items: center !important;
 }
@@ -145,6 +120,65 @@ $shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($schem
 .presentation {
   height: calc(100vh - #{ $navbar-height });
   width: 100%;
+}
+
+.profile-editor {
+  background: $grey-dark;
+  border-radius: 10px;
+  color: $white-ter;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13pt;
+  line-height: 1.2;
+  width: 50vw;
+
+  .columns {
+    margin: 0;
+    width: 100%;
+  }
+
+  .profile-editor-line-number {
+    border-right: 2px $grey solid;
+  }
+
+  .profile-editor-ta-wrap {
+    position: relative;
+  }
+
+  code, code span {
+    white-space: pre;
+  }
+
+  code, textarea {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13pt;
+    line-height: 1.2;
+  }
+
+  pre {
+    color: $white-ter;
+    padding: 0;
+    z-index: 998;
+  }
+
+  pre, textarea {
+    background: transparent;
+    overflow: auto;
+    position: absolute;
+    white-space: nowrap;
+    width: calc(100% - 2 * #{ map-get($spacing-values, '3') });
+  }
+
+  textarea {
+    border: none;
+    caret-color: $white-ter;
+    color: transparent;
+    resize: none;
+    z-index: 999;
+
+    &:focus {
+      outline: none;
+    }
+  }
 }
 
 .settings-data {

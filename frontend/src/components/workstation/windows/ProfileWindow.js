@@ -14,6 +14,7 @@ const ProfileWindow = () => {
     >
       <div className="box">
         <h5 className="subtitle is-5">Mapping Function</h5>
+        <hr />
         <ProfileEditor />
       </div>
     </Window>
