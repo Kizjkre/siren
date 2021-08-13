@@ -44,7 +44,9 @@ summary {
 }
 
 .profile-editor {
-  background: $grey-lighter;
+  background: $grey-dark;
+  border-radius: 10px;
+  color: $white-ter;
   font-family: 'JetBrains Mono', monospace;
   font-size: 13pt;
   line-height: 1.2;
@@ -54,19 +56,15 @@ summary {
     width: 100%;
   }
 
-  .notification {
-    font-size: 10pt;
-  }
+  .profile-editor-editor {
+    height: 20vh;
+    overflow: scroll;
+    white-space: nowrap;
+    width: 100%;
 
-  textarea {
-    background: $grey-lighter;
-    border: none;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13pt;
-    line-height: 1.2;
-    resize: horizontal;
-    outline: none;
-    max-width: 100%;
+    &:focus {
+      outline: none;
+    }
   }
 }
 

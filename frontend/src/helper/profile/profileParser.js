@@ -3,7 +3,7 @@ import SimpleSyntaxAnalyzer from './SimpleSyntaxAnalyzer';
 
 const profileParser = code => {
   if (!code) {
-    return;
+    return { tokens: [] };
   }
   const tokens = new SimpleLexicalAnalyzer(code).analyze().tokens;
   new SimpleSyntaxAnalyzer(tokens).analyze();
