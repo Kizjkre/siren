@@ -27,15 +27,18 @@ const ProfileEditor = () => {
       tokens.forEach((token, i) => {
         switch (token.type) {
           case SLAToken.TYPES.number:
-            innerHTML.push(<span style={ { color: 'goldenrod' } } key={ i }>{ token.value }</span>);
+            innerHTML.push(<span className="profile-editor-code-number" key={ i }>{ token.value }</span>);
             break;
           case SLAToken.TYPES.additive:
           case SLAToken.TYPES.multiplicative:
           case SLAToken.TYPES.exponential:
-            innerHTML.push(<span style={ { color: 'mediumpurple' } } key={ i }>{ token.value }</span>);
+            innerHTML.push(<span className="profile-editor-code-operation" key={ i }>{ token.value }</span>);
             break;
           case SLAToken.TYPES.keyword:
-            innerHTML.push(<span style={ { color: 'darkseagreen' } } key={ i }>{ token.value }</span>);
+            innerHTML.push(<span className="profile-editor-code-keyword" key={ i }>{ token.value }</span>);
+            break;
+          case SLAToken.TYPES.parenthesis:
+            innerHTML.push(<span className="profile-editor-code-parenthesis" key={ i }>{ token.value }</span>);
             break;
           default:
             innerHTML.push(<Fragment key={ i }>{ token.value }</Fragment>);

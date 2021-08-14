@@ -43,6 +43,22 @@ summary {
   font-size: $size-1;
 }
 
+.profile-editor-code-number {
+  color: goldenrod;
+}
+
+.profile-editor-code-operation {
+  color: mediumpurple;
+}
+
+.profile-editor-code-keyword {
+  color: darkseagreen;
+}
+
+.profile-editor-code-parenthesis {
+  color: $grey-lighter;
+}
+
 .timesig-wrap {
   align-items: center !important;
 }
