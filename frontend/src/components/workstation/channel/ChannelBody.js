@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { editChannel, focusWindow } from '../../../actions';
 import { useState } from 'react';
 
-const ChannelBody = ({ name, tracks, channels, editChannel }) => {
+const ChannelBody = ({ name, tracks, channels, editChannel, focusWindow }) => {
   const [track, setTrack] = useState('');
 
   return (
