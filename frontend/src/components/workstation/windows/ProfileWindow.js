@@ -20,7 +20,7 @@ const ProfileWindow = ({ profiles, addProfile }) => {
         close: true,
         color: 'is-success',
         text: 'Add Profile',
-        disabled: value !== expression || name === '' || Object.keys(profiles).includes(name),
+        disabled: expression === '' || value !== expression || name === '' || Object.keys(profiles).includes(name),
         onClick: () => {
           addProfile(name, expression);
           setSave(!save);
