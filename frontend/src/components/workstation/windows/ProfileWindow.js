@@ -40,7 +40,7 @@ const ProfileWindow = ({ profiles, addProfile }) => {
           </div>
         </div>
         <hr />
-        <ProfileEditor save={ save } onExpression={ expr => setExpression(expr) } onChange={ value => setValue(value) } />
+        <ProfileEditor save={ save } onExpression={ expr => setExpression(expr) } onChange={ value => setValue(value) } editable={ true } />
         <hr />
         <div className="box">
           <h6 className="subtitle is-size-5">To use:</h6>

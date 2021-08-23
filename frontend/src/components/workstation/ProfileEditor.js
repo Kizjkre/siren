@@ -2,7 +2,14 @@ import { Fragment, useState, useRef, useEffect } from 'react';
 import profileParser from '../../helper/profile/profileParser';
 import { SLAToken } from '../../helper/profile/SimpleLexicalAnalyzer';
 
-const ProfileEditor = ({ save, onChange, onExpression }) => {
+const ProfileEditor = ({ save, onChange, onExpression, initialCode, editable }) => {
+  if (!onChange) {
+    onChange = () => null;
+  }
+  if (!onExpression) {
+    onExpression = () => null;
+  }
+
   const [code, setCode] = useState('');
   const [display, setDisplay] = useState([]);
   const [error, setError] = useState('');
@@ -10,6 +17,12 @@ const ProfileEditor = ({ save, onChange, onExpression }) => {
 
   const editing = useRef();
   const highlighting = useRef();
+
+  useEffect(() => {
+    if (initialCode) {
+      handleChange({ target: { value: initialCode } });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (save !== clear) {
@@ -65,8 +78,8 @@ const ProfileEditor = ({ save, onChange, onExpression }) => {
   };
 
   const handleScroll = () => {
-    highlighting.current.scrollTop = editing.current.scrollTop;
-    highlighting.current.scrollLeft = editing.current.scrollLeft;
+    highlighting.current.scrollTop = editing.current?.scrollTop;
+    highlighting.current.scrollLeft = editing.current?.scrollLeft;
   };
 
   return (
@@ -85,15 +98,19 @@ const ProfileEditor = ({ save, onChange, onExpression }) => {
           </p>
         </div>
         <div className="column is-11 profile-editor-ta-wrap">
-          <textarea
-            onChange={ handleChange }
-            onScroll={ handleScroll }
-            value={ code }
-            rows={ code.split('\n').length }
-            wrap="off"
-            ref={ editing }
-            spellCheck="false"
-          />
+          {
+            editable ? (
+              <textarea
+                onChange={ handleChange }
+                onScroll={ handleScroll }
+                value={ code }
+                rows={ code.split('\n').length }
+                wrap="off"
+                ref={ editing }
+                spellCheck="false"
+              />
+            ) : null
+          }
           <pre ref={ highlighting }>
             <code aria-hidden>{ display }</code>
           </pre>

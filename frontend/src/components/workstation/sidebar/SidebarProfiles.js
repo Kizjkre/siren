@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { focusWindow } from '../../../actions';
 
 const SidebarProfiles = ({ profiles, focusWindow }) => {
-  const handleClick = () => {};
+  const handleClick = name => () => focusWindow(`window-profile-view-${ name }`);
 
   return (
     <>
@@ -11,7 +11,7 @@ const SidebarProfiles = ({ profiles, focusWindow }) => {
         {
           Object.keys(profiles).map(profile => (
             <li key={ profile }>
-              <a onClick={ handleClick }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
+              <a onClick={ handleClick(profile) }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
                 <span className="icon-text">
                   <span className="icon">
                     <i className="fa fa-map-signs" />

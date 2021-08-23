@@ -13,8 +13,9 @@ import KeyWindow from '../workstation/windows/KeyWindow';
 import TimesigWindow from '../workstation/windows/TimesigWindow';
 import ChannelWindow from '../workstation/windows/ChannelWindow';
 import ProfileWindow from '../workstation/windows/ProfileWindow';
+import ProfileViewWindow from '../workstation/windows/ProfileViewWindow';
 
-const Workstation = ({ files, tracks, channels, fileBrowser }) => {
+const Workstation = ({ files, tracks, channels, profiles, fileBrowser }) => {
   useDemoData();
 
   return (
@@ -22,6 +23,7 @@ const Workstation = ({ files, tracks, channels, fileBrowser }) => {
       { Object.keys(files).map(name => <CreateTrackWindow key={ name } track={ name } id={ `window-${ name }` } />) }
       { Object.keys(channels).map(name => <ChannelSettingsWindow key={ name } id={ `window-channel-settings-${ name }` } name={ name } />) }
       { Object.entries(tracks).map(([id, { name }]) => <TrackSettingsWindow key={ name } id={ `window-sonification-${ name }` } trackId={ id } />) }
+      { Object.keys(profiles).map(name => <ProfileViewWindow key={ name } id={ `window-profile-view-${ name }` } name={ name } />) }
       <ViewWindow />
       <BPMWindow />
       <KeyWindow />
@@ -49,6 +51,7 @@ const mapStateToProps = state => ({
   files: state.workstation.files,
   tracks: state.workstation.tracks,
   channels: state.workstation.channels,
+  profiles: state.workstation.profiles,
   fileBrowser: state.workstation.settings.fileBrowser
 });
 
