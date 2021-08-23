@@ -51,7 +51,7 @@ const workstationReducer = (state, action) => {
         for (const name in channels) {
           if (channels.hasOwnProperty(name)) {
             channels[name].tracks = channels[name].tracks.filter(track =>
-              track.id !== parseInt(action.payload)
+              track !== parseInt(action.payload)
             );
           }
         }
@@ -103,6 +103,13 @@ const workstationReducer = (state, action) => {
       return Object.assign({}, state, {
         settings: {
           ...state.settings,
+          ...action.payload
+        }
+      });
+    case ActionType.ADD_PROFILE.type:
+      return Object.assign({}, state, {
+        profiles: {
+          ...state.profiles,
           ...action.payload
         }
       });

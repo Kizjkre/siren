@@ -91,4 +91,9 @@ export const setEditorOpen = open => ({
   payload: { open }
 });
 
+export const addProfile = (name, map) => ({
+  type: ActionType.ADD_PROFILE,
+  payload: { [name]: map }
+});
+
 // TODO: https://stackoverflow.com/questions/14552529/dynamic-sass-variables?

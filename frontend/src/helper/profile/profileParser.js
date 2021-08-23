@@ -3,11 +3,11 @@ import SimpleSyntaxAnalyzer from './SimpleSyntaxAnalyzer';
 
 const profileParser = code => {
   if (!code) {
-    return { tokens: [] };
+    return { tokens: [], tree: null };
   }
   const tokens = new SimpleLexicalAnalyzer(code).analyze().tokens;
-  new SimpleSyntaxAnalyzer(tokens).analyze();
-  return { tokens };
+  const tree = new SimpleSyntaxAnalyzer(tokens).analyze().tree;
+  return { tokens, tree };
 };
 
 export default profileParser;

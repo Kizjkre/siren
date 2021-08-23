@@ -1,18 +1,28 @@
-import { Fragment, useState, useRef } from 'react';
+import { Fragment, useState, useRef, useEffect } from 'react';
 import profileParser from '../../helper/profile/profileParser';
 import { SLAToken } from '../../helper/profile/SimpleLexicalAnalyzer';
 
-const ProfileEditor = () => {
+const ProfileEditor = ({ save, onChange, onExpression }) => {
   const [code, setCode] = useState('');
-  const [display, setDisplay] = useState();
+  const [display, setDisplay] = useState([]);
   const [error, setError] = useState('');
+  const [clear, setClear] = useState(false);
 
   const editing = useRef();
   const highlighting = useRef();
 
+  useEffect(() => {
+    if (save !== clear) {
+      setCode('');
+      setDisplay([]);
+      setError('');
+      setClear(save);
+    }
+  }, [save]);
+
   const handleChange = e => {
     setCode(e.target.value);
-
+    onChange(e.target.value);
     handleScroll();
 
     try {
@@ -46,6 +56,8 @@ const ProfileEditor = () => {
       });
 
       setDisplay(innerHTML);
+
+      onExpression(e.target.value);
     } catch (err) {
       setError(`${ err.name }: ${ err.message }`);
       setDisplay(e.target.value);

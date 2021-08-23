@@ -3,13 +3,15 @@ import { connect } from 'react-redux';
 import { focusWindow } from '../../../actions';
 
 const SidebarProfiles = ({ profiles, focusWindow }) => {
+  const handleClick = () => {};
+
   return (
     <>
       <SidebarSectionTemplate title="Profiles" icon="fa fa-map-signs" empty={ !Object.keys(profiles).length }>
         {
           Object.keys(profiles).map(profile => (
             <li key={ profile }>
-              <a> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
+              <a onClick={ handleClick }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
                 <span className="icon-text">
                   <span className="icon">
                     <i className="fa fa-map-signs" />

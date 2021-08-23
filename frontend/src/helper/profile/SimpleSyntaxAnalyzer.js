@@ -3,7 +3,7 @@ import { SLAToken } from './SimpleLexicalAnalyzer';
 export default class SimpleSyntaxAnalyzer {
   constructor(tokens) {
     this._tokens = new SimpleStream(tokens);
-    this._tree = {};
+    this._tree = null;
   }
 
   analyze() {
@@ -12,7 +12,8 @@ export default class SimpleSyntaxAnalyzer {
       const next = this._tokens.next();
       throw new SyntaxError(`Unexpected token ${ next.value } in expression at position ${ next.index + 1 }.`);
     }
-    return expression;
+    this._tree = expression;
+    return this;
   }
 
   _skipWhitespace() {
@@ -128,13 +129,13 @@ class Node {
   }
 }
 
-class NumberNode extends Node {
+export class NumberNode extends Node {
   constructor(value) {
     super(parseFloat(value), Node.TYPES.number);
   }
 }
 
-class OperationNode extends Node {
+export class OperationNode extends Node {
   constructor(value, operands) {
     super(value, Node.TYPES.operation);
     this._operands = operands;
@@ -145,7 +146,7 @@ class OperationNode extends Node {
   }
 }
 
-class KeywordNode extends Node {
+export class KeywordNode extends Node {
   constructor(value) {
     super(value, Node.TYPES.keyword);
   }

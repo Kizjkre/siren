@@ -1,5 +1,4 @@
 import cloneDeep from 'lodash.clonedeep';
-import { extremes } from '../helper/processing';
 
 export const ActionType = Object.freeze({
   reducer: {
@@ -16,6 +15,7 @@ export const ActionType = Object.freeze({
   EDIT_CHANNEL: { type: 'EDIT_CHANNEL', reducer: 'WORKSTATION' },
   EDIT_CHANNEL_FEATURES: { type: 'EDIT_CHANNEL_FEATURES', reducer: 'WORKSTATION' },
   SET_SETTINGS: { type: 'SET_SETTINGS', reducer: 'WORKSTATION' },
+  ADD_PROFILE: { type: 'ADD_PROFILE', reducer: 'WORKSTATION' },
   SET_EDITOR: { type: 'SET_EDITOR', reducer: 'EDITOR' },
   CREATE_WINDOW: { type: 'CREATE_WINDOW', reducer: 'GENERAL' },
   FOCUS_WINDOW: { type: 'FOCUS_WINDOW', reducer: 'GENERAL' },
@@ -43,11 +43,8 @@ export const INITIAL_CHANNEL_SETTINGS = {
 };
 
 export const INITIAL_PROFILE_SETTINGS = {
-  map: data => {
-    const [min, max] = extremes(data);
-    return data.map(datum => (datum - min) / (max - min));
-  },
-  filter: () => true
+  map: '(x - MIN) / (MAX - MIN)',
+  filter: true
 };
 
 export const INITIAL_STATE = {

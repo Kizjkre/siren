@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Track from './Track';
+import Track from './track/Track';
 
 const Main = ({ tracks }) => {
   return Object.keys(tracks).length ? (
@@ -22,8 +22,6 @@ const Main = ({ tracks }) => {
                 <p className="subtitle is-block">
                   &emsp;<br />
                   Nothing to see here..., open a <kbd>.csv</kbd> file to get started!
-                  {/*<br />&emsp;*/}
-                  {/*<br />&emsp;*/}
                 </p>
               </div>
             </div>

@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
-import Navbar from '../Navbar';
-import ToolbarFile from './toolbar/ToolbarFile';
-import ToolbarEdit from './toolbar/ToolbarEdit';
-import ToolbarView from './toolbar/ToolbarView';
-import useClickOutside from '../../hooks/useClickOutside';
+import Navbar from '../../Navbar';
+import ToolbarFile from './ToolbarFile';
+import ToolbarEdit from './ToolbarEdit';
+import ToolbarView from './ToolbarView';
+import useClickOutside from '../../../hooks/useClickOutside';
 import { Link } from 'react-router-dom';
 
 const Toolbar = () => {

@@ -1,5 +1,5 @@
-import Toolbar from '../workstation/Toolbar';
-import FileBrowser from '../workstation/Sidebar';
+import Toolbar from '../workstation/toolbar/Toolbar';
+import FileBrowser from '../workstation/sidebar/Sidebar';
 import Main from '../workstation/Main';
 import CreateTrackWindow from '../workstation/windows/CreateTrackWindow';
 import Controls from '../workstation/Controls';

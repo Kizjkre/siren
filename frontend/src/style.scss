@@ -13,6 +13,11 @@ $window-max-width: 70vw;
   }
 }
 
+code {
+  border-radius: 2px;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
 summary {
   cursor: pointer;
 }
@@ -56,7 +61,7 @@ summary {
 }
 
 .profile-editor-code-parenthesis {
-  color: $grey;
+  color: $grey-light;
 }
 
 .timesig-wrap {
@@ -164,7 +169,7 @@ $shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($schem
     white-space: pre;
   }
 
-  code, textarea {
+  code, pre, textarea {
     font-family: 'JetBrains Mono', monospace;
     font-size: 13pt;
     line-height: 1.2;
