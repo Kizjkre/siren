@@ -38,7 +38,9 @@ const Track = ({ id, column, name, tracks }) => (
                 )
             }
           </div>
-
+        </div>
+        <div className="block">
+          <span className="tag is-info m-0">{ tracks[id].settings.profile }</span>
         </div>
         <Settings column={ column } id={ id } />
       </div>

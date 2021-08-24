@@ -1,13 +1,14 @@
 import { connect } from 'react-redux';
 import { editTrack, deleteTrack, focusWindow } from '../../../actions';
 
-const Settings = ({ id, tracks, editTrack, deleteTrack, focusWindow }) => {
+const Settings = ({ id, tracks, profiles, editTrack, deleteTrack, focusWindow }) => {
 
   const handleMute = () => editTrack(id, { mute: !tracks[id].settings.mute });
   const handleVolume = e => editTrack(id, { volume: e.target.value });
   const handlePan = e => editTrack(id, { pan: Math.abs(e.target.value) < 5 ? 0 : parseInt(e.target.value) });
   const handleDelete = () => deleteTrack(id);
   const handleClick = () => focusWindow(`window-sonification-${ tracks[id].name }`);
+  const handleProfile = e => editTrack(id, { profile: e.target.value });
 
   return (
     <details className="message">
@@ -71,6 +72,28 @@ const Settings = ({ id, tracks, editTrack, deleteTrack, focusWindow }) => {
         }
         <div className="level">
           <div className="level-item">
+            <div className="field">
+              <label className="label" htmlFor={ `profile-select-${ id }` }>Select Profile</label>
+              <div className="control">
+                <div className="select">
+                  <select
+                    name={ `profile-select-${ id }` }
+                    defaultValue={ tracks[id].settings.profile }
+                    onChange={ handleProfile }
+                  >
+                    {
+                      Object.keys(profiles).map(name =>
+                        <option key={ name } value={ name }>{ name }</option>
+                      )
+                    }
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="level">
+          <div className="level-item">
             <button onClick={ handleClick } className="button is-primary">
               Sonification Settings<br />(Advanced)
             </button>
@@ -92,7 +115,8 @@ const Settings = ({ id, tracks, editTrack, deleteTrack, focusWindow }) => {
 };
 
 const mapStateToProps = state => ({
-  tracks: state.workstation.tracks
+  tracks: state.workstation.tracks,
+  profiles: state.workstation.profiles
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -31,7 +31,7 @@ const ProfileEditor = ({ save, onChange, onExpression, initialCode, editable }) 
       setError('');
       setClear(save);
     }
-  }, [save]);
+  }, [save]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = e => {
     setCode(e.target.value);

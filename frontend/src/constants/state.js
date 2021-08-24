@@ -28,7 +28,8 @@ export const INITIAL_SETTINGS = {
   volume: 50,
   pan: 0,
   continuous: false,
-  channel: ['Main']
+  channel: ['Main'],
+  profile: 'Default'
 };
 
 export const INITIAL_CHANNEL_SETTINGS = {
