@@ -12,7 +12,7 @@ const KEYWORDS = {
 };
 
 export default class SimpleCodeGenerator {
-  constructor(tree, keywords = {}) {
+  constructor(tree = null, keywords = {}) {
     this._tree = tree;
     this._keywords = Object.assign(keywords, KEYWORDS);
   }
@@ -37,9 +37,15 @@ export default class SimpleCodeGenerator {
       return tree.value;
     } else if (tree instanceof KeywordNode) {
       return this._keywords[tree.value];
+    } else if (tree === null) {
+      return;
     }
 
     throw new SyntaxError(`SimpleCodeGenerator could not correctly identify token type.`);
+  }
+
+  set tree(tree) {
+    this._tree = tree;
   }
 
   set x(x) {

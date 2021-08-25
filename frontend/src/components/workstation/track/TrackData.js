@@ -53,7 +53,7 @@ const TrackData = ({ tracks, id }) => {
       xAxis.current.style.transform = `translateY(calc(${ height } - 20px))`;
       yAxis.current.style.transform = 'translateX(30px)';
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [track]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isNumerical(track)) {
     return (

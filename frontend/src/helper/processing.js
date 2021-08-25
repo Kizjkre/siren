@@ -99,3 +99,19 @@ export const numerizeToArray = data => data.map(d => {
   }
   return values;
 });
+
+export const mode = data =>
+  data.reduce((acc, curr) => {
+    if (acc.curr.value !== curr) {
+      acc.curr.value = curr;
+      acc.curr.count = 1;
+      return acc;
+    }
+
+    if (++acc.curr.count > acc.max.count) {
+      acc.max.value = curr;
+      acc.max.count = acc.curr.count;
+    }
+
+    return acc;
+  }, { max: { value: data[0], count: 1 }, curr: { value: data[0], count: 0 } }).max.value;

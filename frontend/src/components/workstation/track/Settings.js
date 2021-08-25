@@ -1,14 +1,35 @@
 import { connect } from 'react-redux';
-import { editTrack, deleteTrack, focusWindow } from '../../../actions';
+import { editTrack, deleteTrack, focusWindow, editTrackData } from '../../../actions';
+import profileParser from '../../../helper/profile/profileParser';
+import SimpleCodeGenerator from '../../../helper/profile/SimpleCodeGenerator';
+import { extremes, median, mode } from '../../../helper/processing';
 
-const Settings = ({ id, tracks, profiles, editTrack, deleteTrack, focusWindow }) => {
+const Settings = ({ id, tracks, profiles, editTrackData, editTrack, deleteTrack, focusWindow }) => {
+  const extr = extremes(tracks[id].data);
+  const med = median(tracks[id].data);
+  const generator = new SimpleCodeGenerator(null, {
+    MIN: extr[0],
+    MAX: extr[1],
+    MEAN: tracks[id].data.reduce((acc, datum) => acc + datum) / tracks[id].data.length,
+    MEDIAN: med,
+    MODE: mode(tracks[id].data),
+    Q1: median(tracks[id].data.filter(datum => datum < med)),
+    Q3: median(tracks[id].data.filter(datum => datum > med))
+  });
 
   const handleMute = () => editTrack(id, { mute: !tracks[id].settings.mute });
   const handleVolume = e => editTrack(id, { volume: e.target.value });
   const handlePan = e => editTrack(id, { pan: Math.abs(e.target.value) < 5 ? 0 : parseInt(e.target.value) });
   const handleDelete = () => deleteTrack(id);
   const handleClick = () => focusWindow(`window-sonification-${ tracks[id].name }`);
-  const handleProfile = e => editTrack(id, { profile: e.target.value });
+  const handleProfile = e => {
+    editTrack(id, { profile: e.target.value });
+    generator.tree = profileParser(profiles[e.target.value].map).tree;
+    editTrackData(id, tracks[id].data.map(datum => {
+      generator.x = datum;
+      return generator.generate();
+    }));
+  };
 
   return (
     <details className="message">
@@ -120,6 +141,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  editTrackData: (id, data) => dispatch(editTrackData(id, data)),
   editTrack: (id, settings) => dispatch(editTrack(id, settings)),
   deleteTrack: id => dispatch(deleteTrack(id)),
   focusWindow: window => dispatch(focusWindow(window))
