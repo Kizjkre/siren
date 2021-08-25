@@ -44,7 +44,7 @@ export const INITIAL_CHANNEL_SETTINGS = {
 };
 
 export const INITIAL_PROFILE_SETTINGS = {
-  map: '(x - MIN) / (MAX - MIN)',
+  map: 'x',
   filter: false
 };
 

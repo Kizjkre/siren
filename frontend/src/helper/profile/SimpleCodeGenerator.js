@@ -14,7 +14,7 @@ const KEYWORDS = {
 export default class SimpleCodeGenerator {
   constructor(tree = null, keywords = {}) {
     this._tree = tree;
-    this._keywords = Object.assign(keywords, KEYWORDS);
+    this._keywords = Object.assign(KEYWORDS, keywords);
   }
 
   generate(tree = this._tree) {

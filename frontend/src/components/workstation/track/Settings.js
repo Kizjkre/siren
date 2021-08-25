@@ -4,17 +4,18 @@ import profileParser from '../../../helper/profile/profileParser';
 import SimpleCodeGenerator from '../../../helper/profile/SimpleCodeGenerator';
 import { extremes, median, mode } from '../../../helper/processing';
 
-const Settings = ({ id, tracks, profiles, editTrackData, editTrack, deleteTrack, focusWindow }) => {
-  const extr = extremes(tracks[id].data);
-  const med = median(tracks[id].data);
+const Settings = ({ id, files, tracks, profiles, editTrackData, editTrack, deleteTrack, focusWindow }) => {
+  const data = files[tracks[id].file].map(row => row[tracks[id].name]);
+  const extr = extremes(data);
+  const med = median(data);
   const generator = new SimpleCodeGenerator(null, {
     MIN: extr[0],
     MAX: extr[1],
-    MEAN: tracks[id].data.reduce((acc, datum) => acc + datum) / tracks[id].data.length,
+    MEAN: data.reduce((acc, datum) => acc + datum) / data.length,
     MEDIAN: med,
-    MODE: mode(tracks[id].data),
-    Q1: median(tracks[id].data.filter(datum => datum < med)),
-    Q3: median(tracks[id].data.filter(datum => datum > med))
+    MODE: mode(data),
+    Q1: median(data.filter(datum => datum < med)),
+    Q3: median(data.filter(datum => datum > med))
   });
 
   const handleMute = () => editTrack(id, { mute: !tracks[id].settings.mute });
@@ -25,7 +26,7 @@ const Settings = ({ id, tracks, profiles, editTrackData, editTrack, deleteTrack,
   const handleProfile = e => {
     editTrack(id, { profile: e.target.value });
     generator.tree = profileParser(profiles[e.target.value].map).tree;
-    editTrackData(id, tracks[id].data.map(datum => {
+    editTrackData(id, data.map(datum => {
       generator.x = datum;
       return generator.generate();
     }));
@@ -136,6 +137,7 @@ const Settings = ({ id, tracks, profiles, editTrackData, editTrack, deleteTrack,
 };
 
 const mapStateToProps = state => ({
+  files: state.workstation.files,
   tracks: state.workstation.tracks,
   profiles: state.workstation.profiles
 });
