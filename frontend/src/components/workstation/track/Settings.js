@@ -2,20 +2,19 @@ import { connect } from 'react-redux';
 import { editTrack, deleteTrack, focusWindow, editTrackData } from '../../../actions';
 import profileParser from '../../../helper/profile/profileParser';
 import SimpleCodeGenerator from '../../../helper/profile/SimpleCodeGenerator';
-import { extremes, median, mode } from '../../../helper/processing';
+import * as d3 from 'd3';
 
 const Settings = ({ id, files, tracks, profiles, editTrackData, editTrack, deleteTrack, focusWindow }) => {
   const data = files[tracks[id].file].map(row => row[tracks[id].name]);
-  const extr = extremes(data);
-  const med = median(data);
+  const [min, max] = d3.extent(data);
   const generator = new SimpleCodeGenerator(null, {
-    MIN: extr[0],
-    MAX: extr[1],
-    MEAN: data.reduce((acc, datum) => acc + datum) / data.length,
-    MEDIAN: med,
-    MODE: mode(data),
-    Q1: median(data.filter(datum => datum < med)),
-    Q3: median(data.filter(datum => datum > med))
+    MIN: min,
+    MAX: max,
+    MEAN: d3.mean(data),
+    MEDIAN: d3.median(data),
+    MODE: d3.mode(data),
+    Q1: d3.quantile(data, 0.25),
+    Q3: d3.quantile(data, 0.75)
   });
 
   const handleMute = () => editTrack(id, { mute: !tracks[id].settings.mute });
@@ -28,7 +27,8 @@ const Settings = ({ id, files, tracks, profiles, editTrackData, editTrack, delet
     generator.tree = profileParser(profiles[e.target.value].map).tree;
     editTrackData(id, data.map(datum => {
       generator.x = datum;
-      return generator.generate();
+      const result = generator.generate();
+      return Math.abs(result) === Infinity ? 0 : result;
     }));
   };
 
@@ -114,13 +114,13 @@ const Settings = ({ id, files, tracks, profiles, editTrackData, editTrack, delet
             </div>
           </div>
         </div>
-        <div className="level">
-          <div className="level-item">
-            <button onClick={ handleClick } className="button is-primary">
-              Sonification Settings<br />(Advanced)
-            </button>
-          </div>
-        </div>
+        {/*<div className="level">*/}
+        {/*  <div className="level-item">*/}
+        {/*    <button onClick={ handleClick } className="button is-primary">*/}
+        {/*      Sonification Settings<br />(Advanced)*/}
+        {/*    </button>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
         <div className="level">
           <div className="level-item">
             <button onClick={ handleDelete } className="button is-danger is-small">

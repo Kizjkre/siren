@@ -1,9 +1,10 @@
 import { ActionType } from '../constants/state';
 import * as d3 from 'd3';
-import { formatCSV, typeify } from '../helper/processing';
+// import { formatCSV, typeify } from '../helper/processing';
 
 export const uploadFile = async (name, raw) => {
-  const data = typeify(await d3.csvParse(formatCSV(raw)));
+  // const data = typeify(await d3.csvParse(formatCSV(raw)));
+  const data = await d3.csvParse(raw, d3.autoType);
 
   return {
     type: ActionType.UPLOAD_FILE,

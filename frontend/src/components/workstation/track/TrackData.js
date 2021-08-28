@@ -10,7 +10,7 @@ const TrackData = ({ tracks, id }) => {
   const xAxis = useRef();
   const yAxis = useRef();
 
-  const [state, setState] = useState({ graph: '' });
+  const [graph, setGraph] = useState('');
 
   const track = tracks[id].data;
 
@@ -36,7 +36,7 @@ const TrackData = ({ tracks, id }) => {
           .x(data => x(data[0]))
           .y(data => y(data[1]));
 
-        setState({ ...state, graph: line(data) });
+        setGraph(line(data));
 
         const axes = [
           d3.axisBottom()
@@ -75,7 +75,7 @@ const TrackData = ({ tracks, id }) => {
         <g className="x" ref={ xAxis } />
         <g className="y" ref={ yAxis } />
         <g className="line">
-          <path d={ state.graph } fill="none" stroke='black' />
+          <path d={ graph } fill="none" stroke="black" />
         </g>
       </g>
     </svg>

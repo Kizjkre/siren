@@ -73,15 +73,6 @@ export const typeify = data => {
   return data;
 };
 
-export const average = data => data.reduce((acc, curr) => acc + curr) / data.length;
-
-// REF: https://www.30secondsofcode.org/js/s/median
-export const median = arr => {
-  const mid = Math.floor(arr.length / 2),
-    nums = [...arr].sort((a, b) => a - b);
-  return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
-};
-
 export const isOutlier = (datum, q1, q3) => !(datum < q1 -  1.5 * (q3 - q1) || datum > q3 + 1.5 * (q3 - q1));
 
 export const numerizeToNumber = data => data.map(d => {
@@ -99,19 +90,3 @@ export const numerizeToArray = data => data.map(d => {
   }
   return values;
 });
-
-export const mode = data =>
-  data.reduce((acc, curr) => {
-    if (acc.curr.value !== curr) {
-      acc.curr.value = curr;
-      acc.curr.count = 1;
-      return acc;
-    }
-
-    if (++acc.curr.count > acc.max.count) {
-      acc.max.value = curr;
-      acc.max.count = acc.curr.count;
-    }
-
-    return acc;
-  }, { max: { value: data[0], count: 1 }, curr: { value: data[0], count: 0 } }).max.value;
