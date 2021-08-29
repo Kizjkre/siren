@@ -89,6 +89,10 @@ summary {
 .track-graph, .track-table {
   height: 100%;
   width: 100%;
+
+  text {
+    font-family: 'JetBrains Mono', $family-primary;
+  }
 }
 
 .window {

@@ -51,28 +51,6 @@ export const removeOutliers = data => {
   return data.filter(d => !(d < first -  1.5 * (third - first) || d > third + 1.5 * (third - first)));
 };
 
-// TODO: fix
-export const formatCSV = raw => {
-  // return raw;
-  let lines = raw.split(/\n/g);
-  const columns = lines[lines.length / 2].split(',').length;
-  lines = lines.filter(line => line.split(',').length === columns);
-  return lines.join('\n');
-};
-
-export const typeify = data => {
-  // TODO: more data types
-  data.forEach(row => {
-    Object.keys(row).forEach(col => {
-      if (!isNaN(row[col].replace(/,/g, ''))) {
-        row[col] = parseFloat(row[col].replace(/,/g, ''));
-      }
-    });
-  });
-
-  return data;
-};
-
 export const isOutlier = (datum, q1, q3) => !(datum < q1 -  1.5 * (q3 - q1) || datum > q3 + 1.5 * (q3 - q1));
 
 export const numerizeToNumber = data => data.map(d => {
