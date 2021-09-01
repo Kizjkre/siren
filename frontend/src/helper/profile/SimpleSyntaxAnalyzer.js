@@ -69,6 +69,15 @@ export default class SimpleSyntaxAnalyzer {
         case SLAToken.TYPES.whitespace:
           this._tokens.next();
           return this._base();
+        case SLAToken.TYPES.additive:
+          const sign = this._tokens.next();
+          if (this._tokens.peek().type !== SLAToken.TYPES.number) {
+            const next = this._tokens.next();
+            throw new SyntaxError(`Unexpected token ${ next.value } in expression at position ${ next.index + 1 }.`);
+          }
+          const signedNumNode = new NumberNode(sign.value + this._tokens.next().value);
+          this._skipWhitespace();
+          return signedNumNode;
         default:
           const next = this._tokens.next();
           throw new SyntaxError(`Unexpected token ${ next.value } in expression at position ${ next.index + 1 }.`);
