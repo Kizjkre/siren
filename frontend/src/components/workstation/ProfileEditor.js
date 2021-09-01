@@ -54,11 +54,14 @@ const ProfileEditor = ({ save, onChange, onExpression, initialCode, editable }) 
             innerHTML.push(<span className="profile-editor-code-number" key={ i }>{ token.value }</span>);
             break;
           case SLAToken.TYPES.additive:
-            if (i === 0 || tokens[i - 1].type !== SLAToken.TYPES.number) {
+            if (
+              (i === 0 || tokens[i - 1].type !== SLAToken.TYPES.number)
+              && (i < tokens.length - 1 && tokens[i + 1].type === SLAToken.TYPES.number)
+            ) {
               innerHTML.push(<span className="profile-editor-code-number" key={ i }>{ token.value }</span>);
               break;
             }
-          case SLAToken.TYPES.multiplicative:
+          case SLAToken.TYPES.multiplicative: // eslint-disable-line no-fallthrough
           case SLAToken.TYPES.exponential:
             innerHTML.push(<span className="profile-editor-code-operation" key={ i }>{ token.value }</span>);
             break;
