@@ -1,4 +1,4 @@
-import { KeywordNode, NumberNode, OperationNode } from './SimpleSyntaxAnalyzer';
+import { KeywordNode, NumberNode, OperationNode, UnaryOperationNode } from './SimpleSyntaxAnalyzer';
 
 const KEYWORDS = {
   MIN: -1,
@@ -37,6 +37,8 @@ export default class SimpleCodeGenerator {
       return tree.value;
     } else if (tree instanceof KeywordNode) {
       return this._keywords[tree.value];
+    } else if (tree instanceof UnaryOperationNode) {
+      return parseInt(`${ tree.value }1`) * this.generate(tree.operand);
     } else if (tree === null) {
       return;
     }

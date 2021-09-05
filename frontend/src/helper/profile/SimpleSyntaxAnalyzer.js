@@ -70,14 +70,10 @@ export default class SimpleSyntaxAnalyzer {
           this._tokens.next();
           return this._base();
         case SLAToken.TYPES.additive:
-          const sign = this._tokens.next();
-          if (this._tokens.peek().type !== SLAToken.TYPES.number) {
-            const next = this._tokens.next();
-            throw new SyntaxError(`Unexpected token ${ next.value } in expression at position ${ next.index + 1 }.`);
-          }
-          const signedNumNode = new NumberNode(sign.value + this._tokens.next().value);
+          const sign = this._tokens.next().value;
+          const opNode = new UnaryOperationNode(sign, this._expression());
           this._skipWhitespace();
-          return signedNumNode;
+          return opNode;
         default:
           const next = this._tokens.next();
           throw new SyntaxError(`Unexpected token ${ next.value } in expression at position ${ next.index + 1 }.`);
@@ -158,5 +154,16 @@ export class OperationNode extends Node {
 export class KeywordNode extends Node {
   constructor(value) {
     super(value, Node.TYPES.keyword);
+  }
+}
+
+export class UnaryOperationNode extends Node {
+  constructor(value, operand) {
+    super(value, Node.TYPES.operation);
+    this._operand = operand;
+  }
+
+  get operand() {
+    return this._operand;
   }
 }
