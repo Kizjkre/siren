@@ -5,7 +5,6 @@ import CreateTrackWindow from '../workstation/windows/CreateTrackWindow';
 import Controls from '../workstation/Controls';
 import useDemoData from '../../hooks/useDemoData';
 import ChannelSettingsWindow from '../workstation/windows/ChannelSettingsWindow';
-import TrackSettingsWindow from '../workstation/windows/TrackSettingsWindow';
 import { connect } from 'react-redux';
 import ViewWindow from '../workstation/windows/ViewWindow';
 import BPMWindow from '../workstation/windows/BPMWindow';
@@ -22,7 +21,6 @@ const Workstation = ({ files, tracks, channels, profiles, fileBrowser }) => {
     <>
       { Object.keys(files).map(name => <CreateTrackWindow key={ name } track={ name } id={ `window-${ name }` } />) }
       { Object.keys(channels).map(name => <ChannelSettingsWindow key={ name } id={ `window-channel-settings-${ name }` } name={ name } />) }
-      { Object.entries(tracks).map(([id, { name }]) => <TrackSettingsWindow key={ name } id={ `window-sonification-${ name }` } trackId={ id } />) }
       { Object.keys(profiles).map(name => <ProfileViewWindow key={ name } id={ `window-profile-view-${ name }` } name={ name } />) }
       <ViewWindow />
       <BPMWindow />
