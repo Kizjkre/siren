@@ -88,4 +88,8 @@ export default class SimpleContext {
       SimpleContext._master.gain.value = 1 / ++SimpleContext._synths;
     }
   }
+
+  static hasContext() {
+    return !!SimpleContext._context;
+  }
 }

@@ -1,10 +1,50 @@
 import { SCALES } from '../constants/workstation';
-import { average, isNumerical, numerizeToArray, numerizeToNumber, scale } from '../helper/processing';
+import { isNumerical, numerizeToArray, scale } from '../helper/processing';
 import store from '../store/';
 import SimpleSynth from './SimpleSynth';
 import SimpleContext from './SimpleContext';
-// import * as dsp from '../third_party/dsp';
-// import createBufferMap from '../third_party/createBufferMap';
+import * as d3 from 'd3';
+
+const _ = () => {
+  if (SimpleContext.hasContext()) {
+    SimpleContext.start();
+    return;
+  }
+
+  const state = store.getState();
+
+  SimpleContext.createContext();
+  SimpleContext.setBpm(state.workstation.settings.bpm < 0 ? 60 : state.workstation.settings.bpm);
+  SimpleContext.setKey(state.workstation.settings.key === 'none' ? 'chromatic' : state.workstation.settings.key);
+  SimpleContext.setTimesig(state.workstation.settings.timesig);
+
+  Object.values(state.workstation.channels).forEach(channel => {
+    const synth = new SimpleSynth();
+
+    channel.Volume.forEach(track => {
+
+    });
+
+    channel.Pitch.forEach((track, i) => {
+      const [min, max] = d3.extent(state.workstation.tracks[track].data);
+      const num = SCALES[SimpleContext.getKey()].length * 2;
+      const normalize = x => Math.round(num / (max - min) * (x - min));
+
+      state.workstation.tracks[track].data.forEach((datum, j) => {
+        const beats = SimpleContext.getTimesig()[0];
+        synth.queue(SimpleContext.toNoteInScale(normalize(datum)), [j * beats, j % beats], i);
+      });
+    });
+
+    channel.Pan.forEach(track => {
+
+    });
+
+    channel.Tempo.forEach(track => {
+
+    });
+  });
+};
 
 export const play = () => {
   const state = store.getState();
@@ -79,10 +119,10 @@ export const play = () => {
       const num = SCALES[SimpleContext.getKey()].length * 2;
       const normalizePitch = x => Math.round(num / (max - min) * (x - min));
       const normalizedGain = Object.keys(state.workstation.tracks).includes(features.Volume + '') ?
-        scale(state.workstation.tracks[features.Volume].data, 'logistic', 1, 0.25, average(state.workstation.tracks[features.Volume].data)) :
+        scale(state.workstation.tracks[features.Volume].data, 'logistic', 1, 0.25, d3.mean(state.workstation.tracks[features.Volume].data)) :
         [];
       const normalizedPan = Object.keys(state.workstation.tracks).includes(features.Pan + '') ?
-        scale(state.workstation.tracks[features.Pan].data, 'logistic', 1, -1, average(state.workstation.tracks[features.Pan].data)) :
+        scale(state.workstation.tracks[features.Pan].data, 'logistic', 1, -1, d3.mean(state.workstation.tracks[features.Pan].data)) :
         [];
 
       pitch.forEach((datum, i) => {

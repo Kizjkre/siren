@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { focusWindow, setFileBrowser } from '../../../actions';
 import { connect } from 'react-redux';
 
@@ -33,14 +32,6 @@ const ToolbarView = ({ selected, setSelected, fileBrowser, setFileBrowser, focus
             <span>Toggle Sidebar</span>
           </div>
         </a>
-        <Link className="navbar-item" to="/editor">
-          <div className="icon-text">
-            <span className="icon">
-              <i className="fa fa-code"/>
-            </span>
-            <span>Code Editor</span>
-          </div>
-        </Link>
         <a className="navbar-item" onClick={ handleView }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
           <div className="icon-text">
             <span className="icon">

@@ -19,6 +19,7 @@ class Node {
     this._y = y;
     this._name = name;
     this._type = nodeType;
+    this._endpoints = [];
   }
 
   get name() {
@@ -46,13 +47,13 @@ class Node {
   }
 }
 
-class Source extends Node{
+class Source extends Node {
   constructor(sourceType, name, x, y) {
     super(NodeType.SOURCE, name, x, y);
   }
 }
 
-class Effect extends Node{
+class Effect extends Node {
   constructor(sourceType, name, x, y) {
     super(NodeType.EFFECT, name, x, y);
   }

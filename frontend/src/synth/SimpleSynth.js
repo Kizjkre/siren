@@ -12,22 +12,23 @@ const OPTIONS = {
 const calculateFrequency = (note, octave) => 440 * 2 ** (octave - (NOTES[note] > 2 ? 5 : 4)) * 2 ** (NOTES[note] / 12);
 
 export default class SimpleSynth {
-  constructor(options = OPTIONS) {
+  constructor(options = {}) {
+    options = Object.assign(options, OPTIONS);
+
+    SimpleContext.createContext();
     SimpleContext.addSynth();
 
-    this._context = SimpleContext.getContext();
-
     this._osc = [];
-    this._gain = new GainNode(this._context);
-    this._panner = new StereoPannerNode(this._context);
+    this._gain = new GainNode(SimpleContext.getContext());
+    this._panner = new StereoPannerNode(SimpleContext.getContext());
 
     for (let i = 0; i < options.num; i++) {
-      const osc = new OscillatorNode(this._context, { type: options.type });
+      const osc = new OscillatorNode(SimpleContext.getContext(), { type: options.type });
       osc
         .connect(this._gain)
         .connect(this._panner)
         .connect(SimpleContext.getMasterGain())
-        .connect(this._context.destination);
+        .connect(SimpleContext.getContext().destination);
       this._osc.push(osc);
     }
 
@@ -39,20 +40,32 @@ export default class SimpleSynth {
     this._duration = 0;
   }
 
-  queue(notes, start) {
+  queue({ note, octave }, start, osc) {
     const time = SimpleContext.toSeconds(start[0], start[1]);
+
     if (this._continuous) {
-      notes.forEach(({ note, octave }, i) =>
-        this._osc[i].frequency.linearRampToValueAtTime(calculateFrequency(note, octave), time)
-      );
+      this._osc[osc].frequency.linearRampToValueAtTime(calculateFrequency(note, octave), time);
     } else {
-      notes.forEach(({ note, octave }, i) =>
-        this._osc[i].frequency.setValueAtTime(calculateFrequency(note, octave), time)
-      );
+      this._osc[osc].frequency.setValueAtTime(calculateFrequency(note, octave), time);
     }
 
     this._duration += time;
   }
+
+  // queue(notes, start) {
+  //   const time = SimpleContext.toSeconds(start[0], start[1]);
+  //   if (this._continuous) {
+  //     notes.forEach(({ note, octave }, i) =>
+  //       this._osc[i].frequency.linearRampToValueAtTime(calculateFrequency(note, octave), time)
+  //     );
+  //   } else {
+  //     notes.forEach(({ note, octave }, i) =>
+  //       this._osc[i].frequency.setValueAtTime(calculateFrequency(note, octave), time)
+  //     );
+  //   }
+  //
+  //   this._duration += time;
+  // }
 
   queueGain(gain, start) {
     const time = SimpleContext.toSeconds(start[0], start[1]);
