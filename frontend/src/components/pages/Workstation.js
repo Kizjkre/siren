@@ -13,6 +13,7 @@ import TimesigWindow from '../workstation/windows/TimesigWindow';
 import ChannelWindow from '../workstation/windows/ChannelWindow';
 import ProfileWindow from '../workstation/windows/ProfileWindow';
 import ProfileViewWindow from '../workstation/windows/ProfileViewWindow';
+import SynthDockWindow from '../workstation/windows/SynthDockWindow';
 
 const Workstation = ({ files, tracks, channels, profiles, fileBrowser }) => {
   useDemoData();
@@ -28,6 +29,7 @@ const Workstation = ({ files, tracks, channels, profiles, fileBrowser }) => {
       <TimesigWindow />
       <ChannelWindow />
       <ProfileWindow />
+      <SynthDockWindow />
 
       <Toolbar />
       <div className="columns">

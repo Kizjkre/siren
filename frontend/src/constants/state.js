@@ -16,6 +16,7 @@ export const ActionType = Object.freeze({
   EDIT_CHANNEL_FEATURES: { type: 'EDIT_CHANNEL_FEATURES', reducer: 'WORKSTATION' },
   SET_SETTINGS: { type: 'SET_SETTINGS', reducer: 'WORKSTATION' },
   ADD_PROFILE: { type: 'ADD_PROFILE', reducer: 'WORKSTATION' },
+  ADD_SYNTH: { type: 'ADD_SYNTH', reducer: 'WORKSTATION' },
   SET_EDITOR: { type: 'SET_EDITOR', reducer: 'EDITOR' },
   CREATE_WINDOW: { type: 'CREATE_WINDOW', reducer: 'GENERAL' },
   FOCUS_WINDOW: { type: 'FOCUS_WINDOW', reducer: 'GENERAL' },
@@ -54,6 +55,7 @@ export const INITIAL_STATE = {
     tracks: {},
     channels: { Main: cloneDeep(INITIAL_CHANNEL_SETTINGS) },
     profiles: { Default: cloneDeep(INITIAL_PROFILE_SETTINGS) },
+    synths: {},
     settings: {
       bpm: 120,
       key: 'C',

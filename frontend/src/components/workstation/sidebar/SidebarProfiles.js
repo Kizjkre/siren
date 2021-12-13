@@ -6,34 +6,32 @@ const SidebarProfiles = ({ profiles, focusWindow }) => {
   const handleClick = name => () => focusWindow(`window-profile-view-${ name }`);
 
   return (
-    <>
-      <SidebarSectionTemplate title="Profiles" icon="fa fa-map-signs" empty={ !Object.keys(profiles).length }>
-        {
-          Object.keys(profiles).map(profile => (
-            <li key={ profile }>
-              <a onClick={ handleClick(profile) }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
-                <span className="icon-text">
-                  <span className="icon">
-                    <i className="fa fa-map-signs" />
-                  </span>
-                  <span>{ profile }</span>
+    <SidebarSectionTemplate title="Profiles" icon="fa fa-map-signs" empty={ !Object.keys(profiles).length }>
+      {
+        Object.keys(profiles).map(profile => (
+          <li key={ profile }>
+            <a onClick={ handleClick(profile) }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
+              <span className="icon-text">
+                <span className="icon">
+                  <i className="fa fa-map-signs" />
                 </span>
-              </a>
-            </li>
-          ))
-        }
-        <li>
-          <a className="button is-info" onClick={ () => focusWindow('window-profile') }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
-            <span className="icon-text">
-              <span className="icon">
-                <i className="fa fa-plus" />
+                <span>{ profile }</span>
               </span>
-              <span>Add profile</span>
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a className="button is-info" onClick={ () => focusWindow('window-profile') }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
+          <span className="icon-text">
+            <span className="icon">
+              <i className="fa fa-plus" />
             </span>
-          </a>
-        </li>
-      </SidebarSectionTemplate>
-    </>
+            <span>Add profile</span>
+          </span>
+        </a>
+      </li>
+    </SidebarSectionTemplate>
   );
 };
 

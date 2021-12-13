@@ -56,7 +56,7 @@ const ProfileEditor = ({ save, onChange, onExpression, initialCode, editable }) 
             break;
           case SLAToken.TYPES.additive:
             if (
-              (i === 0 || tokens[i - 1].type !== SLAToken.TYPES.number)
+              (i === 0 || (tokens[i - 1].type !== SLAToken.TYPES.number && tokens[i - 1].type !== SLAToken.TYPES.keyword))
               && (i < tokens.length - 1 && tokens[i + 1].type === SLAToken.TYPES.number)
             ) {
               innerHTML.push(<span className="profile-editor-code-number" key={ i }>{ token.value }</span>);
