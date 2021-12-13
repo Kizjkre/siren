@@ -1,0 +1,127 @@
+{
+  "$id": "schema.json",
+  "title": "Synth",
+  "description": "A synth.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "Name of the synth.",
+      "type": "string"
+    },
+    "nodes": {
+      "description": "List of nodes",
+      "type": "array",
+      "items": {
+        "description": "Node definition.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name of the node.",
+            "type": "string",
+            "not": {
+              "enum": ["context"]
+            }
+          },
+          "type": {
+            "description": "Type of node.",
+            "type": "string",
+            "enum": ["oscillator", "gain", "panner", "convolver", "constantSource"]
+          }
+        },
+        "required": ["name", "type"]
+      }
+    },
+    "connections": {
+      "description": "Directed connection between nodes.",
+      "type": "array",
+      "items": {
+        "description": "Connection definition.",
+        "type": "object",
+        "oneOf": [
+          {
+            "patternProperties": {
+              "^.+$": {
+                "description": "<From>: <To>",
+                "type": "string"
+              }
+            }
+          },
+          {
+            "patternProperties": {
+              "^.+$": {
+                "description": "<From>: <To>",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "Node name.",
+                    "type": "string",
+                    "enum": { "$data": "1/properties/nodes/items.properties/name" }
+                  },
+                  "property": {
+                    "description": "Node property.",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "propertyNames": {
+          "enum": { "$data": "1/properties/nodes/items.properties/name" }
+        }
+      }
+    },
+    "variables": {
+      "description": "Initializing input variables.",
+      "type": "object",
+      "patternProperties": {
+        "^.+$": {
+          "description": "<Variable>: <Value>",
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "inputs": {
+      "description": "Entry points to connect tracks to.",
+      "type": "object",
+      "patternProperties": {
+        "^.+$": {
+          "description": "<Input>: <Expression>",
+          "type": "string"
+        }
+      },
+      "propertyNames": {
+        "enum": { "$data": "1/properties/nodes/items.properties/name" }
+      }
+    },
+    "adsrd": {
+      "description": "Defines the ADSR-D envelope.",
+      "type": "object",
+      "properties": {
+        "values": {
+          "description": "ADSR-D values.",
+          "type": "array",
+          "items": {
+            "description": "Attack, delay, sustain, release, and duration values.",
+            "type": "number",
+            "minimum": 0
+          },
+          "minItems": 5,
+          "maxItems": 5
+        },
+        "nodes": {
+          "description": "Node(s) for the ADSR-D to operate on.",
+          "type": "array",
+          "items": {
+            "description": "Node names.",
+            "type": "string",
+            "enum": { "$data": "1/properties/nodes/items.properties/name" }
+          },
+          "required": ["values", "nodes"]
+        }
+      }
+    }
+  },
+  "required": ["name", "nodes", "connections", "inputs", "adsrd"]
+}

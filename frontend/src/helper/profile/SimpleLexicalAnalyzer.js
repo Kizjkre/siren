@@ -67,7 +67,7 @@ export class SLAToken {
     multiplicative: /[*/]/,
     exponential: /\^/,
     parenthesis: /[()]/,
-    keyword: /MAX|MIN|MEAN|MEDIAN|MODE|Q1|Q3|x/,
+    keyword: null,
     whitespace: /\s+/
   };
 

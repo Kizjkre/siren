@@ -1,20 +1,9 @@
 import { KeywordNode, NumberNode, OperationNode, UnaryOperationNode } from './SimpleSyntaxAnalyzer';
 
-const KEYWORDS = {
-  MIN: -1,
-  MAX: -1,
-  MEAN: -1,
-  MEDIAN: -1,
-  MODE: -1,
-  Q1: -1,
-  Q3: -1,
-  x: -1
-};
-
 export default class SimpleCodeGenerator {
   constructor(tree = null, keywords = {}) {
     this._tree = tree;
-    this._keywords = Object.assign(KEYWORDS, keywords);
+    this._keywords = keywords;
   }
 
   generate(tree = this._tree) {

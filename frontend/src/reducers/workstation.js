@@ -113,6 +113,13 @@ const workstationReducer = (state, action) => {
           ...action.payload
         }
       });
+    case ActionType.ADD_SYNTH.type:
+      return Object.assign({}, state, {
+        synths: {
+          ...state.synths,
+          [action.payload.name]: action.payload
+        }
+      })
     default:
       return state;
   }

@@ -97,4 +97,9 @@ export const addProfile = (name, map) => ({
   payload: { [name]: { map, filter: true } } // TODO: filter
 });
 
+export const addSynth = synth => ({
+  type: ActionType.ADD_SYNTH,
+  payload: synth
+});
+
 // TODO: https://stackoverflow.com/questions/14552529/dynamic-sass-variables?
