@@ -1,6 +1,6 @@
 import { Fragment, useState, useRef, useEffect } from 'react';
 import profileParser from '../../helper/profile/profileParser';
-import { SLAToken } from '../../helper/profile/SimpleLexicalAnalyzer';
+import { SLAToken } from '../../helper/simple/SimpleLexicalAnalyzer';
 
 // REF: https://css-tricks.com/creating-an-editable-textarea-that-supports-syntax-highlighted-code/
 const ProfileEditor = ({ save, onChange, onExpression, initialCode, editable }) => {

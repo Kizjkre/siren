@@ -36,10 +36,10 @@ const ChannelBody = ({ name, tracks, channels, editChannel, focusWindow }) => {
             </div>
           </div>
         </div>
-        <div className="field">
-          <div className="control">
+        <div className="columns">
+          <div className="column">
             <button
-              className="button is-success is-fullwidth"
+              className="button is-success"
               onClick={ () => {
                 editChannel(name, parseInt(track));
                 setTrack('');
@@ -52,17 +52,19 @@ const ChannelBody = ({ name, tracks, channels, editChannel, focusWindow }) => {
               <span>Add Track</span>
             </button>
           </div>
+          <div className="column">
+            <button
+              className="button is-primary"
+              onClick={ () => focusWindow(`window-channel-settings-${ name }`) }
+            >
+              <span className="icon">
+                <i className="fa fa-cog"/>
+              </span>
+              <span>Channel Settings</span>
+            </button>
+          </div>
         </div>
       </div>
-      <button
-        className="button is-primary is-fullwidth"
-        onClick={ () => focusWindow(`window-channel-settings-${ name }`) }
-      >
-          <span className="icon">
-            <i className="fa fa-cog"/>
-          </span>
-        <span>Channel Settings</span>
-      </button>
     </div>
   );
 };

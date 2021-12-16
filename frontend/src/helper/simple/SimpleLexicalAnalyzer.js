@@ -64,7 +64,7 @@ export class SLAToken {
   static TYPES = {
     number: /\d*\.?\d+/,
     additive: /[+-]/,
-    multiplicative: /[*/]/,
+    multiplicative: /[*/%]/,
     exponential: /\^/,
     parenthesis: /[()]/,
     keyword: null,

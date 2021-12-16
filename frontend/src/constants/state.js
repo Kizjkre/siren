@@ -1,5 +1,11 @@
 import cloneDeep from 'lodash.clonedeep';
 
+const FillType = Object.freeze({
+  STRETCH: 0,
+  REPEAT: 1,
+  WRAP: 2
+})
+
 export const ActionType = Object.freeze({
   reducer: {
     WORKSTATION: 'WORKSTATION',
@@ -14,10 +20,10 @@ export const ActionType = Object.freeze({
   CREATE_CHANNEL: { type: 'CREATE_CHANNEL', reducer: 'WORKSTATION' },
   EDIT_CHANNEL: { type: 'EDIT_CHANNEL', reducer: 'WORKSTATION' },
   EDIT_CHANNEL_FEATURES: { type: 'EDIT_CHANNEL_FEATURES', reducer: 'WORKSTATION' },
+  EDIT_CHANNEL_SYNTH: { type: 'EDIT_CHANNEL_SYNTH', reducer: 'WORKSTATION' },
   SET_SETTINGS: { type: 'SET_SETTINGS', reducer: 'WORKSTATION' },
   ADD_PROFILE: { type: 'ADD_PROFILE', reducer: 'WORKSTATION' },
   ADD_SYNTH: { type: 'ADD_SYNTH', reducer: 'WORKSTATION' },
-  SET_EDITOR: { type: 'SET_EDITOR', reducer: 'EDITOR' },
   CREATE_WINDOW: { type: 'CREATE_WINDOW', reducer: 'GENERAL' },
   FOCUS_WINDOW: { type: 'FOCUS_WINDOW', reducer: 'GENERAL' },
   BLUR_WINDOW: { type: 'BLUR_WINDOW', reducer: 'GENERAL' },
@@ -33,21 +39,35 @@ export const INITIAL_SETTINGS = {
   profile: 'Default'
 };
 
-export const INITIAL_CHANNEL_SETTINGS = {
-  continuous: false,
-  tracks: [],
-  features: {
-    Volume: [],
-    Pitch: [],
-    Pan: [],
-    Tempo: []
-  }
-};
-
-export const INITIAL_PROFILE_SETTINGS = {
+const INITIAL_PROFILE_SETTINGS = {
   map: 'x',
   filter: false
 };
+
+const INITIAL_SYNTH_SETTINGS = {
+  name: 'Default',
+  nodes: [{ name: 'osc', type: 'oscillator' }, { name: 'gain', type: 'gain' }, { name: 'pan', type: 'panner' }],
+  connections: [{ osc: 'pan' }, { pan: 'gain' }, { gain: { name: 'context', property: 'destination' } }],
+  variables: { Frequency: 440, Volume: 0, Pan: 0 },
+  inputs: { osc: 'Frequency', gain: 'Volume', pan: 'Pan' },
+  adsrd: { values: [0, 0, 1, 0, 1], nodes: ['gain'] }
+};
+
+export const INITIAL_CHANNEL_SETTINGS = {
+  continuous: false,
+  tracks: [],
+  synth: 'Default',
+  fill: FillType.STRETCH,
+  features: {
+    Attack: '',
+    Decay: '',
+    Sustain: '',
+    Release: '',
+    Duration: ''
+  }
+};
+
+Object.keys(INITIAL_SYNTH_SETTINGS.variables).forEach(variable => INITIAL_CHANNEL_SETTINGS.features[variable] = '');
 
 export const INITIAL_STATE = {
   workstation: {
@@ -55,17 +75,13 @@ export const INITIAL_STATE = {
     tracks: {},
     channels: { Main: cloneDeep(INITIAL_CHANNEL_SETTINGS) },
     profiles: { Default: cloneDeep(INITIAL_PROFILE_SETTINGS) },
-    synths: {},
+    synths: { Default: cloneDeep(INITIAL_SYNTH_SETTINGS) },
     settings: {
       bpm: 120,
       key: 'C',
       timesig: [4, 4],
       fileBrowser: true
     }
-  },
-  editor: {
-    synth: [],
-    open: null
   },
   windows: []
 };

@@ -15,7 +15,7 @@ import ProfileWindow from '../workstation/windows/ProfileWindow';
 import ProfileViewWindow from '../workstation/windows/ProfileViewWindow';
 import SynthDockWindow from '../workstation/windows/SynthDockWindow';
 
-const Workstation = ({ files, tracks, channels, profiles, fileBrowser }) => {
+const Workstation = ({ files, channels, profiles, fileBrowser }) => {
   useDemoData();
 
   return (
@@ -49,7 +49,6 @@ const Workstation = ({ files, tracks, channels, profiles, fileBrowser }) => {
 
 const mapStateToProps = state => ({
   files: state.workstation.files,
-  tracks: state.workstation.tracks,
   channels: state.workstation.channels,
   profiles: state.workstation.profiles,
   fileBrowser: state.workstation.settings.fileBrowser

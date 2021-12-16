@@ -19,6 +19,8 @@ export default class SimpleCodeGenerator {
           return this.generate(tree.operands[0]) / this.generate(tree.operands[1]);
         case '^':
           return this.generate(tree.operands[0]) ** this.generate(tree.operands[1]);
+        case '%':
+          return this.generate(tree.operands[0]) % this.generate(tree.operands[1]);
         default:
           throw new SyntaxError(`Unexpected operation ${ tree.value }.`);
       }

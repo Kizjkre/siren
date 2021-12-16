@@ -28,7 +28,7 @@ const SynthDockWindow = ({ addSynth }) => {
   };
 
   return (
-    <Window id="window-synth" title={ `Synth Dock` }>
+    <Window id="window-synth" title='Synth Dock'>
       { err }
       <input type="file" id="synth-import" className="is-hidden" accept="application/json" onChange={ handleImport } />
       <label htmlFor="synth-import" className="button is-primary">

@@ -29,11 +29,13 @@ summary {
 .channel-feature-checked {
   background: $success;
   color: $primary-invert;
+  text-align: center !important;
 }
 
 .channel-feature-disabled {
   background: $grey-lighter;
   color: $white;
+  text-align: center !important;
 }
 
 .h-100 {
@@ -238,5 +240,3 @@ $shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($schem
 .workstation-empty {
   height: 100%;
 }
-
-@import '~bulma-slider';

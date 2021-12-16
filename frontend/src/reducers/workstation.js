@@ -87,14 +87,23 @@ const workstationReducer = (state, action) => {
     case ActionType.EDIT_CHANNEL_FEATURES.type:
       return (() => {
         const channel = cloneDeep(state.channels);
-        if (channel[action.payload.channel].features[action.payload.feature].includes(action.payload.track)) {
-          channel[action.payload.channel].features[action.payload.feature].splice(
-            channel[action.payload.channel].features[action.payload.feature].indexOf(action.payload.track),
-            1
-          );
+        if (channel[action.payload.channel].features[action.payload.feature] === action.payload.track) {
+          channel[action.payload.channel].features[action.payload.feature] = '';
         } else {
-          channel[action.payload.channel].features[action.payload.feature].push(action.payload.track);
+          channel[action.payload.channel].features[action.payload.feature] = action.payload.track;
         }
+        return Object.assign({}, state, {
+          channels: Object.assign({}, state.channels, channel)
+        });
+      })();
+    case ActionType.EDIT_CHANNEL_SYNTH.type:
+      return (() => {
+        const channel = cloneDeep(state.channels);
+        channel[action.payload.channel].synth = action.payload.synth;
+        channel[action.payload.channel].features = {};
+        ['Attack', 'Decay', 'Sustain', 'Release', 'Duration'].concat(Object.keys(state.synths[action.payload.synth].variables)).map(
+          variable => channel[action.payload.channel].features[variable] = ''
+        );
         return Object.assign({}, state, {
           channels: Object.assign({}, state.channels, channel)
         });

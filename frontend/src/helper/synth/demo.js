@@ -1,6 +1,6 @@
-import SimpleCodeGenerator from '../profile/SimpleCodeGenerator';
-import { SimpleLexicalAnalyzer, SLAToken } from '../profile/SimpleLexicalAnalyzer';
-import SimpleSyntaxAnalyzer from '../profile/SimpleSyntaxAnalyzer';
+import SimpleCodeGenerator from '../simple/SimpleCodeGenerator';
+import { SimpleLexicalAnalyzer, SLAToken } from '../simple/SimpleLexicalAnalyzer';
+import SimpleSyntaxAnalyzer from '../simple/SimpleSyntaxAnalyzer';
 
 const nodeTypes = Object.freeze({
   OSC: 'oscillator',
@@ -45,6 +45,8 @@ export const synthDemo = synth => {
         nodes[node.name] = new ConstantSourceNode(nodes.context);
         types.constant.push(node.name);
         break;
+      default:
+        break;
     }
   });
 
@@ -80,12 +82,23 @@ export const synthDemo = synth => {
 
   const now = nodes.context.currentTime;
   synth.adsrd.nodes.forEach(node => {
-    const factor = nodes[node].offset.value || 1;
-    nodes[node].offset.setValueAtTime(0, now);
-    nodes[node].offset.linearRampToValueAtTime(synth.adsrd.values[2] * factor, now + synth.adsrd.values[0]);
-    nodes[node].offset.linearRampToValueAtTime(0.6 * synth.adsrd.values[2] * factor, now + synth.adsrd.values[0] + synth.adsrd.values[1]);
-    nodes[node].offset.setValueAtTime(0.6 * synth.adsrd.values[2] * factor, now + synth.adsrd.values[4] - synth.adsrd.values[3]);
-    nodes[node].offset.linearRampToValueAtTime(0, now + synth.adsrd.values[4]);
+    let prop = '';
+    if (types.osc.includes(node)) {
+      prop = 'frequency';
+    } else if (types.gain.includes(node)) {
+      prop = 'gain';
+    } else if (types.pan.includes(node)) {
+      prop = 'pan';
+    } else if (types.convolver.includes(node)) {
+    } else if (types.constant.includes(node)) {
+      prop = 'offset';
+    }
+    const factor = nodes[node][prop].value || 1;
+    nodes[node][prop].setValueAtTime(0, now);
+    nodes[node][prop].linearRampToValueAtTime(factor, now + synth.adsrd.values[0]);
+    nodes[node][prop].linearRampToValueAtTime(synth.adsrd.values[2] * factor, now + synth.adsrd.values[0] + synth.adsrd.values[1]);
+    nodes[node][prop].setValueAtTime(synth.adsrd.values[2] * factor, now + synth.adsrd.values[4] - synth.adsrd.values[3]);
+    nodes[node][prop].linearRampToValueAtTime(0, now + synth.adsrd.values[4]);
   });
 
   Object.values(nodes).forEach(node => 'stop' in node ? node.stop(now + synth.adsrd.values[4]): null);

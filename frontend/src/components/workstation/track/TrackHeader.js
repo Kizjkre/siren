@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import SimpleCodeGenerator from '../../../helper/profile/SimpleCodeGenerator';
+import SimpleCodeGenerator from '../../../helper/simple/SimpleCodeGenerator';
 import profileParser from '../../../helper/profile/profileParser';
 import { connect } from 'react-redux';
 import { deleteTrack, editTrack, editTrackData } from '../../../actions';

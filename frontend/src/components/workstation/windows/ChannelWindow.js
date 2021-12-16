@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import Window from '../../Window';
 import { connect } from 'react-redux';
-import { createChannel, editChannel, focusWindow } from '../../../actions';
+import { createChannel } from '../../../actions';
 import ChannelBody from '../channel/ChannelBody';
 
-const ChannelWindow = ({ tracks, channels, createChannel, editChannel, focusWindow }) => {
+const ChannelWindow = ({ channels, createChannel }) => {
   const [open, setOpen] = useState('');
   const [name, setName] = useState('');
 
@@ -72,13 +72,10 @@ const ChannelWindow = ({ tracks, channels, createChannel, editChannel, focusWind
 };
 
 const mapDispatchToProps = dispatch => ({
-  createChannel: name => dispatch(createChannel(name)),
-  editChannel: (name, trackId) => dispatch(editChannel(name, trackId)),
-  focusWindow: id => dispatch(focusWindow(id))
+  createChannel: name => dispatch(createChannel(name))
 });
 
 const mapStateToProps = state => ({
-  tracks: state.workstation.tracks,
   channels: state.workstation.channels
 });
 

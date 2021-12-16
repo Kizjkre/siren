@@ -67,6 +67,11 @@ export const editChannelFeatures = (channel, feature, track) => ({
   payload: { channel, feature, track }
 });
 
+export const editChannelSynth = (channel, synth) => ({
+  type: ActionType.EDIT_CHANNEL_SYNTH,
+  payload: { channel, synth }
+});
+
 export const setState = state => ({
   type: ActionType.SET_STATE,
   payload: state

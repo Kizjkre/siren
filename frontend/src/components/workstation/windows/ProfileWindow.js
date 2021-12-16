@@ -61,7 +61,8 @@ const ProfileWindow = ({ profiles, addProfile }) => {
                   <code className="profile-editor-code-operation">-</code>,&nbsp;
                   <code className="profile-editor-code-operation">*</code>,&nbsp;
                   <code className="profile-editor-code-operation">/</code>,&nbsp;
-                  <code className="profile-editor-code-operation">^</code>
+                  <code className="profile-editor-code-operation">^</code>,&nbsp;
+                  <code className="profile-editor-code-operation">%</code>
                 </li>
                 <li>Parenthesis: <code className="profile-editor-code-parenthesis">()</code></li>
                 <li>
