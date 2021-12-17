@@ -1,4 +1,4 @@
-import { ActionType, INITIAL_CHANNEL_SETTINGS, INITIAL_SETTINGS } from '../constants/state';
+import { ActionType, FillType, INITIAL_CHANNEL_SETTINGS, INITIAL_SETTINGS } from '../constants/state';
 import cloneDeep from 'lodash.clonedeep';
 
 const workstationReducer = (state, action) => {
@@ -87,10 +87,10 @@ const workstationReducer = (state, action) => {
     case ActionType.EDIT_CHANNEL_FEATURES.type:
       return (() => {
         const channel = cloneDeep(state.channels);
-        if (channel[action.payload.channel].features[action.payload.feature] === action.payload.track) {
-          channel[action.payload.channel].features[action.payload.feature] = '';
+        if (channel[action.payload.channel].features[action.payload.feature].track === action.payload.track) {
+          channel[action.payload.channel].features[action.payload.feature].track = '';
         } else {
-          channel[action.payload.channel].features[action.payload.feature] = action.payload.track;
+          channel[action.payload.channel].features[action.payload.feature].track = action.payload.track;
         }
         return Object.assign({}, state, {
           channels: Object.assign({}, state.channels, channel)
@@ -102,8 +102,16 @@ const workstationReducer = (state, action) => {
         channel[action.payload.channel].synth = action.payload.synth;
         channel[action.payload.channel].features = {};
         ['Attack', 'Decay', 'Sustain', 'Release', 'Duration'].concat(Object.keys(state.synths[action.payload.synth].variables)).map(
-          variable => channel[action.payload.channel].features[variable] = ''
+          variable => channel[action.payload.channel].features[variable] = { track: '', fill: FillType.STRETCH }
         );
+        return Object.assign({}, state, {
+          channels: Object.assign({}, state.channels, channel)
+        });
+      })();
+    case ActionType.EDIT_CHANNEL_FILL.type:
+      return (() => {
+        const channel = cloneDeep(state.channels);
+        channel[action.payload.channel].features[action.payload.feature].fill = action.payload.fill;
         return Object.assign({}, state, {
           channels: Object.assign({}, state.channels, channel)
         });

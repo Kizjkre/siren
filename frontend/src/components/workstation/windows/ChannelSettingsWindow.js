@@ -1,10 +1,12 @@
 import Window from '../../Window';
 import { connect } from 'react-redux';
-import { editChannelFeatures, editChannelSynth } from '../../../actions';
+import { editChannelFeatures, editChannelFill, editChannelSynth } from '../../../actions';
+import { FillType } from '../../../constants/state';
 
-const ChannelSettingsWindow = ({ id, name, tracks, channels, synths, editChannelFeatures, editChannelSynth }) => {
+const ChannelSettingsWindow = ({ id, name, tracks, channels, synths, editChannelFeatures, editChannelSynth, editChannelFill }) => {
   const handleSynth = e => editChannelSynth(name, e.target.value);
   const handleAssign = (feature, track) => () => editChannelFeatures(name, feature, track);
+  const handleFill = feature => e => editChannelFill(name, feature, e.target.value);
 
   return (
     <Window id={ id } title={ `Channel Settings: ${ name }` }>
@@ -46,7 +48,7 @@ const ChannelSettingsWindow = ({ id, name, tracks, channels, synths, editChannel
                         <i className="fa fa-times" />
                       </span>
                     );
-                    switch (channels[name].features[feature]) {
+                    switch (channels[name].features[feature].track) {
                       case tracks[track].name:
                         className = 'channel-feature-checked';
                         icon = (
@@ -67,6 +69,22 @@ const ChannelSettingsWindow = ({ id, name, tracks, channels, synths, editChannel
               </tr>
             ))
           }
+          <tr>
+            <td>Fill</td>
+            {
+              Object.keys(channels[name].features).map((feature, i) => (
+                <td key={ i }>
+                  <div className="select is-small">
+                    <select defaultValue={ channels[name].features[feature].fill } onChange={ handleFill(feature) }>
+                      {
+                        Object.keys(FillType).map((key, i) => <option key={ i } value={ key }>{ FillType[key] }</option>)
+                      }
+                    </select>
+                  </div>
+                </td>
+              ))
+            }
+          </tr>
         </tbody>
       </table>
     </Window>
@@ -81,7 +99,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   editChannelFeatures: (channel, feature, track) => dispatch(editChannelFeatures(channel, feature, track)),
-  editChannelSynth: (channel, synth) => dispatch(editChannelSynth(channel, synth))
+  editChannelSynth: (channel, synth) => dispatch(editChannelSynth(channel, synth)),
+  editChannelFill: (channel, feature, fill) => dispatch(editChannelFill(channel, feature, fill))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChannelSettingsWindow);

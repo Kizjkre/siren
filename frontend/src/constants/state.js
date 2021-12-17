@@ -1,9 +1,9 @@
 import cloneDeep from 'lodash.clonedeep';
 
-const FillType = Object.freeze({
-  STRETCH: 0,
-  REPEAT: 1,
-  WRAP: 2
+export const FillType = Object.freeze({
+  STRETCH: 'Stretch',
+  REPEAT: 'Repeat',
+  WRAP: 'Wrap'
 })
 
 export const ActionType = Object.freeze({
@@ -21,6 +21,7 @@ export const ActionType = Object.freeze({
   EDIT_CHANNEL: { type: 'EDIT_CHANNEL', reducer: 'WORKSTATION' },
   EDIT_CHANNEL_FEATURES: { type: 'EDIT_CHANNEL_FEATURES', reducer: 'WORKSTATION' },
   EDIT_CHANNEL_SYNTH: { type: 'EDIT_CHANNEL_SYNTH', reducer: 'WORKSTATION' },
+  EDIT_CHANNEL_FILL: { type: 'EDIT_CHANNEL_FILL', reducer: 'WORKSTATION' },
   SET_SETTINGS: { type: 'SET_SETTINGS', reducer: 'WORKSTATION' },
   ADD_PROFILE: { type: 'ADD_PROFILE', reducer: 'WORKSTATION' },
   ADD_SYNTH: { type: 'ADD_SYNTH', reducer: 'WORKSTATION' },
@@ -57,17 +58,16 @@ export const INITIAL_CHANNEL_SETTINGS = {
   continuous: false,
   tracks: [],
   synth: 'Default',
-  fill: FillType.STRETCH,
   features: {
-    Attack: '',
-    Decay: '',
-    Sustain: '',
-    Release: '',
-    Duration: ''
+    Attack: { track: '', fill: FillType.STRETCH },
+    Decay: { track: '', fill: FillType.STRETCH },
+    Sustain: { track: '', fill: FillType.STRETCH },
+    Release: { track: '', fill: FillType.STRETCH },
+    Duration: { track: '', fill: FillType.STRETCH }
   }
 };
 
-Object.keys(INITIAL_SYNTH_SETTINGS.variables).forEach(variable => INITIAL_CHANNEL_SETTINGS.features[variable] = '');
+Object.keys(INITIAL_SYNTH_SETTINGS.variables).forEach(variable => INITIAL_CHANNEL_SETTINGS.features[variable] = { track: '', fill: FillType.STRETCH });
 
 export const INITIAL_STATE = {
   workstation: {
