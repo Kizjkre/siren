@@ -1,179 +1,131 @@
-import { SCALES } from '../constants/workstation';
-import { isNumerical, numerizeToArray, scale } from '../helper/processing';
-import store from '../store/';
-import SimpleSynth from './SimpleSynth';
-import SimpleContext from './SimpleContext';
-import * as d3 from 'd3';
+import store from '../store';
+import { SimpleLexicalAnalyzer, SLAToken } from '../helper/simple/SimpleLexicalAnalyzer';
+import SimpleSyntaxAnalyzer from '../helper/simple/SimpleSyntaxAnalyzer';
+import SimpleCodeGenerator from '../helper/simple/SimpleCodeGenerator';
+import cloneDeep from 'lodash.clonedeep';
 
-const _ = () => {
-  if (SimpleContext.hasContext()) {
-    SimpleContext.start();
-    return;
-  }
+const nodeTypes = Object.freeze({
+  OSC: 'oscillator',
+  GAIN: 'gain',
+  PAN: 'panner',
+  CONVOLVER: 'convolver',
+  CONSTANT: 'constantSource'
+});
 
+export const play = timelines => {
   const state = store.getState();
 
-  SimpleContext.createContext();
-  SimpleContext.setBpm(state.workstation.settings.bpm < 0 ? 60 : state.workstation.settings.bpm);
-  SimpleContext.setKey(state.workstation.settings.key === 'none' ? 'chromatic' : state.workstation.settings.key);
-  SimpleContext.setTimesig(state.workstation.settings.timesig);
+  Object.values(timelines).forEach(t => {
+    const synth = state.workstation.synths[t.synth];
+    const timeline = t.timeline;
 
-  Object.values(state.workstation.channels).forEach(channel => {
-    const synth = new SimpleSynth();
+    const nodes = {
+      context: new AudioContext()
+    };
 
-    channel.Volume.forEach(track => {
+    const types = {
+      osc: [],
+      gain: [],
+      pan: [],
+      convolver: [],
+      constant: []
+    };
 
+    synth.nodes.forEach(node => {
+      switch (node.type) {
+        case nodeTypes.OSC:
+          nodes[node.name] = new OscillatorNode(nodes.context);
+          types.osc.push(node.name);
+          break;
+        case nodeTypes.GAIN:
+          nodes[node.name] = new GainNode(nodes.context);
+          types.gain.push(node.name);
+          break;
+        case nodeTypes.PAN:
+          nodes[node.name] = new StereoPannerNode(nodes.context);
+          types.pan.push(node.name);
+          break;
+        case nodeTypes.CONVOLVER:
+          nodes[node.name] = new ConvolverNode(nodes.context);
+          types.convolver.push(node.name);
+          break;
+        case nodeTypes.CONSTANT:
+          nodes[node.name] = new ConstantSourceNode(nodes.context);
+          types.constant.push(node.name);
+          break;
+        default:
+          break;
+      }
     });
 
-    channel.Pitch.forEach((track, i) => {
-      const [min, max] = d3.extent(state.workstation.tracks[track].data);
-      const num = SCALES[SimpleContext.getKey()].length * 2;
-      const normalize = x => Math.round(num / (max - min) * (x - min));
+    synth.connections.forEach(connection => {
+      const [from, to] = Object.entries(connection)[0];
+      if (typeof to === 'object') {
+        nodes[from].connect(nodes[to.name][to.property]);
+      } else {
+        nodes[from].connect(nodes[to]);
+      }
+    });
 
-      state.workstation.tracks[track].data.forEach((datum, j) => {
-        const beats = SimpleContext.getTimesig()[0];
-        synth.queue(SimpleContext.toNoteInScale(normalize(datum)), [j * beats, j % beats], i);
+    Object.values(nodes).forEach(node => 'start' in node ? node.start(): null);
+
+    SLAToken.TYPES.keyword = new RegExp(Object.keys(synth.variables).reduce((a, v) => `${ a }|${ v }`));
+    SLAToken.TYPES.number = /(?<![a-zA-Z])\d*\.?\d+/;
+
+    const calculateParameters = (variables, time) => Object.entries(synth.inputs).forEach(([name, value]) => {
+      const tokens = new SimpleLexicalAnalyzer(value).analyze().tokens;
+      const tree = new SimpleSyntaxAnalyzer(tokens).analyze().tree;
+      const generator = new SimpleCodeGenerator(tree, variables);
+      const result = generator.generate();
+      if (types.osc.includes(name)) {
+        nodes[name].frequency.setValueAtTime(result, time);
+      } else if (types.gain.includes(name)) {
+        nodes[name].gain.setValueAtTime(result, time);
+      } else if (types.pan.includes(name)) {
+        nodes[name].pan.setValueAtTime(result, time);
+      } else if (types.convolver.includes(name)) {
+      } else if (types.constant.includes(name)) {
+        nodes[name].offset.setValueAtTime(result, time);
+      }
+    });
+
+    const now = nodes.context.currentTime;
+
+    calculateParameters(synth.variables, now);
+
+    let current = cloneDeep(synth.variables);
+    current['Attack'] = synth.adsrd.values[0];
+    current['Decay'] = synth.adsrd.values[1];
+    current['Sustain'] = synth.adsrd.values[2];
+    current['Release'] = synth.adsrd.values[3];
+    current['Duration'] = synth.adsrd.values[4];
+
+    const setADSRD = callback => {
+      synth.adsrd.nodes.forEach(node => {
+        let prop = '';
+        if (types.osc.includes(node)) {
+          prop = 'frequency';
+        } else if (types.gain.includes(node)) {
+          prop = 'gain';
+        } else if (types.pan.includes(node)) {
+          prop = 'pan';
+        } else if (types.convolver.includes(node)) {
+        } else if (types.constant.includes(node)) {
+          prop = 'offset';
+        }
+        const factor = nodes[node][prop].value;
+        callback(nodes[node][prop], factor);
       });
+    };
+
+    setADSRD(node => node.setValueAtTime(0, now));
+
+    Object.entries(timeline).forEach(([time, change]) => {
+      time = parseFloat(time);
+      calculateParameters(Object.assign(current, change), now + time);
+      setADSRD((node, factor) => node.linearRampToValueAtTime(factor));
     });
 
-    channel.Pan.forEach(track => {
-
-    });
-
-    channel.Tempo.forEach(track => {
-
-    });
+    Object.values(nodes).forEach(node => 'stop' in node ? node.stop(now + synth.adsrd.values[4]): null);
   });
-};
-
-export const play = () => {
-  const state = store.getState();
-
-  if (SimpleContext._context) {
-    SimpleContext.start();
-  } else {
-    SimpleContext.createContext();
-    SimpleContext.setBpm(state.workstation.settings.bpm < 0 ? 60 : state.workstation.settings.bpm);
-    SimpleContext.setKey(state.workstation.settings.key === 'none' ? 'chromatic' : state.workstation.settings.key);
-    SimpleContext.setTimesig(state.workstation.settings.timesig);
-
-    Object.values(state.workstation.tracks).forEach(t => {
-      if (t.settings.channel.length !== 0) return;
-      const data = isNumerical(t.data) ? t.data : numerizeToArray(t.data);
-
-      const synth = new SimpleSynth({
-        gain: t.settings.mute ? 0 : t.settings.volume / 100,
-        pan: t.settings.pan / 50,
-        continuous: t.settings.continuous,
-        num: data[0].length || 1,
-        type: 'sine'
-      });
-
-      const max = Math.max(...data.flat());
-      const min = Math.min(...data.flat());
-      const num = SCALES[SimpleContext.getKey()].length * 2;
-      const normalize = x => Math.round(num / (max - min) * (x - min));
-
-      data.forEach((datum, i) => {
-        const notes = [];
-        if (typeof datum === 'object') {
-          datum.forEach(d => notes.push(SimpleContext.toNoteInScale(normalize(d))));
-        } else {
-          notes.push(SimpleContext.toNoteInScale(normalize(datum)));
-        }
-        synth.queue(notes, [Math.floor(i / SimpleContext.getTimesig()[0]), i % SimpleContext.getTimesig()[0]]);
-      });
-
-      synth.play();
-    });
-
-    // (async () => {
-    //   const ctx = new AudioContext();
-    //   const map = await createBufferMap(ctx, [{ key: 'note', url: 'http://localhost:3000/violin1-C4.wav' }]);
-    //   const dft = new dsp.DFT(map.note.length, map.note.sampleRate);
-    //   dft.forward(map.note.getChannelData(0));
-    //   const osc = new OscillatorNode(ctx);
-    //   const table = ctx.createPeriodicWave(dft.real, dft.imag);
-    //   osc.setPeriodicWave(table);
-    //   osc.frequency.value = 10;
-    //   osc.connect(ctx.destination);
-    //   osc.start(0);
-    //   osc.stop(1);
-    // })();
-
-    const type = ['sine', 'triangle', 'sawtooth']
-    Object.values(state.workstation.channels).forEach(({ continuous, features }, i) => {
-      const pitch = isNumerical(state.workstation.tracks[features.Pitch].data) ?
-        state.workstation.tracks[features.Pitch].data :
-        numerizeToArray(state.workstation.tracks[features.Pitch].data);
-
-      const synth = new SimpleSynth({
-        gain: 1,
-        pan: 0,
-        continuous: false,
-        num: isNumerical(state.workstation.tracks[features.Pitch].data) ? 1 : pitch[0].length,
-        type: type[i]
-      });
-      const max = Math.max(...pitch.flat());
-      const min = Math.min(...pitch.flat());
-      const num = SCALES[SimpleContext.getKey()].length * 2;
-      const normalizePitch = x => Math.round(num / (max - min) * (x - min));
-      const normalizedGain = Object.keys(state.workstation.tracks).includes(features.Volume + '') ?
-        scale(state.workstation.tracks[features.Volume].data, 'logistic', 1, 0.25, d3.mean(state.workstation.tracks[features.Volume].data)) :
-        [];
-      const normalizedPan = Object.keys(state.workstation.tracks).includes(features.Pan + '') ?
-        scale(state.workstation.tracks[features.Pan].data, 'logistic', 1, -1, d3.mean(state.workstation.tracks[features.Pan].data)) :
-        [];
-
-      pitch.forEach((datum, i) => {
-        const notes = [];
-        if (typeof datum === 'object') {
-          datum.forEach(d => notes.push(SimpleContext.toNoteInScale(normalizePitch(d))));
-        } else {
-          notes.push(SimpleContext.toNoteInScale(normalizePitch(datum)));
-        }
-        synth.queue(notes, [Math.floor(i / SimpleContext.getTimesig()[0]), i % SimpleContext.getTimesig()[0]]);
-      });
-
-      if (Object.keys(state.workstation.tracks).includes(features.Volume + '')) {
-        normalizedGain.forEach((datum, i) => {
-          let gain;
-          if (typeof datum === 'object') {
-            gain = datum;
-          } else {
-            gain = datum;
-          }
-          synth.queueGain(
-            gain,
-            [Math.floor(i / SimpleContext.getTimesig()[0]), i % SimpleContext.getTimesig()[0]]
-          );
-        });
-      }
-
-      if (Object.keys(state.workstation.tracks).includes(features.Pan + '')) {
-        normalizedPan.forEach((datum, i) => {
-          let pan;
-          if (typeof datum === 'object') {
-            pan = datum;
-          } else {
-            pan = datum;
-          }
-          synth.queuePan(
-            pan,
-            [Math.floor(i / SimpleContext.getTimesig()[0]), i % SimpleContext.getTimesig()[0]]
-          );
-        });
-      }
-
-      synth.play();
-    });
-
-    SimpleContext.start();
-  }
-};
-
-export const pause = () => SimpleContext.pause();
-
-export const stop = () => {
-  SimpleContext.removeContext();
 };

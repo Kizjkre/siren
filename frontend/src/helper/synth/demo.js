@@ -93,11 +93,11 @@ export const synthDemo = synth => {
     } else if (types.constant.includes(node)) {
       prop = 'offset';
     }
-    const factor = nodes[node][prop].value || 1;
+    const factor = nodes[node][prop].value;
     nodes[node][prop].setValueAtTime(0, now);
-    nodes[node][prop].linearRampToValueAtTime(factor, now + synth.adsrd.values[0]);
-    nodes[node][prop].linearRampToValueAtTime(synth.adsrd.values[2] * factor, now + synth.adsrd.values[0] + synth.adsrd.values[1]);
-    nodes[node][prop].setValueAtTime(synth.adsrd.values[2] * factor, now + synth.adsrd.values[4] - synth.adsrd.values[3]);
+    nodes[node][prop].linearRampToValueAtTime(factor, now + synth.adsrd.values[0] * synth.adsrd.values[4]);
+    nodes[node][prop].linearRampToValueAtTime(synth.adsrd.values[2] * factor, now + (synth.adsrd.values[0] + synth.adsrd.values[1]) * synth.adsrd.values[4]);
+    nodes[node][prop].setValueAtTime(synth.adsrd.values[2] * factor, now + (1 - synth.adsrd.values[3]) * synth.adsrd.values[4]);
     nodes[node][prop].linearRampToValueAtTime(0, now + synth.adsrd.values[4]);
   });
 

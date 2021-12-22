@@ -49,9 +49,9 @@ const INITIAL_SYNTH_SETTINGS = {
   name: 'Default',
   nodes: [{ name: 'osc', type: 'oscillator' }, { name: 'gain', type: 'gain' }, { name: 'pan', type: 'panner' }],
   connections: [{ osc: 'pan' }, { pan: 'gain' }, { gain: { name: 'context', property: 'destination' } }],
-  variables: { Frequency: 440, Volume: 0, Pan: 0 },
+  variables: { Frequency: 440, Volume: 1, Pan: 0 },
   inputs: { osc: 'Frequency', gain: 'Volume', pan: 'Pan' },
-  adsrd: { values: [0, 0, 1, 0, 1], nodes: ['gain'] }
+  adsrd: { values: [0, 0, 1, 0, 0.5], nodes: ['gain'] }
 };
 
 export const INITIAL_CHANNEL_SETTINGS = {
@@ -59,15 +59,15 @@ export const INITIAL_CHANNEL_SETTINGS = {
   tracks: [],
   synth: 'Default',
   features: {
-    Attack: { track: '', fill: FillType.STRETCH },
-    Decay: { track: '', fill: FillType.STRETCH },
-    Sustain: { track: '', fill: FillType.STRETCH },
-    Release: { track: '', fill: FillType.STRETCH },
-    Duration: { track: '', fill: FillType.STRETCH }
+    Attack: { track: -1, fill: FillType.STRETCH },
+    Decay: { track: -1, fill: FillType.STRETCH },
+    Sustain: { track: -1, fill: FillType.STRETCH },
+    Release: { track: -1, fill: FillType.STRETCH },
+    Duration: { track: -1, fill: FillType.STRETCH }
   }
 };
 
-Object.keys(INITIAL_SYNTH_SETTINGS.variables).forEach(variable => INITIAL_CHANNEL_SETTINGS.features[variable] = { track: '', fill: FillType.STRETCH });
+Object.keys(INITIAL_SYNTH_SETTINGS.variables).forEach(variable => INITIAL_CHANNEL_SETTINGS.features[variable] = { track: -1, fill: FillType.STRETCH });
 
 export const INITIAL_STATE = {
   workstation: {

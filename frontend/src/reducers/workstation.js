@@ -88,7 +88,7 @@ const workstationReducer = (state, action) => {
       return (() => {
         const channel = cloneDeep(state.channels);
         if (channel[action.payload.channel].features[action.payload.feature].track === action.payload.track) {
-          channel[action.payload.channel].features[action.payload.feature].track = '';
+          channel[action.payload.channel].features[action.payload.feature].track = -1;
         } else {
           channel[action.payload.channel].features[action.payload.feature].track = action.payload.track;
         }
@@ -102,7 +102,7 @@ const workstationReducer = (state, action) => {
         channel[action.payload.channel].synth = action.payload.synth;
         channel[action.payload.channel].features = {};
         ['Attack', 'Decay', 'Sustain', 'Release', 'Duration'].concat(Object.keys(state.synths[action.payload.synth].variables)).map(
-          variable => channel[action.payload.channel].features[variable] = { track: '', fill: FillType.STRETCH }
+          variable => channel[action.payload.channel].features[variable] = { track: -1, fill: FillType.STRETCH }
         );
         return Object.assign({}, state, {
           channels: Object.assign({}, state.channels, channel)

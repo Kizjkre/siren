@@ -49,7 +49,7 @@ const ChannelSettingsWindow = ({ id, name, tracks, channels, synths, editChannel
                       </span>
                     );
                     switch (channels[name].features[feature].track) {
-                      case tracks[track].name:
+                      case track:
                         className = 'channel-feature-checked';
                         icon = (
                           <span className="icon">
@@ -57,13 +57,13 @@ const ChannelSettingsWindow = ({ id, name, tracks, channels, synths, editChannel
                           </span>
                         );
                         break;
-                      case '':
+                      case -1:
                         className = '';
                         icon = null;
                         break;
                       default:
                     }
-                    return <td className={ className } onClick={ handleAssign(feature, tracks[track].name) } key={ i }>{ icon }</td>
+                    return <td className={ className } onClick={ handleAssign(feature, track) } key={ i }>{ icon }</td>
                   })
                 }
               </tr>
