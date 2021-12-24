@@ -108,7 +108,7 @@ const getTimeline = () => {
             });
             break;
           default:
-            break;
+            throw new TypeError('Undefined fill type.');
         }
       }
     });

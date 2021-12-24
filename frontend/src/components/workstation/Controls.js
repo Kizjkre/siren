@@ -16,7 +16,6 @@ const Controls = ({ settings, focusWindow, disabled }) => {
         break;
       case PLAYING_STATUS.PLAYING + '':
         const timelines = getTimeline();
-        console.log(timelines);
         play(timelines);
         setStatus(PLAYING_STATUS.PLAYING);
         break;
