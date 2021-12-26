@@ -95,8 +95,6 @@ export default class SynthDock {
   }
 
   _queueADSRD(a, d, s, r, du, node, time, factor) {
-    console.log(arguments);
-    const total = du / (1 - (a + d + r));
     let prop = '';
     switch (this._nodes[node].constructor) {
       case OscillatorNode:
@@ -119,10 +117,10 @@ export default class SynthDock {
     factor = factor || this._nodes[node][prop].value;
     const now = this.now + time;
     this._nodes[node][prop].setValueAtTime(0, now);
-    this._nodes[node][prop].linearRampToValueAtTime(factor, now + a * total);
-    this._nodes[node][prop].linearRampToValueAtTime(s * factor, now + (a + d) * total);
-    this._nodes[node][prop].setValueAtTime(s * factor, now + (1 - r) * total);
-    this._nodes[node][prop].linearRampToValueAtTime(0, now + total);
+    this._nodes[node][prop].linearRampToValueAtTime(factor, now + a);
+    this._nodes[node][prop].linearRampToValueAtTime(s * factor, now + a + d);
+    this._nodes[node][prop].setValueAtTime(s * factor, now + a + d + du);
+    this._nodes[node][prop].linearRampToValueAtTime(0, now + a + d + du + r);
   }
 
   start() { Object.values(this._nodes).forEach(node => 'start' in node ? node.start(): null); return this; }

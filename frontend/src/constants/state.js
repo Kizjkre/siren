@@ -51,7 +51,7 @@ const INITIAL_SYNTH_SETTINGS = {
   connections: [{ osc: 'pan' }, { pan: 'gain' }, { gain: { name: 'context', property: 'destination' } }],
   variables: { Frequency: 440, Volume: 1, Pan: 0 },
   inputs: { osc: 'Frequency', gain: 'Volume', pan: 'Pan' },
-  adsrd: { values: [0, 0, 1, 0, 0.5], nodes: ['gain'] }
+  adsrd: { values: [0.01, 0, 1, 0.01, 0.5], nodes: ['gain'] }
 };
 
 export const INITIAL_CHANNEL_SETTINGS = {
