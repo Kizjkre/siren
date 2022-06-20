@@ -1,3 +1,4 @@
+import JSZip from 'jszip';
 import { setState, uploadFile } from '../../../actions';
 import { connect } from 'react-redux';
 import store from '../../../store';
@@ -14,17 +15,22 @@ const ToolbarFile = ({ selected, setSelected, uploadFile, setState }) => {
 
   const handleImport = async e => {
     if (e.target.files.length) {
-      setState(await (await fetch(URL.createObjectURL(e.target.files[0]))).json());
+      const zip = await JSZip.loadAsync(await (await fetch(URL.createObjectURL(e.target.files[0]))).blob()); // TODO: Error handling
+      setState(JSON.parse(await zip.files['siren-session/state.json'].async('string')));
       e.target.value = '';
       setSelected(false);
     }
   };
 
-  const handleExport = () => {
-    const data = `data:text/json;charset=utf-8,${ encodeURIComponent(JSON.stringify(store.getState())) }`;
+  const handleExport = async () => {
+    const zip = new JSZip();
+    zip.folder('siren-session')
+      .file('state.json', JSON.stringify(store.getState()))
+      .folder('impulse-responses');
+    const data = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 5 } });
     const a = document.createElement('a');
-    a.setAttribute('href', data);
-    a.setAttribute('download', 'siren-session.json');
+    a.setAttribute('href', URL.createObjectURL(data));
+    a.setAttribute('download', 'session.siren.zip');
     a.click();
     setSelected(false);
   };
@@ -43,7 +49,7 @@ const ToolbarFile = ({ selected, setSelected, uploadFile, setState }) => {
           </div>
         </label>
         <label htmlFor="import" className="navbar-item">
-          <input type="file" id="import" className="is-hidden" accept="application/json" onChange={ handleImport } />
+          <input type="file" id="import" className="is-hidden" accept="application/zip" onChange={ handleImport } />
           <div className="icon-text">
             <div className="icon">
               <i className="fa fa-file-import"/>
