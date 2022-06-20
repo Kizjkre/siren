@@ -1,19 +1,18 @@
-import Toolbar from '../workstation/toolbar/Toolbar';
-import FileBrowser from '../workstation/sidebar/Sidebar';
-import Main from '../workstation/Main';
-import CreateTrackWindow from '../workstation/windows/CreateTrackWindow';
-import Controls from '../workstation/Controls';
-import useDemoData from '../../hooks/useDemoData';
-import ChannelSettingsWindow from '../workstation/windows/ChannelSettingsWindow';
 import { connect } from 'react-redux';
-import ViewWindow from '../workstation/windows/ViewWindow';
+import useDemoData from '../../hooks/useDemoData';
+import Controls from '../workstation/Controls';
+import Main from '../workstation/Main';
+import FileBrowser from '../workstation/sidebar/Sidebar';
+import Toolbar from '../workstation/toolbar/Toolbar';
 import BPMWindow from '../workstation/windows/BPMWindow';
-import KeyWindow from '../workstation/windows/KeyWindow';
-import TimesigWindow from '../workstation/windows/TimesigWindow';
+import ChannelSettingsWindow from '../workstation/windows/ChannelSettingsWindow';
 import ChannelWindow from '../workstation/windows/ChannelWindow';
-import ProfileWindow from '../workstation/windows/ProfileWindow';
+import CreateTrackWindow from '../workstation/windows/CreateTrackWindow';
+import KeyWindow from '../workstation/windows/KeyWindow';
 import ProfileViewWindow from '../workstation/windows/ProfileViewWindow';
-import SynthDockWindow from '../workstation/windows/SynthDockWindow';
+import ProfileWindow from '../workstation/windows/ProfileWindow';
+import TimesigWindow from '../workstation/windows/TimesigWindow';
+import ViewWindow from '../workstation/windows/ViewWindow';
 
 const Workstation = ({ files, channels, profiles, fileBrowser }) => {
   useDemoData();
@@ -29,7 +28,6 @@ const Workstation = ({ files, channels, profiles, fileBrowser }) => {
       <TimesigWindow />
       <ChannelWindow />
       <ProfileWindow />
-      <SynthDockWindow />
 
       <Toolbar />
       <div className="columns">

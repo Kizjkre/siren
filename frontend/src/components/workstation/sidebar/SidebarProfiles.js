@@ -6,14 +6,14 @@ const SidebarProfiles = ({ profiles, focusWindow }) => {
   const handleClick = name => () => focusWindow(`window-profile-view-${ name }`);
 
   return (
-    <SidebarSectionTemplate title="Profiles" icon="fa fa-map-signs" empty={ !Object.keys(profiles).length }>
+    <SidebarSectionTemplate title="Profiles" icon="fa fa-chart-line" empty={ !Object.keys(profiles).length }>
       {
         Object.keys(profiles).map(profile => (
           <li key={ profile }>
             <a onClick={ handleClick(profile) }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
               <span className="icon-text">
                 <span className="icon">
-                  <i className="fa fa-map-signs" />
+                  <i className="fa fa-chart-line" />
                 </span>
                 <span>{ profile }</span>
               </span>
