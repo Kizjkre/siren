@@ -27,7 +27,7 @@ const ToolbarFile = ({ selected, setSelected, uploadFile, setState }) => {
     zip.folder('siren-session')
       .file('state.json', JSON.stringify(store.getState()))
       .folder('impulse-responses');
-    const data = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 5 } });
+    const data = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 9 } });
     const a = document.createElement('a');
     a.setAttribute('href', URL.createObjectURL(data));
     a.setAttribute('download', 'session.siren.zip');

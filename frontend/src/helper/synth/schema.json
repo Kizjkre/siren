@@ -14,21 +14,46 @@
       "items": {
         "description": "Node definition.",
         "type": "object",
-        "properties": {
-          "name": {
-            "description": "Name of the node.",
-            "type": "string",
-            "not": {
-              "enum": ["context"]
-            }
+        "oneOf": [
+          {
+            "properties": {
+              "name": {
+                "description": "Name of the node.",
+                "type": "string",
+                "not": {
+                  "enum": ["context"]
+                }
+              },
+              "type": {
+                "description": "Type of node.",
+                "type": "string",
+                "enum": ["oscillator", "gain", "panner", "constantSource"]
+              }
+            },
+            "required": ["name", "type"]
           },
-          "type": {
-            "description": "Type of node.",
-            "type": "string",
-            "enum": ["oscillator", "gain", "panner", "convolver", "constantSource"]
+          {
+            "properties": {
+              "name": {
+                "description": "Name of the node.",
+                "type": "string",
+                "not": {
+                  "enum": ["context"]
+                }
+              },
+              "type": {
+                "description": "Type of node.",
+                "type": "string",
+                "enum": ["convolver"]
+              },
+              "impulseResponse": {
+                "description": "Relative path to the impulse response associated with the convolver.",
+                "type": "string"
+              }
+            },
+            "required": ["name", "type", "impulseResponse"]
           }
-        },
-        "required": ["name", "type"]
+        ]
       }
     },
     "connections": {

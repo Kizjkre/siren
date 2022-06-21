@@ -18,7 +18,7 @@ export default class SynthDock {
 
   init() {
     this._nodes.context = new AudioContext();
-    this._synth.nodes.forEach(node => {
+    this._synth.nodes.forEach(async node => {
       switch (node.type) {
         case SynthDock.NodeTypes.OSC:
           this._nodes[node.name] = new OscillatorNode(this._nodes.context);
@@ -30,7 +30,11 @@ export default class SynthDock {
           this._nodes[node.name] = new StereoPannerNode(this._nodes.context);
           break;
         case SynthDock.NodeTypes.CONVOLVER:
+          // REF: https://developer.mozilla.org/en-US/docs/Web/API/ConvolverNode
           this._nodes[node.name] = new ConvolverNode(this._nodes.context);
+          const response = this._synth.irs[node.impulseResponse];
+          const arraybuffer = await response.arrayBuffer();
+          this._nodes[node.name].buffer = await this._nodes.context.decodeAudioData(arraybuffer);
           break;
         case SynthDock.NodeTypes.CONSTANT:
           this._nodes[node.name] = new ConstantSourceNode(this._nodes.context);
@@ -75,6 +79,7 @@ export default class SynthDock {
             this._nodes[name].pan.setValueAtTime(result, time);
             break;
           case ConvolverNode:
+            this._nodes[name].gain.setValueAtTime(result, time);
             break;
           case ConstantSourceNode:
             this._nodes[name].offset.setValueAtTime(result, time);
