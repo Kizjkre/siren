@@ -32,21 +32,6 @@ export const deleteTrack = id => ({
   payload: id
 });
 
-export const setBPM = bpm => ({
-  type: ActionType.SET_SETTINGS,
-  payload: { bpm }
-});
-
-export const setTimesig = timesig => ({
-  type: ActionType.SET_SETTINGS,
-  payload: { timesig }
-});
-
-export const setKey = key => ({
-  type: ActionType.SET_SETTINGS,
-  payload: { key }
-});
-
 export const setFileBrowser = fileBrowser => ({
   type: ActionType.SET_SETTINGS,
   payload: { fileBrowser }

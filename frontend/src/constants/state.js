@@ -78,9 +78,6 @@ export const INITIAL_STATE = {
     profiles: { Default: cloneDeep(INITIAL_PROFILE_SETTINGS) },
     synths: { Default: cloneDeep(INITIAL_SYNTH_SETTINGS) },
     settings: {
-      bpm: 120,
-      key: 'C',
-      timesig: [4, 4],
       fileBrowser: true
     }
   },

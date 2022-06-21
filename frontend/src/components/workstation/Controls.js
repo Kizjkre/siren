@@ -73,28 +73,10 @@ const Controls = ({ settings, focusWindow, disabled }) => {
       <nav className="navbar is-fixed-bottom py-4" role="navigation" aria-label="main navigation">
         <div className="container">
           <nav className="level" id="controls">
-            <div className="level-left">
-              <p className="level-item">
-                <button className="button is-white" onClick={ () => focusWindow('window-bpm') }>
-                  <span className="icon">
-                    <i className="fa fa-drum" />
-                  </span>
-                  <span>BPM:&nbsp;<span className="text-monospace">{ settings.bpm < 0 ? 'N/A' : settings.bpm }</span></span>
-                </button>
-              </p>
-              <p className="level-item">
-                <button className="button is-white" onClick={ () => focusWindow('window-key') }>
-                  <span className="icon">
-                    <i className="fa fa-hashtag" />
-                  </span>
-                  <span>Key:&nbsp;{ <span dangerouslySetInnerHTML={ { __html: KEYS[settings.key] } } /> }</span>
-                </button>
-              </p>
-            </div>
-            <p className="level-item">
+            <div className="level-item">
               { status === PLAYING_STATUS.PLAYING ? buttons[PLAYING_STATUS.PAUSED] : buttons[PLAYING_STATUS.PLAYING] }
               { buttons[PLAYING_STATUS.STOPPED] }
-            </p>
+            </div>
             <div className="level-right">
               <div className="level-item">
                 <button className="button is-primary" onClick={ () => focusWindow('window-channel') }>
@@ -102,20 +84,6 @@ const Controls = ({ settings, focusWindow, disabled }) => {
                     <i className="fa fa-code-branch" />
                   </span>
                   <span>Edit Channels</span>
-                </button>
-              </div>
-              <div className="level-item">
-                <button className="button is-white timesig-wrap" onClick={ () => focusWindow('window-timesig') }>
-                  <span className="icon">
-                    <i className="fa fa-stopwatch" />
-                  </span>
-                  <span className="timesig">
-                    Time Signature:&nbsp;
-                    <span>
-                      <sup>{ settings.timesig[0] <= 0 ? 'N/A' : settings.timesig[0] }</sup>
-                      <sub>{ settings.timesig[1] <= 0 ? 'N/A' : settings.timesig[1] }</sub>
-                    </span>
-                  </span>
                 </button>
               </div>
             </div>

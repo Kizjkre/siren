@@ -4,14 +4,11 @@ import Controls from '../workstation/Controls';
 import Main from '../workstation/Main';
 import FileBrowser from '../workstation/sidebar/Sidebar';
 import Toolbar from '../workstation/toolbar/Toolbar';
-import BPMWindow from '../workstation/windows/BPMWindow';
 import ChannelSettingsWindow from '../workstation/windows/ChannelSettingsWindow';
 import ChannelWindow from '../workstation/windows/ChannelWindow';
 import CreateTrackWindow from '../workstation/windows/CreateTrackWindow';
-import KeyWindow from '../workstation/windows/KeyWindow';
 import ProfileViewWindow from '../workstation/windows/ProfileViewWindow';
 import ProfileWindow from '../workstation/windows/ProfileWindow';
-import TimesigWindow from '../workstation/windows/TimesigWindow';
 import ViewWindow from '../workstation/windows/ViewWindow';
 
 const Workstation = ({ files, channels, profiles, fileBrowser }) => {
@@ -23,9 +20,6 @@ const Workstation = ({ files, channels, profiles, fileBrowser }) => {
       { Object.keys(channels).map(name => <ChannelSettingsWindow key={ name } id={ `window-channel-settings-${ name }` } name={ name } />) }
       { Object.keys(profiles).map(name => <ProfileViewWindow key={ name } id={ `window-profile-view-${ name }` } name={ name } />) }
       <ViewWindow />
-      <BPMWindow />
-      <KeyWindow />
-      <TimesigWindow />
       <ChannelWindow />
       <ProfileWindow />
 
@@ -36,7 +30,7 @@ const Workstation = ({ files, channels, profiles, fileBrowser }) => {
             <FileBrowser />
           </section>
         </div>
-        <div className="column is-10 workstation-body">
+        <div className={ `column ${ fileBrowser ? 'is-10' : '' } workstation-body` }>
           <Main />
         </div>
       </div>
