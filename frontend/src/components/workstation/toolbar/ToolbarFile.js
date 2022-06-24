@@ -1,7 +1,7 @@
-import JSZip from 'jszip';
-import { setState, uploadFile } from '../../../actions';
 import { connect } from 'react-redux';
-import store from '../../../store';
+import { setState, uploadFile } from '../../../actions';
+import createZip from '../../../helper/export';
+import unzip from '../../../helper/import';
 
 const ToolbarFile = ({ selected, setSelected, uploadFile, setState }) => {
   const handleOpen = async e => {
@@ -15,19 +15,14 @@ const ToolbarFile = ({ selected, setSelected, uploadFile, setState }) => {
 
   const handleImport = async e => {
     if (e.target.files.length) {
-      const zip = await JSZip.loadAsync(await (await fetch(URL.createObjectURL(e.target.files[0]))).blob()); // TODO: Error handling
-      setState(JSON.parse(await zip.files['siren-session/state.json'].async('string')));
+      setState(await unzip(e.target.files[0]));
       e.target.value = '';
       setSelected(false);
     }
   };
 
   const handleExport = async () => {
-    const zip = new JSZip();
-    zip.folder('siren-session')
-      .file('state.json', JSON.stringify(store.getState()))
-      .folder('impulse-responses');
-    const data = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 9 } });
+    const data = await createZip();
     const a = document.createElement('a');
     a.setAttribute('href', URL.createObjectURL(data));
     a.setAttribute('download', 'session.siren.zip');
