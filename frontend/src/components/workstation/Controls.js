@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { focusWindow } from '../../actions';
-import { KEYS, PLAYING_STATUS } from '../../constants/workstation';
+import { PLAYING_STATUS } from '../../constants/workstation';
 import { play } from '../../synth/synth';
-import getTimeline from '../../synth/timeline';
+import createTimeline from '../../synth/timeline';
 
-const Controls = ({ settings, focusWindow, disabled }) => {
+const Controls = ({ disabled, focusWindow }) => {
   const [status, setStatus] = useState(PLAYING_STATUS.STOPPED);
 
   const handlePlay = e => {
@@ -15,7 +15,7 @@ const Controls = ({ settings, focusWindow, disabled }) => {
         setStatus(PLAYING_STATUS.STOPPED);
         break;
       case PLAYING_STATUS.PLAYING + '':
-        const timelines = getTimeline();
+        const timelines = createTimeline();
         console.log(timelines);
         play(timelines);
         setStatus(PLAYING_STATUS.PLAYING);
@@ -95,7 +95,6 @@ const Controls = ({ settings, focusWindow, disabled }) => {
 };
 
 const mapStateToProps = state => ({
-  settings: state.workstation.settings,
   disabled: !Object.keys(state.workstation.tracks).length
 });
 

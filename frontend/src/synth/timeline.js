@@ -1,114 +1,71 @@
-import store from '../store';
 import { FillType } from '../constants/state';
+import { ENVELOPE, TIME_FEATURES } from '../constants/workstation';
+import store from '../store';
 
-const getTimeline = () => {
+const createTimeline = () => {
   const state = store.getState();
-  const timeline = {};
+  const timelines = {};
 
-  Object.entries(state.workstation.channels).forEach(([channelName, channel]) => {
-    const variables = {};
-
+  Object.entries(state.workstation.channels).forEach(([name, channel]) => {
     const max = Math.max(...Object.values(channel.features).map(({ track }) => track === -1 ? 0 : state.workstation.tracks[track].data.length));
-    const duration = new Array(max);
-    duration.fill(0);
+    const timeline = new Array(max).fill().map(() => [0, {}]);
 
-    const fill = (feature, def, duration) => {
-      if (channel.features[feature].track === -1) {
-        duration.forEach((_, i) => duration[i] += def);
-      } else {
-        const dur = state.workstation.tracks[channel.features[feature].track].data;
-        switch (channel.features[feature].fill) {
-          case FillType.STRETCH:
-            duration.forEach((_, i) => duration[i] += dur[Math.floor(dur.length / max * i)]);
-            break;
-          case FillType.REPEAT:
-            const temp1 = dur.concat(dur.slice(0, max - dur));
-            duration.forEach((_, i) => duration[i] += temp1[i]);
-            break;
-          case FillType.WRAP:
-            const temp2 = dur.concat(dur.reverse().slice(0, max - dur));
-            duration.forEach((_, i) => duration[i] += temp2[i]);
-            break;
-          default:
-            throw new TypeError('Undefined fill type.');
-        }
-      }
-    };
-
-    fill('Attack', state.workstation.synths[channel.synth].adsrd.values[0], duration);
-    fill('Decay', state.workstation.synths[channel.synth].adsrd.values[1], duration);
-    fill('Release', state.workstation.synths[channel.synth].adsrd.values[3], duration);
-    fill('Duration', state.workstation.synths[channel.synth].adsrd.values[4], duration);
-
-    Object.entries(channel.features).forEach(([feature, track]) => {
-      if (track.track !== -1) {
-        const adsrd = ['Attack', 'Decay', 'Sustain', 'Release', 'Duration'];
-        if (adsrd.includes(feature) || state.workstation.tracks[track.track].data.length === max) {
-          const temp = new Array(max);
-          temp.fill(0);
-          let def = state.workstation.synths[channel.synth];
-          if (adsrd.includes(feature)) {
-            def = def.adsrd.values[adsrd.findIndex(e => e === feature)];
-          } else {
-            def = def.variables[feature];
-          }
-          fill(feature, def, temp);
-          let accumulator = 0;
-          temp.forEach((d, i) => {
-            accumulator += duration[i];
-            i = accumulator - duration[i];
-            if (i in variables) {
-              variables[i][feature] = d;
-            } else {
-              variables[i] = { [feature]: d };
-            }
+    // TODO: negative ADSR-D values for continuous sound.
+    ENVELOPE.forEach((feature, i) => {
+      if (feature === 'Sustain') return;
+      const track = channel.features[feature];
+      const data = track.track === -1 ? new Array(timeline.length).fill(state.workstation.synths[channel.synth].adsrd.values[i]) : state.workstation.tracks[track.track].data;
+      switch (track.fill) {
+        case FillType.STRETCH:
+          timeline.forEach((_, j) => {
+            const datum = data[Math.floor(data.length / max * j)];
+            timeline[j][1][feature] = datum;
+            j !== 0 && (timeline[j][0] += datum + timeline[j - 1][0]);
           });
-        } else {
-          const data = state.workstation.tracks[track.track].data;
-          let accumulator = 0;
-          switch (track.fill) {
-            case FillType.STRETCH:
-              const sum = duration.reduce((a, v) => a + v);
-              data.forEach((d, i) => {
-                if (sum / data.length * i in variables) {
-                  variables[sum / data.length * i][feature] = d;
-                } else {
-                  variables[sum / data.length * i] = {[feature]: d};
-                }
-              });
-              break;
-            case FillType.REPEAT:
-            case FillType.WRAP:
-              data.forEach((d, i) => {
-                accumulator += duration[i];
-                i = accumulator - duration[i];
-                if (i in variables) {
-                  variables[i][feature] = d;
-                } else {
-                  variables[i] = {[feature]: d};
-                }
-              });
-              (track.fill === FillType.REPEAT ? data : data.reverse()).slice(0, max - data.length).forEach((d, i) => {
-                accumulator += duration[data.length + i];
-                i = accumulator - duration[data.length + i];
-                if (i in variables) {
-                  variables[i][feature] = d;
-                } else {
-                  variables[i] = {[feature]: d};
-                }
-              });
-              break;
-            default:
-              throw new TypeError('Undefined fill type.');
-          }
-        }
+          break;
+        case FillType.REPEAT:
+          timeline.forEach((_, j) => {
+            const datum = data[j % data.length];
+            timeline[j][1][feature] = datum;
+            j !== 0 && (timeline[j][0] += datum + timeline[j - 1][0]);
+          });
+          break;
+        case FillType.WRAP:
+          timeline.forEach((_, j) => {
+            const datum = data[Math.floor(j / data.length) % 2 ? data.length - 1 - j % data.length : j % data.length];
+            timeline[j][1][feature] = datum;
+            j !== 0 && (timeline[j][0] += datum + timeline[j - 1][0]);
+          });
+          break;
+        default:
+          throw new TypeError('Undefined fill type.');
       }
     });
 
-    timeline[channelName] = { timeline: variables, synth: channel.synth };
+    Object.entries(channel.features).filter(([feature, track]) => !TIME_FEATURES.includes(feature) && track.track !== -1).forEach(([feature, track]) => {
+      const data = state.workstation.tracks[track.track].data;
+      switch (track.fill) {
+        case FillType.STRETCH:
+          const temp = Object.fromEntries(timeline);
+          const increment = (timeline[timeline.length - 1][0] + Object.entries(timeline[timeline.length - 1][1]).filter(([name]) => TIME_FEATURES.includes(name)).reduce((acc, v) => acc + v[1], 0)) / data.length;
+          data.forEach((datum, i) => temp[i * increment][feature] = datum);
+          Object.entries(temp).forEach(([time, d], i) => timeline[i] = [+time, d]);
+          break;
+        case FillType.REPEAT:
+          timeline.forEach((_, j) => timeline[j][1][feature] = data[j % data.length]);
+          break;
+        case FillType.WRAP:
+          timeline.forEach((_, j) => timeline[j][1][feature] = data[Math.floor(j / data.length) % 2 ? data.length - 1 - j % data.length : j % data.length]);
+          break;
+        default:
+          throw new TypeError('Undefined fill type.');
+      }
+    });
+
+    timelines[name] = timeline;
   });
 
-  return timeline;
+  return timelines;
 };
 
-export default getTimeline;
+export default createTimeline;
