@@ -1,57 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
-import * as d3 from 'd3';
+import { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { isNumerical } from '../../../helper/processing';
-
-let height = -1;
+import Tooltip from '../../Tooltip';
+import graph from '../../../helper/graph';
 
 const TrackData = ({ tracks, id }) => {
-  const svg = useRef();
-  const xAxis = useRef();
-  const yAxis = useRef();
+  const [open, setOpen] = useState(null);
 
-  const [graph, setGraph] = useState('');
+  const svg = useRef();
 
   const track = tracks[id].data;
 
-  const data = track.map((d, i) => [i, d]);
-
   useEffect(() => {
     if (isNumerical(track)) {
-      const width = getComputedStyle(svg.current).width;
-
-      if (height < 0) {
-        height = getComputedStyle(svg.current).height;
-      }
-
-      const x = d3.scaleLinear()
-        .domain(d3.extent(data, datum => datum[0]))
-        .range([30, parseFloat(width.slice(0, width.length - 2))]);
-      const y = d3.scaleLinear()
-        .domain(d3.extent(data, datum => datum[1]))
-        .range([parseFloat(height.slice(0, height.length - 2)) - 20, 0]);
-
-      if (data.every(datum => !isNaN(datum[1]))) {
-        const line = d3.line()
-          .x(data => x(data[0]))
-          .y(data => y(data[1]));
-
-        setGraph(line(data));
-
-        const axes = [
-          d3.axisBottom()
-            .scale(x)
-            .ticks(0),
-          d3.axisLeft()
-            .scale(y)
-        ];
-
-        d3.select(xAxis.current).call(axes[0]);
-        d3.select(yAxis.current).call(axes[1]);
-      }
-
-      xAxis.current.style.transform = `translateY(calc(${ height } - 20px))`;
-      yAxis.current.style.transform = 'translateX(30px)';
+      graph(svg.current, id, track, (e, d) => setOpen({ x: e.pageX, y: e.pageY, d }), () => setOpen(null));
     }
   }, [track]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -70,15 +32,10 @@ const TrackData = ({ tracks, id }) => {
   }
 
   return (
-    <svg className="track-graph" ref={ svg }>
-      <g>
-        <g className="x" ref={ xAxis } />
-        <g className="y" ref={ yAxis } />
-        <g className="line">
-          <path d={ graph } fill="none" stroke="black" />
-        </g>
-      </g>
-    </svg>
+    <>
+      <svg className="track-graph" ref={ svg } />
+      <Tooltip open={ !!open } position={ open || { x: 0, y: 0 } }>{ open?.d }</Tooltip>
+    </>
   );
 };
 

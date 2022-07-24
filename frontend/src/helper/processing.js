@@ -1,5 +1,31 @@
 import * as d3 from 'd3';
 
+// REF: https://stackoverflow.com/a/27865285
+const decimals = a => {
+  let e = 1, p = 0;
+  while (Math.round(a * e) / e !== a) { e *= 10; p++; }
+  return p;
+};
+
+const _add = (a, b) => {
+  const d = Math.max(decimals(a), decimals(b));
+  return (a * 10 ** d + b * 10 ** d) / (10 ** d);
+};
+
+export const add = (...nums) => nums.reduce((acc, v) => _add(acc, v));
+
+// REF: https://stackoverflow.com/a/21822316
+export const binsert = (arr, value) => {
+  let s = 0, e = arr.length;
+  while (s < e) {
+    const i = (s + e) >>> 1;
+    if (arr[i] < value) s = i + 1;
+    else e = i;
+  }
+  arr.splice(s, 0, value);
+  return s;
+};
+
 export const chunkify = (data, size) => {
   if (size < 1) {
     return data;
@@ -15,35 +41,6 @@ export const chunkify = (data, size) => {
 };
 
 export const isNumerical = data => data.every(d => typeof d === 'number' || d === null);
-
-export const extremes = data => {
-  let [min, max] = [Infinity, -Infinity];
-  data.forEach(datum => {
-    if (datum < min) min = datum;
-    if (datum > max) max = datum;
-  });
-  return [min, max];
-}
-
-export const scale = (data, type, max, min, center) => {
-  if (!isNumerical(data)) {
-    return null;
-  }
-  return data.map(d => {
-    switch (type) {
-      case 'logistic':
-        return (max - min) / (1 + Math.E ** (-1 * (d - center))) + min;
-      case 'tanh':
-        return (max - min) * Math.tanh(d - center) + (max + min) / 2;
-      case 'arctan':
-        return (max - min) * 2 / Math.PI * Math.atan(d - center) + (max + min) / 2;
-      case 'sign':
-        return (max - min) * Math.sign(d - center) + (max + min) / 2;
-      default:
-        return d;
-    }
-  });
-};
 
 export const removeOutliers = data => {
   const first = d3.quantile(data, 0.25);

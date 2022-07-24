@@ -1,15 +1,15 @@
 import { connect } from 'react-redux';
-import useDemoData from '../../hooks/useDemoData';
-import Controls from '../workstation/Controls';
-import Main from '../workstation/Main';
-import FileBrowser from '../workstation/sidebar/Sidebar';
-import Toolbar from '../workstation/toolbar/Toolbar';
-import ChannelSettingsWindow from '../workstation/windows/ChannelSettingsWindow';
-import ChannelWindow from '../workstation/windows/ChannelWindow';
-import CreateTrackWindow from '../workstation/windows/CreateTrackWindow';
-import ProfileViewWindow from '../workstation/windows/ProfileViewWindow';
-import ProfileWindow from '../workstation/windows/ProfileWindow';
-import ViewWindow from '../workstation/windows/ViewWindow';
+import Controls from '../components/workstation/Controls';
+import Main from '../components/workstation/Main';
+import FileBrowser from '../components/workstation/sidebar/Sidebar';
+import Toolbar from '../components/workstation/toolbar/Toolbar';
+import ChannelSettingsWindow from '../components/workstation/windows/ChannelSettingsWindow';
+import ChannelWindow from '../components/workstation/windows/ChannelWindow';
+import CreateTrackWindow from '../components/workstation/windows/CreateTrackWindow';
+import ProfileViewWindow from '../components/workstation/windows/ProfileViewWindow';
+import ProfileWindow from '../components/workstation/windows/ProfileWindow';
+import ViewWindow from '../components/workstation/windows/ViewWindow';
+import useDemoData from '../hooks/useDemoData';
 
 const Workstation = ({ files, channels, profiles, fileBrowser }) => {
   useDemoData();

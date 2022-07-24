@@ -27,7 +27,7 @@
               "type": {
                 "description": "Type of node.",
                 "type": "string",
-                "enum": ["oscillator", "gain", "panner", "constantSource"]
+                "enum": ["OscillatorNode", "GainNode", "StereoPannerNode", "ConstantSourceNode"]
               }
             },
             "required": ["name", "type"]
@@ -44,7 +44,7 @@
               "type": {
                 "description": "Type of node.",
                 "type": "string",
-                "enum": ["convolver"]
+                "enum": ["ConvolverNode"]
               },
               "impulseResponse": {
                 "description": "Relative path to the impulse response associated with the convolver.",
@@ -83,8 +83,8 @@
                     "type": "string",
                     "enum": { "$data": "1/properties/nodes/items/properties/name" }
                   },
-                  "property": {
-                    "description": "Node property.",
+                  "parameter": {
+                    "description": "Node param. Should be an AudioParam.",
                     "type": "string"
                   }
                 }
@@ -113,8 +113,22 @@
       "type": "object",
       "patternProperties": {
         "^.+$": {
-          "description": "<Input>: <Expression>",
-          "type": "string"
+          "description": "<Expression>: {[ node: <Node>, parameter: <Param> }]",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "node": {
+                "description": "Node to apply expression to.",
+                "type": "string"
+              },
+              "parameter": {
+                "description": "Parameter to apply expression to",
+                "type": "string"
+              }
+            },
+            "required": ["node", "parameter"]
+          }
         }
       },
       "propertyNames": {
@@ -141,8 +155,19 @@
           "type": "array",
           "items": {
             "description": "Node names.",
-            "type": "string",
-            "enum": { "$data": "1/properties/nodes/items/properties/name" }
+            "type": "object",
+            "properties": {
+              "node": {
+                "description": "Node name.",
+                "type": "string",
+                "enum": { "$data": "1/properties/nodes/items/properties/name" }
+              },
+              "parameter": {
+                "description": "Parameter to apply expression to",
+                "type": "string"
+              }
+            },
+            "required": ["node", "parameter"]
           }
         }
       },

@@ -18,8 +18,26 @@ code, .code {
   font-family: 'JetBrains Mono', monospace !important;
 }
 
+html {
+  background: url('assets/polygon-scatter-haikei.svg') no-repeat;
+  background-size: 100%;
+}
+
+path.x.origin, path.y.origin {
+  display: none;
+}
+
 summary {
   cursor: pointer;
+}
+
+.accordion {
+  cursor: pointer;
+}
+
+.control-background {
+  background: url('assets/wave-haikei.svg') no-repeat 0 !important;
+  background-size: 100% !important;
 }
 
 .channel-feature {
@@ -50,42 +68,45 @@ summary {
   font-size: $size-1;
 }
 
+.profile-editor-code-function {
+  color: #E06C75;
+  font-variant-ligatures: none;
+}
+
+.profile-editor-code-keyword {
+  color: #C678DD;
+  font-variant-ligatures: none;
+}
+
 .profile-editor-code-number {
   color: #D19A66;
+  font-variant-ligatures: none;
 }
 
 .profile-editor-code-operation {
   color: #56B6C2;
-}
-
-.profile-editor-code-keyword {
-  color: #98C379;
+  font-variant-ligatures: none;
 }
 
 .profile-editor-code-parenthesis {
   color: #ABB2BF;
+  font-variant-ligatures: none;
 }
 
-.synth-editor-param {
-  cursor: pointer;
+.profile-editor-error {
+  background: transparent !important;
+  color: inherit;
+  padding: 0 !important;
 }
 
-.synth-editor-param.selected {
-  color: $danger;
-}
-
-.timesig-wrap {
-  align-items: center !important;
-}
-
-.timesig {
+.profile-title {
   align-items: center;
-  display: flex;
+  display: flex !important;
+}
 
-  span {
-    display: flex;
-    flex-direction: column;
-  }
+.tooltip {
+  cursor: pointer;
+  position: fixed;
 }
 
 .track-header {
@@ -99,10 +120,6 @@ summary {
 .track-graph, .track-table {
   height: 100%;
   width: 100%;
-
-  text {
-    font-family: 'JetBrains Mono', $family-primary;
-  }
 }
 
 .window {
@@ -125,13 +142,6 @@ summary {
 
 #controls {
   width: 100%;
-}
-
-// TODO: temporary
-#editor {
-  height: 500px;
-  position: relative;
-  width: 500px;
 }
 
 @import "node_modules/bulma/bulma";
@@ -167,6 +177,7 @@ $shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($schem
   font-family: 'JetBrains Mono', monospace;
   font-size: 13pt;
   line-height: 1.2;
+  margin: 0;
   width: 50vw;
 
   .columns {
@@ -230,6 +241,11 @@ $shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($schem
 .settings-data-selected {
   background: $table-row-active-background-color;
   color: $table-row-active-color;
+}
+
+.track-datum {
+  cursor: pointer;
+  fill: $red;
 }
 
 .workstation-body {

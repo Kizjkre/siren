@@ -1,5 +1,5 @@
-import { ActionType, FillType, INITIAL_CHANNEL_SETTINGS, INITIAL_SETTINGS } from '../constants/state';
 import cloneDeep from 'lodash.clonedeep';
+import { ActionType, FillType, INITIAL_CHANNEL_SETTINGS, INITIAL_TRACK_SETTINGS } from '../constants/state';
 
 const workstationReducer = (state, action) => {
   switch (action.type.type) {
@@ -15,7 +15,13 @@ const workstationReducer = (state, action) => {
         let id = Math.max(...Object.keys(state.tracks));
         id = id === -Infinity ? 0 : id + 1;
         return Object.assign({}, state, {
-          tracks: { ...state.tracks, [id]: { ...action.payload, settings: cloneDeep(INITIAL_SETTINGS) } },
+          tracks: {
+            ...state.tracks,
+            [id]: {
+              ...action.payload,
+              settings: cloneDeep(INITIAL_TRACK_SETTINGS)
+            }
+          },
           channels: {
             ...state.channels,
             Main: { ...state.channels.Main, tracks: [...state.channels.Main.tracks, id] }

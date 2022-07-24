@@ -4,7 +4,7 @@ import ProfileEditor from '../ProfileEditor';
 
 const ProfileViewWindow = ({ id, name, profiles }) => (
   <Window title={ `View Profile: ${ name }` } id={ id }>
-    <ProfileEditor initialCode={ profiles[name].map } save={ false } />
+    <ProfileEditor initialCode={ profiles[name] } />
   </Window>
 );
 

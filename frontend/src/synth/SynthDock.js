@@ -1,135 +1,112 @@
-import { SimpleLexicalAnalyzer, SLAToken } from '../helper/simple/SimpleLexicalAnalyzer';
-import SimpleSyntaxAnalyzer from '../helper/simple/SimpleSyntaxAnalyzer';
-import SimpleCodeGenerator from '../helper/simple/SimpleCodeGenerator';
+import { compile } from 'moo';
+import { ENVELOPE } from '../constants/workstation';
+import calculate from '../helper/grammars/calculator';
+import { TOKEN_TYPES, tokens } from '../helper/lexer';
+import Timeline from '../helper/synth/timeline';
 
 export default class SynthDock {
   constructor(synth) {
     this._synth = synth;
     this._nodes = {};
-  }
 
-  static NodeTypes = Object.freeze({
-    OSC: 'oscillator',
-    GAIN: 'gain',
-    PAN: 'panner',
-    CONVOLVER: 'convolver',
-    CONSTANT: 'constantSource'
-  });
-
-  init() {
     this._nodes.context = new AudioContext();
     this._synth.nodes.forEach(async node => {
-      switch (node.type) {
-        case SynthDock.NodeTypes.OSC:
-          this._nodes[node.name] = new OscillatorNode(this._nodes.context);
-          break;
-        case SynthDock.NodeTypes.GAIN:
-          this._nodes[node.name] = new GainNode(this._nodes.context);
-          break;
-        case SynthDock.NodeTypes.PAN:
-          this._nodes[node.name] = new StereoPannerNode(this._nodes.context);
-          break;
-        case SynthDock.NodeTypes.CONVOLVER:
-          // REF: https://developer.mozilla.org/en-US/docs/Web/API/ConvolverNode
-          this._nodes[node.name] = new ConvolverNode(this._nodes.context);
-          const response = this._synth.irs[node.impulseResponse];
-          const arraybuffer = await response.arrayBuffer();
-          this._nodes[node.name].buffer = await this._nodes.context.decodeAudioData(arraybuffer);
-          break;
-        case SynthDock.NodeTypes.CONSTANT:
-          this._nodes[node.name] = new ConstantSourceNode(this._nodes.context);
-          break;
-        default:
-          break;
+      this._nodes[node.name] = new window[node.type](this._nodes.context);
+      if (this._nodes[node.name] instanceof ConvolverNode) {
+        // REF: https://developer.mozilla.org/en-US/docs/Web/API/ConvolverNode
+        const response = this._synth.irs[node.impulseResponse];
+        const arraybuffer = await response.arrayBuffer();
+        this._nodes[node.name].buffer = await this._nodes.context.decodeAudioData(arraybuffer);
       }
     });
 
     this._synth.connections.forEach(connection => {
       const [from, to] = Object.entries(connection)[0];
       if (typeof to === 'object') {
-        this._nodes[from].connect(this._nodes[to.name][to.property]);
+        this._nodes[from].connect(this._nodes[to.name][to.parameter]);
       } else {
         this._nodes[from].connect(this._nodes[to]);
       }
     });
-
-    return this;
   }
 
-  queue(variables, adsrd, time) {
-    SLAToken.TYPES.keyword = new RegExp(Object.keys(variables).reduce((a, v) => `${ a }|${ v }`));
-    SLAToken.TYPES.number = /(?<![a-zA-Z])\d*\.?\d+/;
-    Object.entries(this._synth.inputs).forEach(([name, value]) => {
-      const tokens = new SimpleLexicalAnalyzer(value).analyze().tokens;
-      const tree = new SimpleSyntaxAnalyzer(tokens).analyze().tree;
-      const generator = new SimpleCodeGenerator(tree, variables);
-      const result = generator.generate();
+  queue(timeline) {
+    const t = new Timeline(this._synth);
+    t.add(0, timeline[0][1]);
 
-      if (this._synth.adsrd.nodes.includes(name)) {
-        this._queueADSRD(...adsrd, name, time, result);
-      } else {
-        switch (this._nodes[name].constructor) {
-          case OscillatorNode:
-            this._nodes[name].frequency.setValueAtTime(result, time);
-            break;
-          case GainNode:
-            this._nodes[name].gain.setValueAtTime(result, time);
-            break;
-          case StereoPannerNode:
-            this._nodes[name].pan.setValueAtTime(result, time);
-            break;
-          case ConvolverNode:
-            this._nodes[name].gain.setValueAtTime(result, time);
-            break;
-          case ConstantSourceNode:
-            this._nodes[name].offset.setValueAtTime(result, time);
-            break;
-          default:
-            throw new TypeError('Undefined node type.');
-        }
-      }
-    });
+    const current = {};
+    const envelope = [...this._synth.adsrd.values];
 
-    this._synth.adsrd.nodes.forEach(node => {
-      if (!Object.keys(this._synth.inputs).includes(node)) {
-        this._queueADSRD(...adsrd, node, time);
-      }
-    });
+    this._synth.adsrd.nodes.forEach(({ node, parameter }) => this._nodes[node][parameter].setValueAtTime(0, 0));
 
-    return this;
-  }
+    const synthTokens = Object.freeze({ ...tokens, KEYWORD: Object.keys(this._synth.variables) });
 
-  _queueADSRD(a, d, s, r, du, node, time, factor) {
-    let prop = '';
-    switch (this._nodes[node].constructor) {
-      case OscillatorNode:
-        prop = 'frequency';
-        break;
-      case GainNode:
-        prop = 'gain';
-        break;
-      case StereoPannerNode:
-        prop = 'pan';
-        break;
-      case ConvolverNode:
-        break;
-      case ConstantSourceNode:
-        prop = 'offset';
-        break;
-      default:
-        throw new TypeError('Undefined node type.');
+    const lexer = compile(synthTokens);
+    const lex = expression => {
+      lexer.reset(expression);
+      return Array.from(lexer);
     }
-    factor = factor || this._nodes[node][prop].value;
-    const now = this.now + time;
-    this._nodes[node][prop].setValueAtTime(0, now);
-    this._nodes[node][prop].linearRampToValueAtTime(factor, now + a);
-    this._nodes[node][prop].linearRampToValueAtTime(s * factor, now + a + d);
-    this._nodes[node][prop].setValueAtTime(s * factor, now + a + d + du);
-    this._nodes[node][prop].linearRampToValueAtTime(0, now + a + d + du + r);
+
+    timeline.forEach(([time, features]) => {
+      const timeFeatures = {
+        envelope: [],
+        nodes: []
+      };
+
+      // noinspection CommaExpressionJS
+      ENVELOPE.forEach((feature, i) => feature in features && (timeFeatures.envelope.push(feature), envelope[i] = features[feature]));
+
+      const update = Object.entries(this._synth.inputs)
+        .filter(([expression]) => lex(expression).some(({ value }) => value in features))
+        .flatMap(([expression, nodes]) => nodes.map(node => ({ ...node, expression })));
+
+      update
+        .filter(({ node, parameter }) => !this._synth.adsrd.nodes.some(n => n.node === node && n.parameter === parameter))
+        .forEach(({ node, parameter, expression }) => {
+          const result = calculate(lex(expression).reduce((acc, { type, value }) => acc + (type !== TOKEN_TYPES.KEYWORD ? value.toString() : features[value]), ''));
+          this._nodes[node][parameter].linearRampToValueAtTime(result, time);
+          console.log(node, parameter, result, time);
+        });
+
+      update
+        .filter(({ node, parameter }) => this._synth.adsrd.nodes.some(n => n.node === node && n.parameter === parameter))
+        .forEach(({ node, parameter, expression }) => {
+          const result = calculate(lex(expression).reduce((acc, { type, value }) => acc + (type !== TOKEN_TYPES.KEYWORD ? value.toString() : features[value]), ''));
+          current[node] = { ...current[node], [parameter]: result };
+          timeFeatures.nodes.push({ node, parameter, result });
+        });
+
+      if (timeFeatures.envelope.length) {
+        timeFeatures.envelope.forEach(feature => this._synth.adsrd.nodes.forEach(({ node, parameter }) => {
+          switch (feature) {
+            case 'Attack':
+              this._nodes[node][parameter].linearRampToValueAtTime(current[node][parameter], time);
+              console.log('attack', node, parameter, current[node][parameter], time);
+              break;
+            case 'Decay':
+              this._nodes[node][parameter].linearRampToValueAtTime(envelope[2] * current[node][parameter], time);
+              console.log('decay', node, parameter, envelope[2] * current[node][parameter], time);
+              break;
+            case 'Release':
+              this._nodes[node][parameter].linearRampToValueAtTime(0, time);
+              console.log('release', node, parameter, 0, time);
+              break;
+            case 'Duration':
+              this._nodes[node][parameter].linearRampToValueAtTime(envelope[2] * current[node][parameter], time);
+              console.log('duration', node, parameter, envelope[2] * current[node][parameter], time);
+              break;
+          }
+        }));
+      } else if (timeFeatures.nodes.length) {
+        timeFeatures.nodes.forEach(({ node, parameter, result }) => this._nodes[node][parameter].linearRampToValueAtTime(result, time));
+      }
+    });
+
+    return this;
   }
 
-  start() { Object.values(this._nodes).forEach(node => 'start' in node ? node.start(): null); return this; }
-  stop(time) { Object.values(this._nodes).forEach(node => 'stop' in node ? node.stop(time): null); return this; }
+  start() { Object.values(this._nodes).forEach(node => 'start' in node ? node.start() : null); return this; }
+  stop(time = this._nodes.context.currentTime) { Object.values(this._nodes).forEach(node => 'stop' in node ? node.stop(time) : null); return this; }
 
 
   get synth() {

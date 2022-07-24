@@ -1,3 +1,4 @@
+import { TIME_FEATURES } from '../../../constants/workstation';
 import Window from '../../Window';
 import { connect } from 'react-redux';
 import { editChannelFeatures, editChannelFill, editChannelSynth } from '../../../actions';
@@ -72,12 +73,14 @@ const ChannelSettingsWindow = ({ id, name, tracks, channels, synths, editChannel
           <tr>
             <td>Fill</td>
             {
-              Object.keys(channels[name].features).map((feature, i) => (
+              Object.keys(channels[name].features).map((feature, i) => Object.keys(TIME_FEATURES).includes(feature) ? (
+                <td key={ i } />
+              ) : (
                 <td key={ i }>
                   <div className="select is-small">
                     <select defaultValue={ channels[name].features[feature].fill } onChange={ handleFill(feature) }>
                       {
-                        Object.keys(FillType).map((key, i) => <option key={ i } value={ key }>{ FillType[key] }</option>)
+                        Object.keys(FillType).map((key, i) => <option key={ i } value={ FillType[key] }>{ FillType[key] }</option>)
                       }
                     </select>
                   </div>

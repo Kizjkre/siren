@@ -1,10 +1,10 @@
+import { autoType, csvParse } from 'd3';
 import { ActionType } from '../constants/state';
-import * as d3 from 'd3';
 // import { formatCSV, typeify } from '../helper/processing';
 
 export const uploadFile = async (name, raw) => {
   // const data = typeify(await d3.csvParse(formatCSV(raw)));
-  const data = await d3.csvParse(raw, d3.autoType);
+  const data = await csvParse(raw, autoType);
 
   return {
     type: ActionType.UPLOAD_FILE,
@@ -82,14 +82,9 @@ export const blurWindow = id => ({
   payload: id
 });
 
-export const setEditorOpen = open => ({
-  type: ActionType.SET_EDITOR,
-  payload: { open }
-});
-
 export const addProfile = (name, map) => ({
   type: ActionType.ADD_PROFILE,
-  payload: { [name]: { map, filter: true } } // TODO: filter
+  payload: { [name]: map }
 });
 
 export const addSynth = synth => ({

@@ -1,89 +1,79 @@
-import { Fragment, useState, useRef, useEffect } from 'react';
-import profileParser from '../../helper/profile/profileParser';
-import { SLAToken } from '../../helper/simple/SimpleLexicalAnalyzer';
+// noinspection ExceptionCaughtLocallyJS
+
+import { Grammar, Parser } from 'nearley';
+import { Fragment, useEffect, useRef, useState } from 'react';
+import syntax from '../../helper/grammars/syntax/syntax';
+import { TOKEN_TYPES } from '../../helper/lexer';
 
 // REF: https://css-tricks.com/creating-an-editable-textarea-that-supports-syntax-highlighted-code/
-const ProfileEditor = ({ save, onChange, onExpression, initialCode, editable }) => {
-  if (!onChange) {
-    onChange = () => null;
-  }
-  if (!onExpression) {
-    onExpression = () => null;
-  }
-
+const ProfileEditor = ({ onChange, setClear, initialCode, editable }) => {
   const [code, setCode] = useState('');
   const [display, setDisplay] = useState([]);
   const [error, setError] = useState('');
-  const [clear, setClear] = useState(false);
 
   const editing = useRef();
   const highlighting = useRef();
 
   useEffect(() => {
-    if (initialCode) {
-      handleChange({ target: { value: initialCode } });
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (save !== clear) {
+    if (initialCode) handleChange({ target: { value: initialCode } });
+    setClear?.(() => () => {
       setCode('');
       setDisplay([]);
       setError('');
-      setClear(save);
-    }
-  }, [save]); // eslint-disable-line react-hooks/exhaustive-deps
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = e => {
     setCode(e.target.value);
-    onChange(e.target.value);
     handleScroll();
 
+    let valid = true;
+
     try {
-      const { tokens } = profileParser(e.target.value);
+      if (error) setError('');
 
-      if (error) {
-        setError('');
-      }
-
-      let innerHTML = [];
-
-      tokens.forEach((token, i) => {
-        // noinspection FallThroughInSwitchStatementJS
-        switch (token.type) {
-          case SLAToken.TYPES.number:
-            innerHTML.push(<span className="profile-editor-code-number" key={ i }>{ token.value }</span>);
-            break;
-          case SLAToken.TYPES.additive:
-            if (
-              (i === 0 || (tokens[i - 1].type !== SLAToken.TYPES.number && tokens[i - 1].type !== SLAToken.TYPES.keyword))
-              && (i < tokens.length - 1 && tokens[i + 1].type === SLAToken.TYPES.number)
-            ) {
-              innerHTML.push(<span className="profile-editor-code-number" key={ i }>{ token.value }</span>);
-              break;
-            }
-          case SLAToken.TYPES.multiplicative: // eslint-disable-line no-fallthrough
-          case SLAToken.TYPES.exponential:
-            innerHTML.push(<span className="profile-editor-code-operation" key={ i }>{ token.value }</span>);
-            break;
-          case SLAToken.TYPES.keyword:
-            innerHTML.push(<span className="profile-editor-code-keyword" key={ i }>{ token.value }</span>);
-            break;
-          case SLAToken.TYPES.parenthesis:
-            innerHTML.push(<span className="profile-editor-code-parenthesis" key={ i }>{ token.value }</span>);
-            break;
-          default:
-            innerHTML.push(<Fragment key={ i }>{ token.value }</Fragment>);
+      if (!e.target.value.length) {
+        setDisplay([]);
+      } else {
+        const parser = new Parser(Grammar.fromCompiled(syntax));
+        parser.feed(e.target.value);
+        if (!parser.results.length) {
+          const line = parser.lexer.line;
+          const buf = parser.lexer.buffer.split('\n');
+          const index = parser.lexer.index - buf.slice(0, line - 1).join(' ').length - 1;
+          throw new SyntaxError(`unexpected "${ e.target.value[index - 1] }" at line ${ line } col ${ index }:\n ${ line }\t${ buf[line - 1] }\n  \t${ new Array(index).fill().join(' ') }^`);
         }
-      });
-
-      setDisplay(innerHTML);
-
-      onExpression(e.target.value);
+        setDisplay(parser.results[0].map((token, i) => {
+          // noinspection FallThroughInSwitchStatementJS
+          switch (token.type) { // eslint-disable-line default-case
+            case TOKEN_TYPES.FUNCTION:
+              return <span className="profile-editor-code-function" key={ i }>{ token.text }</span>;
+            case TOKEN_TYPES.KEYWORD:
+              return <span className="profile-editor-code-keyword" key={ i }>{ token.text }</span>;
+            case TOKEN_TYPES.ADDITIVE:
+              if (!token.binary) {
+                return <span className="profile-editor-code-number" key={ i }>{ token.text }</span>;
+              }
+            case TOKEN_TYPES.MULTIPLICATIVE: // eslint-disable-line no-fallthrough
+            case TOKEN_TYPES.EXPONENTIAL:
+              return <span className="profile-editor-code-operation" key={ i }>{ token.text }</span>;
+            case TOKEN_TYPES.NUMBER:
+              return <span className="profile-editor-code-number" key={ i }>{ token.text }</span>;
+            case TOKEN_TYPES.PARENTHETICAL:
+              return <span className="profile-editor-code-parenthesis" key={ i }>{ token.text }</span>;
+            case TOKEN_TYPES.WHITESPACE:
+              return <span key={ i }>{ token.text }</span>;
+          }
+          return null;
+        }));
+      }
     } catch (err) {
       setError(`${ err.name }: ${ err.message }`);
       setDisplay(e.target.value);
+      valid = false;
     }
+
+    onChange?.({ expression: e.target.value, valid });
   };
 
   const handleScroll = () => {
@@ -125,10 +115,8 @@ const ProfileEditor = ({ save, onChange, onExpression, initialCode, editable }) 
           </pre>
         </div>
       </div>
-      <div className="columns">
-        <div className="column">
-          <div className={ `notification is-danger ${ error ? '' : 'is-hidden' }` }>{ error }</div>
-        </div>
+      <div className={ `notification is-danger ${ error ? '' : 'is-hidden' }` }>
+        <pre className="profile-editor-error">{ error }</pre>
       </div>
     </>
   );

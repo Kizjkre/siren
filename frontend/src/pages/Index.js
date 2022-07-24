@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import Navbar from '../Navbar';
-import IndexHeader from '../index/IndexHeader';
-import IndexFeatures from '../index/IndexFeatures';
-import IndexUseCases from '../index/IndexUseCases';
+import IndexFeatures from '../components/index/IndexFeatures';
+import IndexHeader from '../components/index/IndexHeader';
+import IndexUseCases from '../components/index/IndexUseCases';
+import Navbar from '../components/Navbar';
 
 const Index = () => {
   const components = [IndexHeader, IndexFeatures, IndexUseCases];

@@ -3,7 +3,8 @@ import cloneDeep from 'lodash.clonedeep';
 export const FillType = Object.freeze({
   STRETCH: 'Stretch',
   REPEAT: 'Repeat',
-  WRAP: 'Wrap'
+  WRAP: 'Wrap',
+  FIT: 'Fit'
 })
 
 export const ActionType = Object.freeze({
@@ -31,32 +32,23 @@ export const ActionType = Object.freeze({
   SET_STATE: { type: 'SET_STATE', reducer: 'GENERAL' }
 });
 
-export const INITIAL_SETTINGS = {
-  mute: false,
-  volume: 50,
-  pan: 0,
+export const INITIAL_TRACK_SETTINGS = {
   continuous: false,
   channel: ['Main'],
   profile: 'Default'
 };
 
-const INITIAL_PROFILE_SETTINGS = {
-  map: 'x',
-  filter: false
-};
-
 const INITIAL_SYNTH_SETTINGS = {
   name: 'Default',
-  nodes: [{ name: 'osc', type: 'oscillator' }, { name: 'gain', type: 'gain' }, { name: 'pan', type: 'panner' }],
-  connections: [{ osc: 'pan' }, { pan: 'gain' }, { gain: { name: 'context', property: 'destination' } }],
+  nodes: [{ name: 'osc', type: 'OscillatorNode' }, { name: 'gain', type: 'GainNode' }, { name: 'pan', type: 'StereoPannerNode' }],
+  connections: [{ osc: 'pan' }, { pan: 'gain' }, { gain: { name: 'context', parameter: 'destination' } }],
   variables: { Frequency: 440, Volume: 1, Pan: 0 },
-  inputs: { osc: 'Frequency', gain: 'Volume', pan: 'Pan' },
-  adsrd: { values: [0.025, 0, 1, 0.025, 0.5], nodes: ['gain'] },
+  inputs: { Frequency: [{ node: 'osc', parameter: 'frequency' }], Volume: [{ node: 'gain', parameter: 'gain' }], Pan: [{ node: 'pan', parameter: 'pan' }] },
+  adsrd: { values: [0.025, 0, 1, 0.025, 0.5], nodes: [{ node: 'gain', parameter: 'gain' }] },
   irs: {}
 };
 
 export const INITIAL_CHANNEL_SETTINGS = {
-  continuous: false,
   tracks: [],
   synth: 'Default',
   features: {
@@ -75,7 +67,7 @@ export const INITIAL_STATE = {
     files: {},
     tracks: {},
     channels: { Main: cloneDeep(INITIAL_CHANNEL_SETTINGS) },
-    profiles: { Default: cloneDeep(INITIAL_PROFILE_SETTINGS) },
+    profiles: { Default: 'x' },
     synths: { Default: cloneDeep(INITIAL_SYNTH_SETTINGS) },
     settings: {
       fileBrowser: true

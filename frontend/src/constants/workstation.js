@@ -10,4 +10,9 @@ export const PLAYING_STATUS = Object.freeze({
 export const DEFAULT_ADSRD = Object.freeze([0.025, 0, 1, 0.025, 0.5]);
 
 export const ENVELOPE = Object.freeze(['Attack', 'Decay', 'Sustain', 'Release', 'Duration']);
-export const TIME_FEATURES = Object.freeze(['Attack', 'Decay', 'Release', 'Duration']);
+export const TIME_FEATURES = Object.freeze({
+  Attack: 0,
+  Decay: 1,
+  Release: 3,
+  Duration: 4
+});

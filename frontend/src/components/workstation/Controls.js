@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { focusWindow } from '../../actions';
 import { PLAYING_STATUS } from '../../constants/workstation';
 import { play } from '../../synth/synth';
-import createTimeline from '../../synth/timeline';
 
 const Controls = ({ disabled, focusWindow }) => {
   const [status, setStatus] = useState(PLAYING_STATUS.STOPPED);
@@ -15,9 +14,7 @@ const Controls = ({ disabled, focusWindow }) => {
         setStatus(PLAYING_STATUS.STOPPED);
         break;
       case PLAYING_STATUS.PLAYING + '':
-        const timelines = createTimeline();
-        console.log(timelines);
-        play(timelines);
+        play();
         setStatus(PLAYING_STATUS.PLAYING);
         break;
       case PLAYING_STATUS.PAUSED + '':
@@ -70,7 +67,7 @@ const Controls = ({ disabled, focusWindow }) => {
 
   return (
     <>
-      <nav className="navbar is-fixed-bottom py-4" role="navigation" aria-label="main navigation">
+      <nav className="navbar is-fixed-bottom py-4 control-background" role="navigation" aria-label="main navigation">
         <div className="container">
           <nav className="level" id="controls">
             <div className="level-item">

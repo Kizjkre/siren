@@ -1,29 +1,28 @@
-import * as d3 from 'd3';
-import SimpleCodeGenerator from '../../../helper/simple/SimpleCodeGenerator';
-import profileParser from '../../../helper/profile/profileParser';
+import { extent, mean, median, mode, quantile } from 'd3';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { deleteTrack, editTrack, editTrackData } from '../../../actions';
+import calculate from '../../../helper/grammars/calculator';
+import { lex, TOKEN_TYPES } from '../../../helper/lexer';
 
 const TrackHeader = ({ id, column, name, files, tracks, profiles, deleteTrack, editTrack, editTrackData }) => {
-  const data = files[tracks[id].file].map(row => row[tracks[id].name]);
-  const [min, max] = d3.extent(data);
-  const generator = new SimpleCodeGenerator(null, {
-    MIN: min,
-    MAX: max,
-    MEAN: d3.mean(data),
-    MEDIAN: d3.median(data),
-    MODE: d3.mode(data),
-    Q1: d3.quantile(data, 0.25),
-    Q3: d3.quantile(data, 0.75)
+  const [data] = useState(files[tracks[id].file].map(row => row[tracks[id].name]));
+  const [[MIN, MAX]] = useState(extent(data));
+  const [kw] = useState({
+    MIN, MAX,
+    MEAN: mean(data),
+    MEDIAN: median(data),
+    MODE: mode(data),
+    Q1: quantile(data, 0.25),
+    Q3: quantile(data, 0.75)
   });
 
   const handleDelete = () => deleteTrack(id);
   const handleProfile = e => {
     editTrack(id, { profile: e.target.value });
-    generator.tree = profileParser(profiles[e.target.value].map).tree;
-    editTrackData(id, data.map(datum => {
-      generator.x = datum;
-      const result = generator.generate();
+    editTrackData(id, data.map((d, i) => {
+      const expression = lex(profiles[e.target.value]).reduce((acc, t) => acc + (t.type === TOKEN_TYPES.KEYWORD ? (t.value === 'x' ? d : (t.value === 'i' ? i : kw[t.value])) : t.toString()), '');
+      const result = calculate(expression);
       return Math.abs(result) === Infinity ? 0 : result;
     }));
   };
@@ -60,8 +59,8 @@ const TrackHeader = ({ id, column, name, files, tracks, profiles, deleteTrack, e
             <div className="tags">
               {
                 tracks[id].settings.channel.length === 0 ? <span className="tag m-0">No connected channels</span>
-                  : tracks[id].settings.channel.map(channel =>
-                    <span key={ channel } className="tag is-primary">{ channel }</span>
+                  : tracks[id].settings.channel.map((channel, i) =>
+                    <span key={ i } className="tag is-primary">{ channel }</span>
                   )
               }
             </div>
