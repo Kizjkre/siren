@@ -14,18 +14,6 @@ const _add = (a, b) => {
 
 export const add = (...nums) => nums.reduce((acc, v) => _add(acc, v));
 
-// REF: https://stackoverflow.com/a/21822316
-export const binsert = (arr, value) => {
-  let s = 0, e = arr.length;
-  while (s < e) {
-    const i = (s + e) >>> 1;
-    if (arr[i] < value) s = i + 1;
-    else e = i;
-  }
-  arr.splice(s, 0, value);
-  return s;
-};
-
 export const chunkify = (data, size) => {
   if (size < 1) {
     return data;

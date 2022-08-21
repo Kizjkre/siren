@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { synthDemo } from '../../../helper/synth/demo';
+import Sandbox from '../../Sandbox';
 import SynthDock from '../SynthDock';
 import SidebarSectionTemplate from './SidebarSectionTemplate';
 
@@ -9,6 +10,7 @@ const SidebarSynths = ({ synths }) => {
 
   return (
     <>
+      <Sandbox script={ 'console.log("hi");' } />
       <SidebarSectionTemplate title="Synths" empty={ false } icon="fa fa-wave-square">
         {
           Object.values(synths).map((synth, i) => (

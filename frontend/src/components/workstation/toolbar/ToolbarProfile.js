@@ -26,8 +26,8 @@ const ToolbarProfile = ({ selected, setSelected, profiles, focusWindow }) => {
         </a>
         <hr className="dropdown-divider" />
         {
-          Object.keys(profiles).map((profile) => (
-            <a className="navbar-item" onClick={ handleOpen(`window-profile-view-${ profile }`) }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
+          Object.keys(profiles).map((profile, i) => (
+            <a key={ i } className="navbar-item" onClick={ handleOpen(`window-profile-view-${ profile }`) }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
               <div className="icon-text">
                 <span className="icon">
                   <i className="fa fa-chart-line" />

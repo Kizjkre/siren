@@ -1,6 +1,13 @@
 import { axisLeft, curveStep, extent, format, line, scaleLinear, select, transition } from 'd3';
+import interpolate from './interpolate';
 
-const graph = (el, id, data, onMouseEnter, onMouseLeave) => {
+const graph = (el, id, data, feature, envelope, onMouseEnter, onMouseLeave) => {
+  const points = interpolate(data);
+
+  const featureData = feature ? [null] : [];
+  const envelopeData = envelope ? [null] : [];
+  const markData = !feature && !envelope ? [null] : [];
+
   const selection = select(el);
 
   const style = getComputedStyle(el);
@@ -23,6 +30,10 @@ const graph = (el, id, data, onMouseEnter, onMouseLeave) => {
     x: (_, i) => x(i),
     y: d => y(d)
   };
+
+  const envelopeLine = line()
+    .x(d => x(d[0]))
+    .y(d => y(d[1]));
 
   const l = line()
     .x(get.x)
@@ -55,7 +66,7 @@ const graph = (el, id, data, onMouseEnter, onMouseLeave) => {
     .join('g')
     .attr('class', `graph-${ id }-line`)
     .selectAll('path')
-    .data([null])
+    .data(featureData)
     .join(
       enter => enter
         .append('path')
@@ -66,6 +77,46 @@ const graph = (el, id, data, onMouseEnter, onMouseLeave) => {
       update => update
         .transition(t)
         .attr('d', l(data)),
+      exit => exit.remove()
+    );
+
+  selection
+    .selectAll(`g.graph-${ id }-mark`)
+    .data([null])
+    .join('g')
+    .attr('class', `graph-${ id }-mark`)
+    .selectAll('path')
+    .data(markData)
+    .join(
+      enter => enter
+        .append('path')
+        .attr('fill', 'none')
+        .attr('stroke', '#aaa')
+        .attr('stroke-width', 1)
+        .attr('d', l(data)),
+      update => update
+        .transition(t)
+        .attr('d', l(data)),
+      exit => exit.remove()
+    );
+
+  selection
+    .selectAll(`g.graph-${ id }-envelope`)
+    .data([null])
+    .join('g')
+    .attr('class', `graph-${ id }-envelope`)
+    .selectAll('path')
+    .data(envelopeData)
+    .join(
+      enter => enter
+        .append('path')
+        .attr('fill', 'none')
+        .attr('stroke', 'black')
+        .attr('stroke-width', 1)
+        .attr('d', envelopeLine(points)),
+      update => update
+        .transition(t)
+        .attr('d', envelopeLine(points)),
       exit => exit.remove()
     );
 

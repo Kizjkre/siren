@@ -4,7 +4,7 @@ export const tokens = Object.freeze({
   WHITESPACE: { match: /\p{White_Space}+/u, lineBreaks: true },
   PARENTHETICAL: /[()]/u,
   EXPONENTIAL: '^',
-  MULTIPLICATIVE: /[*/]/u,
+  MULTIPLICATIVE: /[*/%]/u,
   ADDITIVE: /[+-]/u,
   FUNCTION: [/a?sin/u, /a?cos/u, /a?tan/u, /sqrt/u, /ln/u],
   NUMBER: [/[0-9]*\.?[0-9]+/u, 'pi', 'e'],

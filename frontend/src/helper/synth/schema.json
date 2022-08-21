@@ -135,23 +135,27 @@
         "enum": { "$data": "1/properties/nodes/items/properties/name" }
       }
     },
-    "adsrd": {
-      "description": "Defines the ADSR-D envelope.",
+    "envelope": {
+      "description": "Defines the envelope.",
       "type": "object",
       "properties": {
-        "values": {
-          "description": "ADSR-D values.",
+        "default": {
+          "description": "Envelope values.",
           "type": "array",
           "items": {
-            "description": "Attack, decay, sustain, release, and duration values.",
-            "type": "number",
-            "minimum": 0
+            "description": "Envelope values.",
+            "type": "array",
+            "items": {
+              "description": "Envelope values.",
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
           },
-          "minItems": 5,
-          "maxItems": 5
+          "minItems": 2
         },
         "nodes": {
-          "description": "Node(s) for the ADSR-D to operate on.",
+          "description": "Node(s) for the envelope to operate on.",
           "type": "array",
           "items": {
             "description": "Node names.",
@@ -171,8 +175,8 @@
           }
         }
       },
-      "required": ["values", "nodes"]
+      "required": ["default", "nodes"]
     }
   },
-  "required": ["name", "nodes", "connections", "variables", "inputs", "adsrd"]
+  "required": ["name", "nodes", "connections", "variables", "inputs", "envelope"]
 }

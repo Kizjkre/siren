@@ -5,7 +5,7 @@ export const FillType = Object.freeze({
   REPEAT: 'Repeat',
   WRAP: 'Wrap',
   FIT: 'Fit'
-})
+});
 
 export const ActionType = Object.freeze({
   reducer: {
@@ -40,11 +40,21 @@ export const INITIAL_TRACK_SETTINGS = {
 
 const INITIAL_SYNTH_SETTINGS = {
   name: 'Default',
-  nodes: [{ name: 'osc', type: 'OscillatorNode' }, { name: 'gain', type: 'GainNode' }, { name: 'pan', type: 'StereoPannerNode' }],
+  nodes: [{ name: 'osc', type: 'OscillatorNode' }, { name: 'gain', type: 'GainNode' }, {
+    name: 'pan',
+    type: 'StereoPannerNode'
+  }],
   connections: [{ osc: 'pan' }, { pan: 'gain' }, { gain: { name: 'context', parameter: 'destination' } }],
   variables: { Frequency: 440, Volume: 1, Pan: 0 },
-  inputs: { Frequency: [{ node: 'osc', parameter: 'frequency' }], Volume: [{ node: 'gain', parameter: 'gain' }], Pan: [{ node: 'pan', parameter: 'pan' }] },
-  adsrd: { values: [0.025, 0, 1, 0.025, 0.5], nodes: [{ node: 'gain', parameter: 'gain' }] },
+  inputs: {
+    Frequency: [{ node: 'osc', parameter: 'frequency' }],
+    Volume: [{ node: 'gain', parameter: 'gain' }],
+    Pan: [{ node: 'pan', parameter: 'pan' }]
+  },
+  envelope: {
+    default: [[0, 0], [0.16666, 1], [0.33333, 0.65], [0.83333, 0.6], [1, 0]],
+    nodes: [{ node: 'gain', parameter: 'gain' }]
+  },
   irs: {}
 };
 
@@ -52,15 +62,15 @@ export const INITIAL_CHANNEL_SETTINGS = {
   tracks: [],
   synth: 'Default',
   features: {
-    Attack: { track: -1, fill: FillType.STRETCH },
-    Decay: { track: -1, fill: FillType.STRETCH },
-    Sustain: { track: -1, fill: FillType.STRETCH },
-    Release: { track: -1, fill: FillType.STRETCH },
+    Envelope: { track: -1, fill: FillType.STRETCH },
     Duration: { track: -1, fill: FillType.STRETCH }
   }
 };
 
-Object.keys(INITIAL_SYNTH_SETTINGS.variables).forEach(variable => INITIAL_CHANNEL_SETTINGS.features[variable] = { track: -1, fill: FillType.STRETCH });
+Object.keys(INITIAL_SYNTH_SETTINGS.variables).forEach(variable => INITIAL_CHANNEL_SETTINGS.features[variable] = {
+  track: -1,
+  fill: FillType.STRETCH
+});
 
 export const INITIAL_STATE = {
   workstation: {

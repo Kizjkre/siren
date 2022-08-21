@@ -1,8 +1,7 @@
-import { TIME_FEATURES } from '../../../constants/workstation';
-import Window from '../../Window';
 import { connect } from 'react-redux';
 import { editChannelFeatures, editChannelFill, editChannelSynth } from '../../../actions';
 import { FillType } from '../../../constants/state';
+import Window from '../../Window';
 
 const ChannelSettingsWindow = ({ id, name, tracks, channels, synths, editChannelFeatures, editChannelSynth, editChannelFill }) => {
   const handleSynth = e => editChannelSynth(name, e.target.value);
@@ -64,7 +63,7 @@ const ChannelSettingsWindow = ({ id, name, tracks, channels, synths, editChannel
                         break;
                       default:
                     }
-                    return <td className={ className } onClick={ handleAssign(feature, track) } key={ i }>{ icon }</td>
+                    return <td className={ `channel-feature ${ className }` } onClick={ handleAssign(feature, track) } key={ i }>{ icon }</td>
                   })
                 }
               </tr>
@@ -73,7 +72,7 @@ const ChannelSettingsWindow = ({ id, name, tracks, channels, synths, editChannel
           <tr>
             <td>Fill</td>
             {
-              Object.keys(channels[name].features).map((feature, i) => Object.keys(TIME_FEATURES).includes(feature) ? (
+              Object.keys(channels[name].features).map((feature, i) => feature === 'Duration' || feature === 'Envelope' ? (
                 <td key={ i } />
               ) : (
                 <td key={ i }>
