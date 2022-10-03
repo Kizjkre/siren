@@ -14,6 +14,24 @@ const _add = (a, b) => {
 
 export const add = (...nums) => nums.reduce((acc, v) => _add(acc, v));
 
+// REF: https://stackoverflow.com/a/41888395
+// REF: https://sites.math.rutgers.edu/~greenfie/gs2004/euclid.html
+const gcd = (a, b) => {
+  if (a < b) {
+    a = a ^ b;
+    b = b ^ a;
+    a = a ^ b;
+  }
+  const r = a % b;
+  return r ? gcd(b, r) : b;
+};
+
+const lcm2 = (a, b) => a * b / gcd(a, b);
+
+export const lcm = arr => arr.reduce(lcm2);
+
+// ****************************************************************************************************************** //
+
 export const chunkify = (data, size) => {
   if (size < 1) {
     return data;

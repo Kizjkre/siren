@@ -106,10 +106,7 @@ const workstationReducer = (state, action) => {
       return (() => {
         const channel = cloneDeep(state.channels);
         channel[action.payload.channel].synth = action.payload.synth;
-        channel[action.payload.channel].features = {};
-        ['Attack', 'Decay', 'Sustain', 'Release', 'Duration'].concat(Object.keys(state.synths[action.payload.synth].variables)).map(
-          variable => channel[action.payload.channel].features[variable] = { track: -1, fill: FillType.STRETCH }
-        );
+        channel[action.payload.channel].features = Object.fromEntries(state.synths[action.payload.synth].settings.parameters.map(parameter => [parameter, { track: -1, fill: FillType.STRETCH }]));
         return Object.assign({}, state, {
           channels: Object.assign({}, state.channels, channel)
         });
@@ -140,9 +137,30 @@ const workstationReducer = (state, action) => {
       return Object.assign({}, state, {
         synths: {
           ...state.synths,
-          [action.payload.name]: action.payload
+          [action.payload.name]: {
+            code: action.payload.code,
+            comments: [...action.payload.code.matchAll(/(\/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/)|(\/\/.*)/g, '')], // TODO: Fix
+            uuid: crypto.randomUUID(),
+            settings: {
+              parameters: [],
+              ref: null
+            }
+          }
         }
-      })
+      });
+    case ActionType.UPDATE_SYNTH.type:
+      return Object.assign({}, state, {
+        synths: {
+          ...state.synths,
+          [action.payload.name]: {
+            ...state.synths[action.payload.name],
+            settings: {
+            ...state.synths[action.payload.name].settings,
+              ...action.payload.settings
+            }
+          }
+        }
+      });
     default:
       return state;
   }

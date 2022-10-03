@@ -21,16 +21,6 @@ const SidebarProfiles = ({ profiles, focusWindow }) => {
           </li>
         ))
       }
-      <li>
-        <a className="button is-info" onClick={ () => focusWindow('window-profile') }> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
-          <span className="icon-text">
-            <span className="icon">
-              <i className="fa fa-plus" />
-            </span>
-            <span>Add profile</span>
-          </span>
-        </a>
-      </li>
     </SidebarSectionTemplate>
   );
 };

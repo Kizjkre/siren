@@ -90,4 +90,9 @@ export const addSynth = synth => ({
   payload: synth
 });
 
+export const updateSynth = (name, settings) => ({
+  type: ActionType.UPDATE_SYNTH,
+  payload: { name, settings }
+});
+
 // TODO: https://stackoverflow.com/questions/14552529/dynamic-sass-variables?

@@ -1,5 +1,5 @@
 import SidebarDatasets from './SidebarDatasets';
-import SidebarSynths from './SidebarSynths';
+import SidebarSynths from './SidebarSynth';
 import SidebarProfiles from './SidebarProfiles';
 
 const Sidebar = () => (

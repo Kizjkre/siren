@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import { focusWindow } from '../../actions';
 import { PLAYING_STATUS } from '../../constants/workstation';
-import createTimeline from '../../helper/synth/timeline';
+import play from '../../helper/synth/play';
 
 const Controls = ({ disabled, focusWindow }) => {
   const [status, setStatus] = useState(PLAYING_STATUS.STOPPED);
@@ -14,8 +14,7 @@ const Controls = ({ disabled, focusWindow }) => {
         setStatus(PLAYING_STATUS.STOPPED);
         break;
       case PLAYING_STATUS.PLAYING + '':
-        createTimeline();
-        // play();
+        play();
         setStatus(PLAYING_STATUS.PLAYING);
         break;
       case PLAYING_STATUS.PAUSED + '':

@@ -16,7 +16,7 @@ const Toolbar = () => {
     if (!navbar.current?.contains(e.target)) {
       setSelected({ file: false, edit: false, view: false, synth: false, profile: false });
     }
-  });
+  }, selected);
 
   return (
     <Navbar>

@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import Sandbox from '../components/Sandbox';
 import Controls from '../components/workstation/Controls';
 import Main from '../components/workstation/Main';
 import FileBrowser from '../components/workstation/sidebar/Sidebar';
@@ -10,15 +11,18 @@ import ProfileViewWindow from '../components/workstation/windows/ProfileViewWind
 import ProfileWindow from '../components/workstation/windows/ProfileWindow';
 import ViewWindow from '../components/workstation/windows/ViewWindow';
 import useDemoData from '../hooks/useDemoData';
+import useFrameMessage from '../hooks/useFrameMessage';
 
-const Workstation = ({ files, channels, profiles, fileBrowser }) => {
+const Workstation = ({ files, channels, profiles, fileBrowser, synths }) => {
   useDemoData();
+  useFrameMessage();
 
   return (
     <>
       { Object.keys(files).map(name => <CreateTrackWindow key={ name } track={ name } id={ `window-${ name }` } />) }
       { Object.keys(channels).map(name => <ChannelSettingsWindow key={ name } id={ `window-channel-settings-${ name }` } name={ name } />) }
       { Object.keys(profiles).map(name => <ProfileViewWindow key={ name } id={ `window-profile-view-${ name }` } name={ name } />) }
+      { Object.keys(synths).map((synth, i) => <Sandbox key={ i } name={ synth } { ...synths[synth] } />) }
       <ViewWindow />
       <ChannelWindow />
       <ProfileWindow />
@@ -43,7 +47,8 @@ const mapStateToProps = state => ({
   files: state.workstation.files,
   channels: state.workstation.channels,
   profiles: state.workstation.profiles,
-  fileBrowser: state.workstation.settings.fileBrowser
+  fileBrowser: state.workstation.settings.fileBrowser,
+  synths: state.workstation.synths
 });
 
 export default connect(mapStateToProps)(Workstation);

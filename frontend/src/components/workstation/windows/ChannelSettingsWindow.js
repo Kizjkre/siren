@@ -72,9 +72,7 @@ const ChannelSettingsWindow = ({ id, name, tracks, channels, synths, editChannel
           <tr>
             <td>Fill</td>
             {
-              Object.keys(channels[name].features).map((feature, i) => feature === 'Duration' || feature === 'Envelope' ? (
-                <td key={ i } />
-              ) : (
+              Object.keys(channels[name].features).map((feature, i) => (
                 <td key={ i }>
                   <div className="select is-small">
                     <select defaultValue={ channels[name].features[feature].fill } onChange={ handleFill(feature) }>

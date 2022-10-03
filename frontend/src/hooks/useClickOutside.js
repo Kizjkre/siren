@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 
-const useClickOutside = handleClick => {
+const useClickOutside = (handleClick, listen) => {
   useEffect(() => {
-    document.addEventListener('click', handleClick);
+    if (Object.values(listen).every(v => !v)) document.removeEventListener('click', handleClick);
+    else document.addEventListener('click', handleClick);
     return () => {
       document.removeEventListener('click', handleClick);
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [listen]); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
 export default useClickOutside;

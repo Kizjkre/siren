@@ -10,8 +10,10 @@ const TrackData = ({ tracks, id, channels }) => {
   const svg = useRef();
 
   const track = tracks[id].data;
-  const feature = tracks[id].settings.channel.some(channel => Object.values(channels[channel].features).slice(1).findIndex(f => f.track === +id) !== -1);
-  const envelope = tracks[id].settings.channel.some(channel => channels[channel].features.Envelope.track === +id);
+  const feature = false;
+  const envelope = false;
+  // const feature = tracks[id].settings.channel.some(channel => Object.values(channels[channel].features).slice(1).findIndex(f => f.track === +id) !== -1);
+  // const envelope = tracks[id].settings.channel.some(channel => channels[channel].features.Envelope.track === +id);
 
   useEffect(() => {
     if (isNumerical(track)) {
