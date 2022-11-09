@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { setState, uploadFile } from '../../../actions';
-import createZip from '../../../helper/export';
-import unzip from '../../../helper/import';
+import store from '../../../store';
 
 const ToolbarFile = ({ selected, setSelected, uploadFile, setState }) => {
   const handleOpen = async e => {
@@ -15,17 +14,17 @@ const ToolbarFile = ({ selected, setSelected, uploadFile, setState }) => {
 
   const handleImport = async e => {
     if (e.target.files.length) {
-      setState(await unzip(e.target.files[0]));
+      setState(await (await fetch(e.target.files[0])).json());
       e.target.value = '';
       setSelected(false);
     }
   };
 
   const handleExport = async () => {
-    const data = await createZip();
+    const data = store.getState();
     const a = document.createElement('a');
     a.setAttribute('href', URL.createObjectURL(data));
-    a.setAttribute('download', 'session.siren.zip');
+    a.setAttribute('download', 'session.siren.json');
     a.click();
     setSelected(false);
   };
@@ -44,7 +43,7 @@ const ToolbarFile = ({ selected, setSelected, uploadFile, setState }) => {
           </div>
         </label>
         <label htmlFor="import" className="navbar-item">
-          <input type="file" id="import" className="is-hidden" accept="application/zip" onChange={ handleImport } />
+          <input type="file" id="import" className="is-hidden" accept="application/json" onChange={ handleImport } />
           <div className="icon-text">
             <div className="icon">
               <i className="fa fa-file-import"/>

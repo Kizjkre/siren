@@ -12,7 +12,7 @@ const useFrameMessage = () => {
       const [port] = e.ports;
       port.onmessage = e => {
         store.dispatch(updateSynth(e.data.name, {
-          parameters: [...e.data.parameters],
+          parameters: e.data.parameters,
           port
         }));
         port.onmessage = null;

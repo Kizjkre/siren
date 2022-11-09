@@ -1,19 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { isNumerical } from '../../../helper/processing';
+import { isNumerical } from '../../../util/processing';
 import Tooltip from '../../Tooltip';
-import graph from '../../../helper/graph';
+import graph from '../../../util/graph';
 
-const TrackData = ({ tracks, id, channels }) => {
+const TrackData = ({ tracks, id }) => {
   const [open, setOpen] = useState(null);
 
   const svg = useRef();
 
   const track = tracks[id].data;
-  const feature = false;
-  const envelope = false;
-  // const feature = tracks[id].settings.channel.some(channel => Object.values(channels[channel].features).slice(1).findIndex(f => f.track === +id) !== -1);
-  // const envelope = tracks[id].settings.channel.some(channel => channels[channel].features.Envelope.track === +id);
 
   useEffect(() => {
     if (isNumerical(track)) {
@@ -21,13 +17,11 @@ const TrackData = ({ tracks, id, channels }) => {
         svg.current,
         id,
         track,
-        feature,
-        envelope,
         (e, d) => setOpen({ x: e.pageX, y: e.pageY, d }),
         () => setOpen(null)
       );
     }
-  }, [track, envelope, feature]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [track]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isNumerical(track)) {
     return (
@@ -52,8 +46,7 @@ const TrackData = ({ tracks, id, channels }) => {
 };
 
 const mapStateToProps = state => ({
-  tracks: state.workstation.tracks,
-  channels: state.workstation.channels
+  tracks: state.workstation.tracks
 });
 
 export default connect(mapStateToProps)(TrackData);

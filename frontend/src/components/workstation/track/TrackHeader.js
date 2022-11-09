@@ -2,8 +2,8 @@ import { extent, mean, median, mode, quantile } from 'd3';
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { deleteTrack, editTrack, editTrackData } from '../../../actions';
-import calculate from '../../../helper/grammars/calculator';
-import { lex, TOKEN_TYPES } from '../../../helper/lexer';
+import calculate from '../../../util/grammars/calculator';
+import { lex, TOKEN_TYPES } from '../../../util/lexer';
 
 const TrackHeader = ({ id, column, name, files, tracks, profiles, deleteTrack, editTrack, editTrackData }) => {
   const [data] = useState(files[tracks[id].file].map(row => row[tracks[id].name]));

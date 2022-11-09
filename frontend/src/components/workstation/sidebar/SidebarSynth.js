@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import synthDemo from '../../../helper/sandbox/demo';
+import synthDemo from '../../../util/sandbox/demo';
 import SidebarSectionTemplate from './SidebarSectionTemplate';
 
 const SidebarSynth = ({ synths }) => (

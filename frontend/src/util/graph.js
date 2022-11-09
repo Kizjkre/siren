@@ -1,13 +1,6 @@
 import { axisLeft, curveStep, extent, format, line, scaleLinear, select, transition } from 'd3';
-import interpolate from './interpolate';
 
-const graph = (el, id, data, feature, envelope, onMouseEnter, onMouseLeave) => {
-  const points = interpolate(data);
-
-  const featureData = feature ? [null] : [];
-  const envelopeData = envelope ? [null] : [];
-  const markData = !feature && !envelope ? [null] : [];
-
+const graph = (el, id, data, onMouseEnter, onMouseLeave) => {
   const selection = select(el);
 
   const style = getComputedStyle(el);
@@ -30,10 +23,6 @@ const graph = (el, id, data, feature, envelope, onMouseEnter, onMouseLeave) => {
     x: (_, i) => x(i),
     y: d => y(d)
   };
-
-  const envelopeLine = line()
-    .x(d => x(d[0]))
-    .y(d => y(d[1]));
 
   const l = line()
     .x(get.x)
@@ -66,7 +55,7 @@ const graph = (el, id, data, feature, envelope, onMouseEnter, onMouseLeave) => {
     .join('g')
     .attr('class', `graph-${ id }-line`)
     .selectAll('path')
-    .data(featureData)
+    .data(data)
     .join(
       enter => enter
         .append('path')
@@ -86,7 +75,7 @@ const graph = (el, id, data, feature, envelope, onMouseEnter, onMouseLeave) => {
     .join('g')
     .attr('class', `graph-${ id }-mark`)
     .selectAll('path')
-    .data(markData)
+    .data(data)
     .join(
       enter => enter
         .append('path')
@@ -97,26 +86,6 @@ const graph = (el, id, data, feature, envelope, onMouseEnter, onMouseLeave) => {
       update => update
         .transition(t)
         .attr('d', l(data)),
-      exit => exit.remove()
-    );
-
-  selection
-    .selectAll(`g.graph-${ id }-envelope`)
-    .data([null])
-    .join('g')
-    .attr('class', `graph-${ id }-envelope`)
-    .selectAll('path')
-    .data(envelopeData)
-    .join(
-      enter => enter
-        .append('path')
-        .attr('fill', 'none')
-        .attr('stroke', 'black')
-        .attr('stroke-width', 1)
-        .attr('d', envelopeLine(points)),
-      update => update
-        .transition(t)
-        .attr('d', envelopeLine(points)),
       exit => exit.remove()
     );
 

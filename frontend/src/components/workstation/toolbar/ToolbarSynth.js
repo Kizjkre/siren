@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { addSynth } from '../../../actions';
-import synthDemo from '../../../helper/sandbox/demo';
+import synthDemo from '../../../util/sandbox/demo';
 
 const ToolbarSynth = ({ selected, setSelected, synths, addSynth }) => {
   const handleSynth = async e => {

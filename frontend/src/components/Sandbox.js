@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { updateSynth } from '../actions';
-import message from '../helper/sandbox/message';
-import processSynth from '../helper/sandbox/processSynth';
-import sandboxModule from '../helper/sandbox/sandboxModule';
+import message from '../util/sandbox/message';
+import processSynth from '../util/sandbox/processSynth';
+import sandboxModule from '../util/sandbox/sandboxModule';
 
 const Sandbox = ({ name, code, uuid, updateSynth }) => {
   const ref = useRef();
@@ -32,10 +32,10 @@ const Sandbox = ({ name, code, uuid, updateSynth }) => {
                   'let port = null;'
                   + ${ JSON.stringify(code) },
                   url =>
-                    'import synth from ' + JSON.stringify(url) + ';'
+                    'import synth, { parameters } from ' + JSON.stringify(url) + ';'
                     + '(() => {('
                     + ${ JSON.stringify(processSynth) }
-                    + ')(${ JSON.stringify(name) }, synth, port);'
+                    + ')(${ JSON.stringify(name) }, synth, parameters, port);'
                     + '})();'
                 );
               </script>  

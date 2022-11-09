@@ -1,5 +1,11 @@
 import cloneDeep from 'lodash.clonedeep';
-import { ActionType, FillType, INITIAL_CHANNEL_SETTINGS, INITIAL_TRACK_SETTINGS } from '../constants/state';
+import {
+  ActionType,
+  FillType,
+  INITIAL_CHANNEL_SETTINGS,
+  INITIAL_TRACK_SETTINGS,
+  PARAMETER_TYPE
+} from '../constants/state';
 
 const workstationReducer = (state, action) => {
   switch (action.type.type) {
@@ -106,7 +112,10 @@ const workstationReducer = (state, action) => {
       return (() => {
         const channel = cloneDeep(state.channels);
         channel[action.payload.channel].synth = action.payload.synth;
-        channel[action.payload.channel].features = Object.fromEntries(state.synths[action.payload.synth].settings.parameters.map(parameter => [parameter, { track: -1, fill: FillType.STRETCH }]));
+        channel[action.payload.channel].features = {
+          ...Object.fromEntries(state.synths[action.payload.synth].settings.parameters.timbral.map(parameter => [parameter, { track: -1, fill: FillType.STRETCH, type: PARAMETER_TYPE.TIMBRAL }])),
+          ...Object.fromEntries(state.synths[action.payload.synth].settings.parameters.time.map(parameter => [parameter, { track: -1, fill: FillType.STRETCH, type: PARAMETER_TYPE.TIME }]))
+        };
         return Object.assign({}, state, {
           channels: Object.assign({}, state.channels, channel)
         });

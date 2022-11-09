@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash.clonedeep';
-import defaultSynth from '../helper/synth/default';
+import defaultSynth, { parameters } from '../util/synth/default';
 
 export const FillType = Object.freeze({
   STRETCH: 'Stretch',
@@ -7,6 +7,11 @@ export const FillType = Object.freeze({
   WRAP: 'Wrap',
   FIT: 'Fit',
   FILL: 'Fill'
+});
+
+export const PARAMETER_TYPE = Object.freeze({
+  TIME: 'TIME',
+  TIMBRAL: 'TIMBRAL'
 });
 
 const reducers = Object.freeze({
@@ -46,9 +51,10 @@ export const INITIAL_CHANNEL_SETTINGS = {
   tracks: [],
   synth: 'Default',
   features: {
-    Frequency: { track: -1, fill: FillType.STRETCH },
-    Gain: { track: -1, fill: FillType.STRETCH },
-    Pan: { track: -1, fill: FillType.STRETCH }
+    Frequency: { track: -1, fill: FillType.STRETCH, type: PARAMETER_TYPE.TIMBRAL },
+    Gain: { track: -1, fill: FillType.STRETCH, type: PARAMETER_TYPE.TIMBRAL },
+    Pan: { track: -1, fill: FillType.STRETCH, type: PARAMETER_TYPE.TIMBRAL },
+    Duration: { track: -1, fill: FillType.STRETCH, type: PARAMETER_TYPE.TIME }
   }
 };
 
@@ -60,7 +66,7 @@ export const INITIAL_STATE = {
     profiles: { Default: 'x' },
     synths: {
       Default: {
-        code: `const defaultSynth = ${ defaultSynth.toString() }; export default defaultSynth;`,
+        code: `export const parameters = ${ JSON.stringify(parameters) }; const defaultSynth = ${ defaultSynth.toString() }; export default defaultSynth;`,
         uuid: crypto.randomUUID(),
         settings: {
           parameters: [],

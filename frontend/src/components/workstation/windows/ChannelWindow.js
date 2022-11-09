@@ -1,31 +1,17 @@
 import { useState } from 'react';
-import Window from '../../Window';
 import { connect } from 'react-redux';
 import { createChannel } from '../../../actions';
-import ChannelBody from '../channel/ChannelBody';
+import Window from '../../Window';
+import ChannelSettings from '../channel/ChannelSettings';
 
 const ChannelWindow = ({ channels, createChannel }) => {
-  const [open, setOpen] = useState('');
+  const [open, setOpen] = useState(Object.keys(channels)[0]);
   const [name, setName] = useState('');
-
-  const tabs = [];
-  const body = {};
-
-  Object.keys(channels).forEach(name => {
-    tabs.push((
-      <li key={ name } onClick={ () => setOpen(name) } className={ open === name ? 'is-active' : '' }>
-        <a> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
-          { name }
-        </a>
-      </li>
-    ));
-    body[name] = <ChannelBody name={ name } />;
-  });
 
   return (
     <Window id="window-channel" title="Channels">
-      <div className="field">
-        <div className="control">
+      <div className="field has-addons">
+        <div className="control is-expanded">
           <input
             className="input"
             type="text"
@@ -34,11 +20,9 @@ const ChannelWindow = ({ channels, createChannel }) => {
             onChange={ e => setName(e.target.value) }
           />
         </div>
-      </div>
-      <div className="field">
         <div className="control">
           <button
-            className="button is-primary is-fullwidth"
+            className="button is-success is-fullwidth"
             onClick={ () => {
               createChannel(name);
               setName('');
@@ -52,19 +36,24 @@ const ChannelWindow = ({ channels, createChannel }) => {
           </button>
         </div>
       </div>
+      <div className="tabs">
+        <ul>
+          {
+            Object.keys(channels).map((channel, i) => (
+              <li key={ i } className={ channel === open ? 'is-active' : '' }>
+                <a onClick={ () => setOpen(channel) }>{ channel }</a> { /* eslint-disable-line jsx-a11y/anchor-is-valid */ }
+              </li>
+            ))
+          }
+        </ul>
+      </div>
       {
         Object.keys(channels).length <= 0 ? null : (
-          <>
-            <hr />
-            <div className="container">
-              <div className="tabs">
-                <ul>
-                  { tabs }
-                </ul>
-              </div>
-              { body[open] }
+          Object.keys(channels).map((channel, i) => (
+            <div key={ i } className={ channel === open ? '' : 'is-hidden' }>
+              <ChannelSettings name={ channel } />
             </div>
-          </>
+          ))
         )
       }
     </Window>

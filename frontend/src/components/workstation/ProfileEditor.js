@@ -2,8 +2,8 @@
 
 import { Grammar, Parser } from 'nearley';
 import { Fragment, useEffect, useRef, useState } from 'react';
-import syntax from '../../helper/grammars/syntax/syntax';
-import { TOKEN_TYPES } from '../../helper/lexer';
+import syntax from '../../util/grammars/syntax/syntax';
+import { TOKEN_TYPES } from '../../util/lexer';
 
 // REF: https://css-tricks.com/creating-an-editable-textarea-that-supports-syntax-highlighted-code/
 const ProfileEditor = ({ onChange, setClear, initialCode, editable }) => {
