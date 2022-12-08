@@ -18,9 +18,13 @@ const ToolbarItem = props => {
       >
         { props.name }
       </button>
-      <div class={ `absolute flex flex-col border border-gray-100 rounded-b-sm bg-white py-2 shadow-lg ${ hidden() ? 'hidden' : '' }` }>
-        { props.children }
-      </div>
+      {
+        props.children && (
+          <div class={ `absolute flex flex-col border border-gray-100 rounded-b-sm bg-white py-2 shadow-lg z-50 ${ hidden() ? 'hidden' : '' }` }>
+            { props.children }
+          </div>
+        )
+      }
     </span>
   );
 };

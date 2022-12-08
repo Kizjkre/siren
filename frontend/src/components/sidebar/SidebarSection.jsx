@@ -7,9 +7,11 @@ const SidebarSection = props => {
         <span class="mr-2">
           <Icon>{ props.icon }</Icon>
         </span>
-        <p class="text-gray-500">{ props.name.toUpperCase() }</p>
+        <p class="text-gray-500 tracking-widest">{ props.name.toUpperCase() }</p>
       </div>
-      { props.children }
+      <div class="relative flex items-center">
+        { props.children }
+      </div>
     </div>
   );
 };
