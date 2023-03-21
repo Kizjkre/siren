@@ -7,6 +7,7 @@ document.addEventListener('click', event => Array.from(elements.entries()).forEa
   }
 }));
 
-const useClickOutside = (ref, action) => elements.set(ref, action);
-
-export default useClickOutside;
+export default (ref, action) => ({
+  set: () => elements.set(ref(), action),
+  remove: () => elements.delete(ref())
+});

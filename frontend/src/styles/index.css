@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-  @apply overflow-hidden;
+body, html {
+  @apply md:overflow-hidden;
+}
+
+/* Testing */
+/*div {*/
+/*  @apply border border-red-500 box-border;*/
+/*}*/
+
+.scroll::-webkit-scrollbar {
+  @apply w-4;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 cursor-pointer;
 }

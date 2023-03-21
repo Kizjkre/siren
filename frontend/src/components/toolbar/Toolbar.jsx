@@ -1,5 +1,7 @@
 import ToolbarEdit from './ToolbarEdit';
 import ToolbarFile from './ToolbarFile';
+import ToolbarSynth from './ToolbarSynth';
+import ToolbarTrack from './ToolbarTrack';
 import ToolbarView from './ToolbarView';
 
 const Toolbar = () => {
@@ -9,6 +11,8 @@ const Toolbar = () => {
       <ToolbarFile />
       <ToolbarEdit />
       <ToolbarView />
+      <ToolbarTrack />
+      <ToolbarSynth />
     </nav>
   );
 };

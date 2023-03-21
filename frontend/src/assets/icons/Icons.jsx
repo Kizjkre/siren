@@ -4,8 +4,13 @@ import DocumentChartBarIcon from './DocumentChartBarIcon';
 import FolderOpenIcon from './FolderOpenIcon';
 import LayoutSidebarLeftCollapseIcon from './LayoutSidebarLeftCollapseIcon';
 import LayoutSidebarLeftExpandIcon from './LayoutSidebarLeftExpandIcon';
-import MathXPlusYIcon from './MathXPlusY';
+import MathXPlusYIcon from './MathXPlusYIcon';
+import PauseIcon from './PauseIcon';
+import PlayIcon from './PlayIcon';
+import PlusCircleIcon from './PlusCircleIcon';
+import StopIcon from './StopIcon';
 import WaveSineIcon from './WaveSineIcon';
+import XCircleIcon from './XCircleIcon';
 
 const Icon = props => {
   switch (props.children) {
@@ -25,6 +30,16 @@ const Icon = props => {
       return <LayoutSidebarLeftCollapseIcon />;
     case 'layout-sidebar-left-expand':
       return <LayoutSidebarLeftExpandIcon />;
+    case 'plus-circle':
+      return <PlusCircleIcon />;
+    case 'x-circle':
+      return <XCircleIcon />;
+    case 'play':
+      return <PlayIcon />;
+    case 'pause':
+      return <PauseIcon />;
+    case 'stop':
+      return <StopIcon />;
     default:
       return null;
   }

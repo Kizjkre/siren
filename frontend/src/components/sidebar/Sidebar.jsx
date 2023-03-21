@@ -1,31 +1,85 @@
-import { createSignal } from 'solid-js';
+import { For } from 'solid-js';
 import { useState } from '../../context/Context';
-import Tooltip from '../util/Tooltip';
+import { status } from '../util/Window';
 import SidebarItem from './SidebarItem';
 import SidebarSection from './SidebarSection';
 
 const Sidebar = () => {
-  const [state] = useState();
-  const [tooltip, setTooltip] = createSignal(false);
-  const [location, setLocation] = createSignal({ x: 0, y: 0 });
+  const [state, { removeDataset, removeMapping, removeSynth }] = useState();
 
-  const handleClick = e => {
-    setTooltip(!tooltip());
-    setLocation({ x: e.clientX, y: e.clientY });
+  const handleSynthDragStart = name => e => {
+    e.dataTransfer.setData('siren/synth', name);
+    e.dataTransfer.dropEffect = 'move';
   };
 
-  return [
-    <div class={ `flex flex-col box-border pt-8 basis-1/5 shrink-0 grow pl-12 pr-4 ${ state().sidebar ? '' : 'hidden' }` }>
+  const handleMappingDragStart = name => e => {
+    e.dataTransfer.setData('siren/mapping', name);
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+
+  const handleRegionDragStart = filename => (e, item) => {
+    e.dataTransfer.setData('siren/region', JSON.stringify({ filename, attribute: item }));
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  // noinspection JSValidateTypes
+  return (
+    <div class={ `flex flex-col box-border pt-8 basis-1/5 shrink-0 grow pl-12 pr-4 overflow-y-auto scroll ${ state.sidebar ? '' : 'hidden' }` }>
       <SidebarSection name="Data" icon="document-chart-bar">
-        <SidebarItem icon="document-chart-bar" onClick={ handleClick }>coral_data.csv</SidebarItem>
+        <For each={ Object.keys(state.datasets) }>
+          {
+            filename => (
+              <SidebarItem
+                icon="document-chart-bar"
+                onRemove={ () => removeDataset(filename) }
+                dropdown={ state.datasets[filename].columns }
+                onDropdownDragStart={ handleRegionDragStart(filename) }
+                dragType="data"
+                accept="siren/region"
+              >
+                { filename }
+              </SidebarItem>
+            )
+          }
+        </For>
       </SidebarSection>
       <SidebarSection name="Synths" icon="wave-sine">
+        <For each={ Object.keys(state.synths) }>
+          {
+            name => (
+              <SidebarItem
+                icon="wave-sine"
+                onRemove={ () => removeSynth(name) }
+                onClick={ () => state.synths[name].port?.postMessage({ action: 'demo' }) }
+                draggable="true"
+                onDragStart={ handleSynthDragStart(name) }
+              >
+                { name }
+              </SidebarItem>
+            )
+          }
+        </For>
       </SidebarSection>
-      <SidebarSection name="Profiles" icon="math-x-plus-y">
+      <SidebarSection name="Mappings" icon="math-x-plus-y">
+        <For each={ Object.keys(state.mappings) }>
+          {
+            name => (
+              <SidebarItem
+                icon="math-x-plus-y"
+                onRemove={ () => removeMapping(name) }
+                onClick={ () => status[name].setClosed(!status[name].closed()) }
+                draggable="true"
+                onDragStart={ handleMappingDragStart(name) }
+              >
+                { name }
+              </SidebarItem>
+            )
+          }
+        </For>
       </SidebarSection>
-    </div>,
-    <>{ tooltip() && <Tooltip location={ location() }><p>hi</p></Tooltip>}</>
-  ];
+    </div>
+  );
 };
 
 export default Sidebar;

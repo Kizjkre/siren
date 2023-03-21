@@ -2,7 +2,7 @@ import Icon from '../../assets/icons/Icons';
 
 const ToolbarDropdownItem = props => (
   <button
-    class="flex px-4 py-2 box-border border-l border-l-transparent hover:bg-gray-100 hover:border-l-blue-600 hover:text-blue-600"
+    class="flex px-4 py-2 box-border border-l border-l-transparent hover:bg-gray-100 hover:border-l-blue-600 hover:text-blue-600 transition-all duration-200"
     onClick={ props.onClick }
   >
     {
