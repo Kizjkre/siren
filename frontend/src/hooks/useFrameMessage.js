@@ -8,7 +8,6 @@ export default () => {
     window.removeEventListener('message', listener);
     const [port] = e.ports;
     port.onmessage = e => {
-      console.log(e);
       updateSynthParameters(e.data.name, e.data.parameters);
       updateSynthPort(e.data.name, port);
       port.onmessage = null;

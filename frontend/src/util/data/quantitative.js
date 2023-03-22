@@ -17,13 +17,32 @@ export default (data, length, id, range) => {
     .select(id)
     .selectAll('rect')
     .data(data)
-    .join('rect')
-    .attr('class', 'cursor-pointer')
-    .attr('x', (_, i) => x(i))
-    .attr('y', d => y(d) - height / 2)
-    .attr('data-data', d => d)
-    .attr('width', x.bandwidth())
-    .attr('height', height)
+    .join(
+      enter => enter
+        .append('rect')
+        .attr('class', 'cursor-pointer')
+        .attr('x', (_, i) => x(i))
+        .attr('y', d => y(d) - height / 2)
+        .attr('data-data', d => d)
+        .attr('width', x.bandwidth())
+        .attr('height', height),
+      update => update
+        .transition()     // <-- akin to a D3 selection, but interpolates values
+        .duration(1000)     // <-- 1000 ms === 1 sec
+        .ease(d3.easeCubic)
+        .attr('class', 'cursor-pointer')
+        .attr('x', (_, i) => x(i))
+        .attr('y', d => y(d) - height / 2)
+        .attr('data-data', d => d)
+        .attr('width', x.bandwidth())
+        .attr('height', height)
+    )
+    // .attr('class', 'cursor-pointer')
+    // .attr('x', (_, i) => x(i))
+    // .attr('y', d => y(d) - height / 2)
+    // .attr('data-data', d => d)
+    // .attr('width', x.bandwidth())
+    // .attr('height', height)
     .on('mouseover', function () {
       const self = d3.select(this);
       self

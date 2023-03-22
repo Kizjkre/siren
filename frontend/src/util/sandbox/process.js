@@ -30,7 +30,7 @@ const process = (name, synth, port, parameters) => {
           Array.from(s.updates.values()).forEach(update => update());
           s.start();
 
-          setTimeout(() => s.stop(), 1000);
+          setTimeout(() => s.stop(), 2000);
         })();
         break;
       case 'play':

@@ -15,10 +15,14 @@ export default setState => ({
   toggleSidebar: () => setState('sidebar', s => !s),
 
   // updateRegionLength: (index, parameter, i, length) => setState('tracks', index, 'regions', parameter, i, 'length', () => length),
+  updateRegionMapping: (index, parameter, i, mapping) => setState('tracks', index, 'regions', parameter, i, 'mapping', () => mapping),
   updateRegionStart: (index, parameter, i, start) => setState('tracks', index, 'regions', parameter, i, 'start', () => start),
   updateSynthParameters: (name, parameters) => setState('synths', name, 'parameters', () => parameters),
   updateSynthPort: (name, port) => setState('synths', name, 'port', () => port),
   updateTrackName: (i, name) => setState('tracks', i, 'name', () => name),
   updateTrackSynth: (i, synth) => setState('tracks', i, 'synth', () => synth),
-  updateTrackView: (i, view) => setState('tracks', i, 'view', () => view)
+  updateTrackView: (i, view) => setState('tracks', i, 'view', () => view),
+
+  // TODO: temp
+  updateRegionData: (index, parameter, i, data) => setState('tracks', index, 'regions', parameter, i, 'data', () => data)
 });

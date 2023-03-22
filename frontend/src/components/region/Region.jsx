@@ -5,8 +5,10 @@ import useDragRegion from '../../hooks/useDragRegion';
 import nominal from '../../util/data/nominal';
 import quantitative from '../../util/data/quantitative';
 
+import { extent } from 'd3';
+
 const Region = props => {
-  const [state, { updateRegionStart }] = useState();
+  const [state, { updateRegionStart, updateRegionMapping, /* TODO: temp */ updateRegionData }] = useState();
 
   let ref;
 
@@ -25,7 +27,9 @@ const Region = props => {
     const mapping = e.dataTransfer.getData('siren/mapping');
     e.target.classList.add('bg-gray-100');
     e.target.classList.remove('bg-blue-100');
-    console.log(mapping);
+    updateRegionMapping(props.index, props.parameter, props.i, mapping);
+
+    updateRegionData(props.index, props.parameter, props.i, state.tracks[props.index].regions[props.parameter][props.i].data.map(x => 440 * (2 ** (1 / 12)) ** (x % 20)));
   };
 
 
@@ -47,11 +51,11 @@ const Region = props => {
     switch (state.synths[state.tracks[props.index].synth].parameters.timbral[props.parameter]) {
       case TYPE.NOMINAL:
       case TYPE.ORDINAL:
-        console.log(props.range);
         nominal(data, domain, `#region-${ props.index }-${ props.parameter }-${ props.i }`, props.range);
         break;
       case TYPE.QUANTITATIVE:
-        quantitative(data, domain, `#region-${ props.index }-${ props.parameter }-${ props.i }`, props.range);
+        // TODO: fix
+        quantitative(data, domain, `#region-${ props.index }-${ props.parameter }-${ props.i }`, extent([...props.range, ...data]));
         break;
     }
   });

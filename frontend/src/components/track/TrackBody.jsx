@@ -11,7 +11,6 @@ const TrackBody = props => {
   let ref;
 
   const findRange = data => {
-    console.log(data);
     switch (state.synths[state.tracks[props.index].synth].parameters.timbral[props.track.view]) {
       case TYPE.NOMINAL:
       case TYPE.ORDINAL:
@@ -37,7 +36,6 @@ const TrackBody = props => {
     const data = JSON.parse(e.dataTransfer.getData('siren/region'));
 
     const attr = state.datasets[data.filename].map(vec => vec[data.attribute]);
-    console.log(findRange(attr));
     setRange({ ...range(), [props.track.view]: findRange(attr) });
     addRegion(props.index, props.track.view, attr, [data.filename, data.attribute]);
   };
