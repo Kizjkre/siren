@@ -5,14 +5,17 @@
   "repository": "https://github.com/Kizjkre/siren.git",
   "license": "MIT",
   "private": true,
-  "dependencies": {
-    "concurrently": "^5.3.0"
-  },
   "scripts": {
     "start": "concurrently \"yarn run frontend:start\" \"yarn run backend:start\"",
     "frontend:start": "cd frontend && yarn start",
     "backend:start": "cd backend && yarn start",
     "postinstall": "concurrently \"cd frontend && yarn\" \"cd backend && yarn\"",
-    "nearleyc": "run(){ frontend/node_modules/nearley/bin/nearleyc.js $1; }; run"
+    "nearleyc": "run(){ frontend/node_modules/nearley/bin/nearleyc.js $1; }; run",
+    "predeploy": "cd frontend && yarn run build",
+    "deploy": "gh-pages -d frontend/dist",
+    "postdeploy": "cd frontend && rm -rf dist/"
+  },
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
   }
 }
