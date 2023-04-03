@@ -3,7 +3,6 @@ import Controls from './components/controls/Controls';
 import Main from './components/main/Main';
 import Sidebar from './components/sidebar/Sidebar';
 import Toolbar from './components/toolbar/Toolbar';
-import Sandbox from './components/util/sandbox/Sandbox';
 import SynthSandbox from './components/util/sandbox/SynthSandbox';
 import Window from './components/util/Window';
 import { useState } from './context/Context';
@@ -38,9 +37,9 @@ const App = () => {
     <For each={ Object.keys(state.synths) }>
       {
         name => (
-          <Sandbox name={ name } uuid={ state.synths[name].uuid }>
+          <SynthSandbox name={ name } uuid={ state.synths[name].uuid }>
             { state.synths[name].code }
-          </Sandbox>
+          </SynthSandbox>
         )
       }
     </For>,

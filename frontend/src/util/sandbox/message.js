@@ -1,8 +1,8 @@
-export default ({ synth, uuid, origin }) => {
+export default ({ name, uuid, origin }) => {
   const channel = new MessageChannel();
   const port = channel.port1;
 
-  window.top.postMessage({ synth, uuid }, origin, [channel.port2]);
+  window.top.postMessage({ name, uuid }, origin, [channel.port2]);
 
   return port;
 };
