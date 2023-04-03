@@ -1,18 +1,18 @@
 import { useState } from '../../context/Context';
-import useFrameMessage from '../../hooks/useFrameMessage';
+import useSandboxMessage from '../../hooks/useSandboxMessage';
 import ToolbarDropdownItem from './ToolbarDropdownItem';
 import ToolbarItem from './ToolbarItem';
 
 const ToolbarSynth = () => {
-  const [state, { addSynth }] = useState();
-  const frameMessage = useFrameMessage();
+  const [, { addSynth }] = useState();
+  const sandboxMessage = useSandboxMessage();
 
   const a = document.createElement('input');
   a.type = 'file';
 
   a.addEventListener('change', async e => {
     if (e.target.files.length) {
-      frameMessage();
+      sandboxMessage();
       const url = URL.createObjectURL(e.target.files[0]);
       addSynth(e.target.files[0].name, await (await fetch(url)).text());
     }

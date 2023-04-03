@@ -21,8 +21,5 @@ export default setState => ({
   updateSynthPort: (name, port) => setState('synths', name, 'port', () => port),
   updateTrackName: (i, name) => setState('tracks', i, 'name', () => name),
   updateTrackSynth: (i, synth) => setState('tracks', i, 'synth', () => synth),
-  updateTrackView: (i, view) => setState('tracks', i, 'view', () => view),
-
-  // TODO: temp
-  updateRegionData: (index, parameter, i, data) => setState('tracks', index, 'regions', parameter, i, 'data', () => data)
+  updateTrackView: (i, view) => setState('tracks', i, 'view', () => view)
 });

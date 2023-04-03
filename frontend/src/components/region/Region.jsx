@@ -8,7 +8,7 @@ import quantitative from '../../util/data/quantitative';
 import { extent } from 'd3';
 
 const Region = props => {
-  const [state, { updateRegionStart, updateRegionMapping, /* TODO: temp */ updateRegionData }] = useState();
+  const [state, { updateRegionStart, updateRegionMapping }] = useState();
 
   let ref;
 
@@ -28,8 +28,6 @@ const Region = props => {
     e.target.classList.add('bg-gray-100');
     e.target.classList.remove('bg-blue-100');
     updateRegionMapping(props.index, props.parameter, props.i, mapping);
-
-    updateRegionData(props.index, props.parameter, props.i, state.tracks[props.index].regions[props.parameter][props.i].data.map(x => 440 * (2 ** (1 / 12)) ** (x % 20)));
   };
 
 
