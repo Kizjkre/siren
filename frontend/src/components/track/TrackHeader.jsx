@@ -1,10 +1,8 @@
 import { For } from 'solid-js';
 import Icon from '../../assets/icons/Icons';
-import { useState } from '../../context/Context';
+import { removeTrack, state, updateTrackName, updateTrackSynth, updateTrackView } from '../../state/state';
 
 const TrackHeader = props => {
-  const [state, { removeTrack, updateTrackName, updateTrackSynth, updateTrackView }] = useState();
-
   const handleKeyPress = e => {
     if (e.keyCode === 13) {
       e.preventDefault();

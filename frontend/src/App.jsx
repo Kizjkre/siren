@@ -3,14 +3,15 @@ import Controls from './components/controls/Controls';
 import Main from './components/main/Main';
 import Sidebar from './components/sidebar/Sidebar';
 import Toolbar from './components/toolbar/Toolbar';
+import MappingSandbox from './components/util/sandbox/MappingSandbox';
 import SynthSandbox from './components/util/sandbox/SynthSandbox';
 import Window from './components/util/Window';
-import { useState } from './context/Context';
 import useDefaultMapping from './hooks/useDefaultMapping';
 import useDefaultSynth from './hooks/useDefaultSynth';
 import useSampleData from './hooks/useSampleData';
 import useTimeline from './hooks/useTimeline';
-import create from './util/monaco/create';
+import { state, updateMapping } from './state/state';
+import ace from './util/ace/ace';
 
 const App = () => {
   useSampleData();
@@ -18,11 +19,13 @@ const App = () => {
   useDefaultMapping();
   useTimeline();
 
-  const [state] = useState();
-
   const mappingWindows = {};
 
-  onMount(() => Object.entries(mappingWindows).forEach(([name, ref]) => create(ref, state.mappings[name])));
+  onMount(() => Object.entries(mappingWindows).forEach(([name, ref]) => {
+    const editor = ace(ref);
+    editor.setValue(state.mappings[name].code, 1);
+    editor.container.addEventListener('keyup', () => updateMapping(name, editor.getValue()));
+  }));
 
   // noinspection JSValidateTypes
   return [

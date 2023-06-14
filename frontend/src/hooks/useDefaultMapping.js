@@ -1,6 +1,3 @@
-import { useState } from '../context/Context';
+import { addMapping } from '../state/state';
 
-export default () => {
-  const [, { addMapping }] = useState();
-  addMapping('Default', 'export default x => x;');
-};
+export default () => addMapping('Default', 'export default x => x;');

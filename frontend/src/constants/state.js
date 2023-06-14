@@ -26,7 +26,14 @@ export const INITIAL_REGION = (data, accessor) => ({
 
 export const INITIAL_SYNTH = code => ({
   code,
-  parameters: {},
-  port: null,
-  uuid: crypto.randomUUID?.() || Math.random() // TODO: fix hack
+  parameters: {}
+});
+
+export const INITIAL_MAP = code => ({
+  code
+});
+
+export const INITIAL_PORT = Object.freeze({
+  synths: {},
+  mappings: {}
 });

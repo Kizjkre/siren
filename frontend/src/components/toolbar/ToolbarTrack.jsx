@@ -1,9 +1,8 @@
-import { useState } from '../../context/Context';
+import { addTrack } from '../../state/state';
 import ToolbarDropdownItem from './ToolbarDropdownItem';
 import ToolbarItem from './ToolbarItem';
 
 const ToolbarTrack = () => {
-  const [, { addTrack }] = useState();
   return (
     <ToolbarItem name="Tracks">
       <ToolbarDropdownItem

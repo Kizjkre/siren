@@ -15,6 +15,7 @@ const Sandbox = props => {
                 const port = (${ message.toString() })({
                   name: ${ JSON.stringify(props.name) },
                   uuid: ${ JSON.stringify(props.uuid) },
+                  type: ${ JSON.stringify(props.type) },
                   origin: ${ JSON.stringify(window.location.origin) }
                 });
                 (${ module.toString() })(

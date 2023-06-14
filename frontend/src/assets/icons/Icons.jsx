@@ -1,3 +1,4 @@
+import ArrowDownTrayIcon from './ArrowDownTrayIcon';
 import ArrowUpTrayIcon from './ArrowUpTrayIcon';
 import DeviceFloppyIcon from './DeviceFloppyIcon';
 import DocumentChartBarIcon from './DocumentChartBarIcon';
@@ -18,6 +19,8 @@ const Icon = props => {
       return <FolderOpenIcon />;
     case 'arrow-up-tray':
       return <ArrowUpTrayIcon />;
+    case 'arrow-down-tray':
+      return <ArrowDownTrayIcon />;
     case 'device-floppy':
       return <DeviceFloppyIcon />;
     case 'document-chart-bar':

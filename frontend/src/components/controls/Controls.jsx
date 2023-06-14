@@ -1,10 +1,8 @@
 import Icon from '../../assets/icons/Icons';
 import { STATUS } from '../../constants/constants';
-import useStatus from '../../hooks/useStatus';
+import { status, setStatus } from '../../state/state';
 
 const Controls = () => {
-  const { status, setStatus } = useStatus;
-
   const handlePlay = () => setStatus(STATUS.PLAYING);
   const handlePause = () => setStatus(STATUS.PAUSED);
   const handleStop = () => setStatus(STATUS.STOPPED);

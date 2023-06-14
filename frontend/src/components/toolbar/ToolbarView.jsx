@@ -1,9 +1,8 @@
-import { useState } from '../../context/Context';
+import { state, toggleSidebar } from '../../state/state';
 import ToolbarDropdownItem from './ToolbarDropdownItem';
 import ToolbarItem from './ToolbarItem';
 
 const ToolbarView = () => {
-  const [state, { toggleSidebar }] = useState();
 
   return (
     <ToolbarItem name="View">

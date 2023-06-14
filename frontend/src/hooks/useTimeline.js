@@ -1,28 +1,24 @@
 import { createEffect } from 'solid-js';
 import { STATUS } from '../constants/constants';
-import { useState } from '../context/Context';
-import useStatus from './useStatus';
+import { port, state, status } from '../state/state';
 
 export default () => {
-  const [state] = useState();
-  const { status } = useStatus;
-
   let prev = null;
 
   createEffect(() => {
     switch (status()) {
       case STATUS.PAUSED:
-        state.tracks.forEach(({ synth }) => state.synths[synth].port.postMessage({ action: 'pause' }));
+        state.tracks.forEach(({ synth }) => port.synths[synth].postMessage({ action: 'pause' }));
         prev = STATUS.PAUSED;
         break;
       case STATUS.STOPPED:
-        state.tracks.forEach(({ synth }) => state.synths[synth].port.postMessage({ action: 'stop' }));
+        state.tracks.forEach(({ synth }) => port.synths[synth].postMessage({ action: 'stop' }));
         prev = STATUS.STOPPED;
         break;
       case STATUS.PLAYING:
         // TODO: memoize
         if (prev === STATUS.PAUSED) {
-          state.tracks.forEach(({ synth }) => state.synths[synth].port.postMessage({ action: 'resume' }));
+          state.tracks.forEach(({ synth }) => port.synths[synth].postMessage({ action: 'resume' }));
           prev = STATUS.PLAYING;
           break;
         }
@@ -38,7 +34,7 @@ export default () => {
               timeline[start + offset] = { ...(timeline[start + offset] || {}), [parameter]: null };
             });
           });
-          state.synths[track.synth].port.postMessage({ action: 'play', timeline: timeline, gain: 1 / state.tracks.length });
+          port.synths[track.synth].postMessage({ action: 'play', timeline: timeline, gain: 1 / state.tracks.length });
         });
         prev = STATUS.PLAYING;
         break;

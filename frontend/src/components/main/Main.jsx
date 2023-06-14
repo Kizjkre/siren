@@ -1,13 +1,11 @@
 import { For } from 'solid-js';
-import { useState } from '../../context/Context';
+import { state } from '../../state/state';
 import TrackBody from '../track/TrackBody';
 import TrackHeader from '../track/TrackHeader';
 import Seeker from './Seeker';
 import Timeline from './Timeline';
 
 const Main = () => {
-  const [state] = useState();
-
   // REF: https://stackoverflow.com/a/66689926
   return (
     <div class="flex flex-col basis-4/5 grow-[4] ml-2 min-w-0">

@@ -1,11 +1,10 @@
 import { extent } from 'd3';
 import { createSignal, For, onMount } from 'solid-js';
 import { TYPE } from '../../constants/constants';
-import { useState } from '../../context/Context';
+import { addRegion, state } from '../../state/state';
 import Region from '../region/Region';
 
 const TrackBody = props => {
-  const [state, { addRegion }] = useState();
   const [range, setRange] = createSignal({});
 
   let ref;

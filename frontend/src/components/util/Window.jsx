@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from 'solid-js';
+import { createSignal } from 'solid-js';
 import Icon from '../../assets/icons/Icons';
 import useDragWindow from '../../hooks/useDragWindow';
 

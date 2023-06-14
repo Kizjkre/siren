@@ -1,10 +1,8 @@
 import { createEffect } from 'solid-js';
 import { STATUS } from '../../constants/constants';
-import useStatus from '../../hooks/useStatus';
+import { status } from '../../state/state';
 
 const Seeker = () => {
-  const { status } = useStatus;
-
   let ref;
 
   let prev;

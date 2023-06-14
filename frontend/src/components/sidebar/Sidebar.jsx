@@ -1,12 +1,10 @@
 import { For } from 'solid-js';
-import { useState } from '../../context/Context';
+import { port, removeDataset, removeMapping, removeSynth, state } from '../../state/state';
 import { status } from '../util/Window';
 import SidebarItem from './SidebarItem';
 import SidebarSection from './SidebarSection';
 
 const Sidebar = () => {
-  const [state, { removeDataset, removeMapping, removeSynth }] = useState();
-
   const handleSynthDragStart = name => e => {
     e.dataTransfer.setData('siren/synth', name);
     e.dataTransfer.dropEffect = 'move';
@@ -25,7 +23,10 @@ const Sidebar = () => {
 
   // noinspection JSValidateTypes
   return (
-    <div class={ `flex flex-col box-border pt-8 basis-1/5 shrink-0 grow pl-12 pr-4 overflow-y-auto scroll ${ state.sidebar ? '' : 'hidden' }` }>
+    <div
+      class="flex flex-col box-border pt-8 basis-1/5 shrink-0 grow pl-12 pr-4 overflow-y-auto scroll"
+      classList={ { hidden: !state.sidebar } }
+    >
       <SidebarSection name="Data" icon="document-chart-bar">
         <For each={ Object.keys(state.datasets) }>
           {
@@ -51,7 +52,7 @@ const Sidebar = () => {
               <SidebarItem
                 icon="wave-sine"
                 onRemove={ () => removeSynth(name) }
-                onClick={ () => state.synths[name].port?.postMessage({ action: 'demo' }) }
+                onClick={ () => port.synths[name].postMessage({ action: 'demo' }) }
                 draggable="true"
                 onDragStart={ handleSynthDragStart(name) }
               >

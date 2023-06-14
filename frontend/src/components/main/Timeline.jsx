@@ -1,8 +1,6 @@
-import { useState } from '../../context/Context';
+import { state } from '../../state/state';
 
 const Timeline = () => {
-  const [state] = useState();
-
   const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
 
   return (

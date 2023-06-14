@@ -1,12 +1,10 @@
-import { useState } from '../../context/Context';
-import useSandboxMessage from '../../hooks/useSandboxMessage';
-import synthSandbox from '../../util/sandbox/synthSandbox';
+import { addSynth } from '../../state/state';
+import synthSandbox from '../../util/sandbox/synthSandboxAction';
 import ToolbarDropdownItem from './ToolbarDropdownItem';
 import ToolbarItem from './ToolbarItem';
 
 const ToolbarSynth = () => {
-  const [, { addSynth }] = useState();
-  const sandboxMessage = useSandboxMessage(...synthSandbox());
+  const sandboxMessage = synthSandbox();
 
   const a = document.createElement('input');
   a.type = 'file';

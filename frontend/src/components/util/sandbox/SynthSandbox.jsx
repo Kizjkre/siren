@@ -5,6 +5,7 @@ const SynthSandbox = props => (
   <Sandbox
     name={ props.name }
     uuid={ props.uuid }
+    type="synth"
     process={
       `url => 'import synth, { parameters } from ' + JSON.stringify(url) + ';'
         + '(() => {('
