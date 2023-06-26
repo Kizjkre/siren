@@ -3,7 +3,6 @@ import Controls from './components/controls/Controls';
 import Main from './components/main/Main';
 import Sidebar from './components/sidebar/Sidebar';
 import Toolbar from './components/toolbar/Toolbar';
-import MappingSandbox from './components/util/sandbox/MappingSandbox';
 import SynthSandbox from './components/util/sandbox/SynthSandbox';
 import Window from './components/util/Window';
 import useDefaultMapping from './hooks/useDefaultMapping';
@@ -18,14 +17,6 @@ const App = () => {
   useDefaultSynth();
   useDefaultMapping();
   useTimeline();
-
-  const mappingWindows = {};
-
-  onMount(() => Object.entries(mappingWindows).forEach(([name, ref]) => {
-    const editor = ace(ref);
-    editor.setValue(state.mappings[name].code, 1);
-    editor.container.addEventListener('keyup', () => updateMapping(name, editor.getValue()));
-  }));
 
   // noinspection JSValidateTypes
   return [
@@ -49,7 +40,14 @@ const App = () => {
     <For each={ Object.keys(state.mappings) }>
       {
         name => (
-          <Window ref={ mappingWindows[name] } title={ name } />
+          <Window
+            title={ name }
+            onMount={ ref => {
+              const editor = ace(ref);
+              editor.setValue(state.mappings[name].code, 1);
+              editor.container.addEventListener('keyup', () => updateMapping(name, editor.getValue()));
+            } }
+          />
         )
       }
     </For>

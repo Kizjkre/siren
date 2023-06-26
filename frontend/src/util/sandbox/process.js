@@ -11,11 +11,11 @@ const process = (name, synth, port, parameters) => {
       graph.set(this.context, new Set());
     }
     graph.get(this.context).add([this, arguments[0]]);
-    this._SIREN_connect(...arguments);
+    return this._SIREN_connect(...arguments);
   };
   AudioNode.prototype.disconnect = function () {
     graph.get(this.context).delete([this, arguments[0]]);
-    this._SIREN_disconnect(...arguments);
+    return this._SIREN_disconnect(...arguments);
   };
 
   const playing = new Set();

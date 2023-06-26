@@ -12,7 +12,7 @@ const Main = () => {
       <div class="relative h-full w-full overflow-scroll scroll">
         <Seeker />
         <div class="flex min-w-max border-b">
-          <div class="shrink-0 sticky left-0 bg-white w-[199px]" />
+          <div class="shrink-0 sticky left-0 bg-white w-[199px] z-40" />
           <div class="shrink-0 min-w-max">
             <Timeline />
           </div>

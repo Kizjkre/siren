@@ -1,17 +1,18 @@
-import { createSignal } from 'solid-js';
+import { createSignal, onMount } from 'solid-js';
 import Icon from '../../assets/icons/Icons';
 import useDragWindow from '../../hooks/useDragWindow';
 
 export const status = {};
 
 const Window = props => {
-  const [closed, setClosed] = createSignal(true);
+  const [closed, setClosed] = createSignal(!props.open);
 
   status[props.title] = { closed, setClosed };
 
-  let ref;
+  let ref, body;
 
   useDragWindow(() => ref.children[0], () => ref);
+  onMount(() => props.onMount(body));
 
   const handleClose = () => setClosed(true);
 
@@ -27,8 +28,8 @@ const Window = props => {
           <Icon>x-circle</Icon>
         </span>
       </div>
-      <div class="min-h-[30vh] min-w-[30vw] max-h-[60vh] max-w-[60vw] px-4 py-2" ref={ props.ref }>
-
+      <div class="min-h-[30vh] min-w-[30vw] max-h-[60vh] max-w-[60vw] px-4 py-2" ref={ body }>
+        { props.children }
       </div>
     </div>
   );

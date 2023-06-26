@@ -1,4 +1,3 @@
-import { extent } from 'd3';
 import { createEffect, createSignal } from 'solid-js';
 import { TYPE } from '../../constants/constants';
 import useDragRegion from '../../hooks/useDragRegion';
@@ -35,7 +34,14 @@ const Region = props => {
 
     port.mappings[map()].onmessage = e => {
       if (!e.data.data) return;
-      updateRegionMapping(props.index, props.parameter, props.i, map(), e.data.data);
+      updateRegionMapping(
+        props.index,
+        props.parameter,
+        props.i,
+        map(),
+        e.data.data,
+        state.synths[state.tracks[props.index].synth].parameters.timbral[props.parameter]
+      );
       port.mappings[map()].onmessage = null;
       setMap(null);
     };
@@ -61,11 +67,20 @@ const Region = props => {
     switch (state.synths[state.tracks[props.index].synth].parameters.timbral[props.parameter]) {
       case TYPE.NOMINAL:
       case TYPE.ORDINAL:
-        nominal(data, domain, `#region-${ props.index }-${ props.parameter }-${ props.i }`, props.range);
+        nominal(
+          data,
+          domain,
+          `#region-${ props.index }-${ props.parameter }-${ props.i }`,
+          state.tracks[props.index].regions[props.parameter].range
+        );
         break;
       case TYPE.QUANTITATIVE:
-        // TODO: fix
-        quantitative(data, domain, `#region-${ props.index }-${ props.parameter }-${ props.i }`, extent([...props.range, ...data]));
+        quantitative(
+          data,
+          domain,
+          `#region-${ props.index }-${ props.parameter }-${ props.i }`,
+          state.tracks[props.index].regions[props.parameter].range
+        );
         break;
     }
   });

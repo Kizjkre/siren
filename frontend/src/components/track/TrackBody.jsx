@@ -1,23 +1,9 @@
-import { extent } from 'd3';
-import { createSignal, For, onMount } from 'solid-js';
-import { TYPE } from '../../constants/constants';
+import { For, onMount } from 'solid-js';
 import { addRegion, state } from '../../state/state';
 import Region from '../region/Region';
 
 const TrackBody = props => {
-  const [range, setRange] = createSignal({});
-
   let ref;
-
-  const findRange = data => {
-    switch (state.synths[state.tracks[props.index].synth].parameters.timbral[props.track.view]) {
-      case TYPE.NOMINAL:
-      case TYPE.ORDINAL:
-        return [...new Set([...(range()?.[props.track.view] || []), ...data])];
-      case TYPE.QUANTITATIVE:
-        return extent([...(range()?.[props.track.view] || []), ...data]);
-    }
-  };
 
   const handleDragOver = e => {
     if (!e.dataTransfer.types.includes('siren/region')) return;
@@ -35,8 +21,14 @@ const TrackBody = props => {
     const data = JSON.parse(e.dataTransfer.getData('siren/region'));
 
     const attr = state.datasets[data.filename].map(vec => vec[data.attribute]);
-    setRange({ ...range(), [props.track.view]: findRange(attr) });
-    addRegion(props.index, props.track.view, attr, [data.filename, data.attribute]);
+
+    addRegion(
+      props.index,
+      props.track.view,
+      attr,
+      state.synths[state.tracks[props.index].synth].parameters.timbral[props.track.view],
+      [data.filename, data.attribute]
+    );
   };
 
   const handleDragLeave = e => {
@@ -53,7 +45,7 @@ const TrackBody = props => {
       <For each={ state.tracks[props.index].regions[props.track.view] }>
         {
           (_, i) => (
-            <Region index={ props.index } parameter={ props.track.view } i={ i() } range={ range()?.[props.track.view] } />
+            <Region index={ props.index } parameter={ props.track.view } i={ i() } />
           )
         }
       </For>

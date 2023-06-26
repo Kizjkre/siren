@@ -20,6 +20,7 @@
   "dependencies": {
     "ace-builds": "^1.22.1",
     "d3": "^7.8.2",
+    "pako": "^2.1.0",
     "solid-js": "^1.5.1"
   }
 }
