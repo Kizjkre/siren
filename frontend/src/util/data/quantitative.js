@@ -42,7 +42,7 @@ export default (data, length, id, range) => {
       self
         .attr('fill', 'red');
       d3.select(this.parentElement)
-        .selectAll('text')
+        .selectAll('text:not(.region-title)')
         .data([null])
         .join('text')
         .text(self.attr('data-data'))
@@ -54,7 +54,7 @@ export default (data, length, id, range) => {
         .select(this)
         .attr('fill', '');
       d3.select(this.parentElement)
-        .selectAll('text')
+        .selectAll('text:not(.region-title)')
         .data([])
         .join('text');
     });

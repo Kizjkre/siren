@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body, html {
-  @apply md:overflow-hidden;
+  @apply md:overflow-hidden select-none;
 }
 
 /* Testing */

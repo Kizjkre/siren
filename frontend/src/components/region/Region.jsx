@@ -99,7 +99,11 @@ const Region = props => {
       onDrop={ handleDrop }
       onDragLeave={ handleDragLeave }
     >
-      <svg id={ `region-${ props.index }-${ props.parameter }-${ props.i }` } height="100" />
+      <svg id={ `region-${ props.index }-${ props.parameter }-${ props.i }` } height="100">
+        <text x="5" y="15" class="region-title">
+          { state.tracks[props.index].regions[props.parameter][props.i].accessor.join(' / ') }
+        </text>
+      </svg>
     </div>,
     <>
       {

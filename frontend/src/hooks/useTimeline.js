@@ -34,7 +34,7 @@ export default () => {
               timeline[start + offset] = { ...(timeline[start + offset] || {}), [parameter]: null };
             });
           });
-          port.synths[track.synth].postMessage({ action: 'play', timeline: timeline, gain: 1 / state.tracks.length });
+          port.synths[track.synth].postMessage({ action: 'play', timeline, gain: 1 / state.tracks.length });
         });
         prev = STATUS.PLAYING;
         break;
