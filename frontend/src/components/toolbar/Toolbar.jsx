@@ -8,7 +8,9 @@ import ToolbarView from './ToolbarView';
 const Toolbar = () => {
   return (
     <nav class="flex">
-      <h1 class="p-4">SIREN</h1>
+      <h1 class="flex items-center p-4">
+        <img class="h-6" src="/favicon.svg" alt="SIREN" />
+      </h1>
       <ToolbarFile />
       <ToolbarEdit />
       <ToolbarView />
