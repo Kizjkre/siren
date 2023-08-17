@@ -5,3 +5,7 @@
 body, html {
   @apply h-full w-full;
 }
+
+.link {
+  @apply after:absolute after:border-b-2 after:h-full after:left-0 after:w-0 hover:after:animate-extend relative w-fit;
+}
