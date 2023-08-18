@@ -1,5 +1,5 @@
 <script lang="ts">
-  import bg1 from '$lib/assets/bg1.svg?raw';
+  import bg1 from '$lib/assets/images/bg1.svg?raw';
   import { IconAppWindow, IconNews } from '@tabler/icons-svelte';
   import { Cite } from '@citation-js/core';
   import { sanitize } from 'isomorphic-dompurify';

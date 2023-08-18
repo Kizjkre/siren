@@ -9,3 +9,11 @@ body, html {
 .link {
   @apply after:absolute after:border-b-2 after:h-full after:left-0 after:w-0 hover:after:animate-extend relative w-fit;
 }
+
+.overflow-scroll::-webkit-scrollbar {
+  @apply w-4;
+}
+
+.overflow-scroll::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 cursor-pointer;
+}

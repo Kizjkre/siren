@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { nodes } from '$lib/util/onWorkstationMount';
+  import clickOutside from '$lib/actions/clickOutside';
 
   export let name: string;
 
@@ -9,17 +9,13 @@
 
   const handleOpen: () => void = () => {
     if (selected) dropdown.close();
-    else {
-      dropdown.show();
-      nodes.set(div, handleClickOutside);
-    }
+    else dropdown.show();
     selected = !selected;
   };
 
   const handleClickOutside: () => void = () => {
     dropdown.close();
     selected = false;
-    nodes.delete(div);
   };
 </script>
 
@@ -33,6 +29,7 @@
   on:keydown={ handleOpen }
   role="button"
   tabindex="0"
+  use:clickOutside={ handleClickOutside }
 >
   { name }
   <dialog
