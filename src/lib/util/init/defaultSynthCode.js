@@ -1,11 +1,10 @@
 // noinspection JSUnusedGlobalSymbols
-export const parameters: { time: string[], timbral: { [parameter: string]: string } } = Object.freeze({
+export const parameters = Object.freeze({
   time: ['Time'],
-  timbral: { Frequency: DataTypes.Quantitative, Gain: DataTypes.Quantitative, Pan: DataTypes.Quantitative }
+  timbral: { Frequency: 'quantitative', Gain: 'quantitative', Pan: 'quantitative' }
 });
 
-const defaultSynth = (): void => {
-  /* 440 * (2 ^ (1 / 12)) ^ x */
+const defaultSynth = () => {
   const context = new AudioContext();
   const osc = new OscillatorNode(context);
   const gain = new GainNode(context);

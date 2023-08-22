@@ -1,5 +1,6 @@
 <script lang="ts">
   import clickOutside from '$lib/actions/clickOutside';
+  import type { MouseEventHandler } from 'svelte/elements';
 
   export let name: string;
 
@@ -13,7 +14,7 @@
     selected = !selected;
   };
 
-  const handleClickOutside: () => void = () => {
+  const handleClickOutside: MouseEventHandler<HTMLButtonElement> = () => {
     dropdown.close();
     selected = false;
   };

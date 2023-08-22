@@ -1,6 +1,13 @@
-import type { Writable } from 'svelte/store';
-import { writable } from 'svelte/store';
+import { type Subscriber, type Writable, writable } from 'svelte/store';
 
-const sidebar: Writable<boolean> = writable(true);
+const { subscribe, update }: Writable<boolean> = writable(true);
+
+const sidebar: {
+  subscribe: Subscriber<Subscriber<boolean>>,
+  toggle: () => void
+} = {
+  subscribe,
+  toggle: (): void => update((v: boolean): boolean => !v)
+};
 
 export default sidebar;

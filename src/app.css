@@ -6,6 +6,53 @@ body, html {
   @apply h-full w-full;
 }
 
+dialog {
+  @apply z-10;
+}
+
+input[type=range] {
+  @apply appearance-none bg-transparent w-full;
+}
+
+input[type=range]:focus {
+  @apply outline-none;
+}
+
+input[type=range]::-ms-thumb {
+  @apply range-thumb;
+}
+
+input[type=range]::-ms-track {
+  @apply bg-transparent cursor-pointer range-track w-full;
+}
+
+input[type=range]::-moz-range-thumb {
+  @apply range-thumb;
+}
+
+input[type=range]::-moz-range-track {
+  @apply range-track;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  @apply range-track;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  @apply range-thumb;
+}
+
+/* noinspection CssUnusedSymbol */
+.ace_editor, .ace_gutter {
+  @apply bg-transparent;
+}
+
+/* noinspection CssUnusedSymbol */
+.ace_scroller, .ace_scroller.ace_scroll-left:after {
+  @apply shadow-none;
+}
+
+
 .link {
   @apply after:absolute after:border-b-2 after:h-full after:left-0 after:w-0 hover:after:animate-extend relative w-fit;
 }
@@ -16,4 +63,14 @@ body, html {
 
 .overflow-scroll::-webkit-scrollbar-thumb {
   @apply bg-gray-300 cursor-pointer;
+}
+
+/* noinspection CssUnusedSymbol */
+.range-thumb {
+  @apply active:cursor-grabbing appearance-none bg-black cursor-grab h-4 hover:bg-blue-600 w-4;
+}
+
+/* noinspection CssUnusedSymbol */
+.range-track {
+  @apply active:cursor-grabbing outline outline-gray-100 cursor-grab hover:bg-gray-100;
 }

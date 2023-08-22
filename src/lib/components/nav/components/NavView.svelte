@@ -5,7 +5,7 @@
   import sidebar from '$lib/stores/sidebar';
   import type { MouseEventHandler } from 'svelte/elements';
 
-  const handleClick: MouseEventHandler<HTMLButtonElement> = (): void => sidebar.update(v => !v);
+  const handleClick: MouseEventHandler<HTMLButtonElement> = sidebar.toggle;
 </script>
 
 <NavItem name="View">

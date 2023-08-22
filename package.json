@@ -28,7 +28,10 @@
 		"@citation-js/plugin-doi": "^0.6.8",
 		"@tabler/icons-svelte": "^2.30.0",
 		"@types/d3-dsv": "^3.0.1",
+		"@types/d3-scale": "^4.0.3",
+		"ace-builds": "^1.24.1",
 		"d3-dsv": "^3.0.1",
+		"d3-scale": "^4.0.2",
 		"isomorphic-dompurify": "^1.8.0"
 	}
 }
