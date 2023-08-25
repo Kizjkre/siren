@@ -1,15 +1,17 @@
-import { DSVParsedArray } from 'd3-dsv';
-import { Subscriber } from 'svelte/store';
+import type { DSVParsedArray } from 'd3-dsv';
+import type { Writable } from 'svelte/store';
+import type { Subscribe } from '$lib/util/definitions/store';
 
 interface DataStore {
   [id: number]: {
-    name: string,
+    name: string;
     data: DSVParsedArray<any>;
+    references: Writable<number>
   }
 }
 
 interface DataStoreObject {
-  add: (name: string, map: string) => number;
-  remove: (id: number) => void;
-  subscribe: Subscriber<Subscriber<DataStore>>;
+  add: (name: string, map: string) => any;
+  remove: (id: number) => any;
+  subscribe: Subscribe<DataStore>
 }

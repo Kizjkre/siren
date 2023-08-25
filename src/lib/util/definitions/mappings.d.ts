@@ -1,4 +1,5 @@
-import type { Subscriber, Writable } from 'svelte/store';
+import type { Writable } from 'svelte/store';
+import type { Subscribe } from '$lib/util/definitions/store';
 
 interface MappingStore {
   [id: number]: {
@@ -8,8 +9,8 @@ interface MappingStore {
 }
 
 interface MappingStoreObject {
-  _addDefault: () => void;
-  add: () => void;
-  remove: (id: number) => void;
-  subscribe: Subscriber<Subscriber<MappingStore>>;
+  _addDefault: () => any;
+  add: () => any;
+  remove: (id: number) => any;
+  subscribe: Subscribe<MappingStore>;
 }

@@ -11,33 +11,35 @@
   import round from '$lib/util/drag/round';
   import { IconCircleX } from '@tabler/icons-svelte';
   import { createEventDispatcher, type EventDispatcher } from 'svelte';
+  import { fade } from 'svelte/transition';
 
   export let region: Region;
 
   const column: number[] = $data[region.source.id].data.map((row: any): number =>
-    +(row[region.source.column] || 0));
+    +(row[region.source.column] || 0)
+  );
 
   const rects: RegionPoint[] = [];
 
   const offset: Writable<number> = region.offset;
   const w = derived(width, (width: number): number => column.length * width / 4);
 
-  const dispatch: EventDispatcher<{ [key: string]: void }> = createEventDispatcher();
+  const dispatch: EventDispatcher<None> = createEventDispatcher();
 
-  const forward: MouseEventHandler<HTMLButtonElement> = (): boolean => dispatch('remove');
+  const forward: MouseEventHandler<HTMLButtonElement> = (): any => dispatch('remove');
 
-  const handleMouseDown: MouseEventHandler<HTMLButtonElement> = (): void => {
+  const handleMouseDown: MouseEventHandler<HTMLButtonElement> = (): any => {
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   }
 
-  const handleMouseMove: MouseEventHandler<any> = (e: MouseEvent): void => {
+  const handleMouseMove: MouseEventHandler<any> = (e: MouseEvent): any => {
     $offset = Math.max(0, $offset + e.movementX / $width);
     if (displacement($offset, 1) < 0.03) $offset = round($offset, 1);
     else if (displacement($offset, 1 / 4) < 0.02) $offset = round($offset, 1 / 4);
   }
 
-  const handleMouseUp: MouseEventHandler<any> = (): void => {
+  const handleMouseUp: MouseEventHandler<any> = (): any => {
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
   };
@@ -58,7 +60,8 @@
   class="absolute active:cursor-grabbing bg-gray-100 border-x border-blue-600 box-content cursor-grab h-full"
   on:mousedown={ handleMouseDown }
   style:left="{ $offset * $width }px"
-  style:width="{ w }px"
+  style:width="{ $w }px"
+  transition:fade={ { duration: 100 } }
 >
   <span class="absolute flex gap-2 items-center left-1 text-xs">
     <button class="hover:text-red-400 text-blue-600" on:click|stopPropagation={ forward }>

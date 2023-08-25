@@ -7,7 +7,7 @@
 
   let js: HTMLInputElement;
 
-  const handleClick: MouseEventHandler<HTMLButtonElement> = (): void => js.click();
+  const handleClick: MouseEventHandler<any> = (): any => js.click();
 </script>
 
 <NavItem name="Synths">

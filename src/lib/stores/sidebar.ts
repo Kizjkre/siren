@@ -1,9 +1,10 @@
-import { type Subscriber, type Writable, writable } from 'svelte/store';
+import { type Writable, writable } from 'svelte/store';
+import type { Subscribe } from '$lib/util/definitions/store';
 
 const { subscribe, update }: Writable<boolean> = writable(true);
 
 const sidebar: {
-  subscribe: Subscriber<Subscriber<boolean>>,
+  subscribe: Subscribe<boolean>,
   toggle: () => void
 } = {
   subscribe,

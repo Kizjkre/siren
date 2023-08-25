@@ -7,7 +7,7 @@
 
   let csv: HTMLInputElement;
 
-  const handleImportCSV: MouseEventHandler<HTMLButtonElement> = (): void => csv.click();
+  const handleImportCSV: MouseEventHandler<any> = (): any => csv.click();
 </script>
 
 <NavItem name="File">

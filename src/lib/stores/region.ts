@@ -1,10 +1,15 @@
-import { type Writable, writable } from 'svelte/store';
-import type { Region } from '$lib/util/definitions/region';
+import { get, type Writable, writable } from 'svelte/store';
+import type { Region, RegionConstructor, RegionSource } from '$lib/util/definitions/region';
+import data from '$lib/stores/data';
 
-const region: ({ source }: { source: { id: number, column: string } }) => Region =
-  ({ source = { id: -1, column: '' } }: { source: { id: number, column: string } }): Region => {
+const region: RegionConstructor =
+  ({ source = { id: -1, column: '' } }: RegionSource): Region => {
     const o: Writable<number> = writable(0);
+    const d: Writable<any[]> = writable(get(data)[source.id].data.map((row: any): number =>
+      +(row[source.column] || 0)
+    ));
     return {
+      data: d,
       offset: o,
       source
     };

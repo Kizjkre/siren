@@ -1,27 +1,25 @@
 <script lang="ts">
   import clickOutside from '$lib/actions/clickOutside';
-  import type { MouseEventHandler } from 'svelte/elements';
+  import type { EventHandler } from 'svelte/elements';
 
   export let name: string;
 
-  let div: HTMLDivElement;
   let dropdown: HTMLDialogElement;
   let selected: boolean = false;
 
-  const handleOpen: () => void = () => {
+  const handleOpen: EventHandler = () => {
     if (selected) dropdown.close();
     else dropdown.show();
     selected = !selected;
   };
 
-  const handleClickOutside: MouseEventHandler<HTMLButtonElement> = () => {
+  const handleClickOutside: EventListener = () => {
     dropdown.close();
     selected = false;
   };
 </script>
 
 <div
-  bind:this={ div }
   class="flex items-center relative select-none"
   class:bg-gray-100={ selected }
   class:!border-b-blue-600={ selected }

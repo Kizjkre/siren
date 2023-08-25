@@ -1,5 +1,5 @@
 // REF: https://stackoverflow.com/a/44622467
-const defaultdict: <T>(defaultInit: T) => DefaultDict<T> = <T>(defaultInit: T): DefaultDict<T> =>
+const defaultdict: DefaultDictInit = <T>(defaultInit: T): DefaultDict<T> =>
   new Proxy<{}>({}, {
     get: (target: { [key: string]: T }, name: string): T =>
       name in target ?

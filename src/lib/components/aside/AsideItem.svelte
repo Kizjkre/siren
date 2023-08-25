@@ -8,7 +8,7 @@
       <slot name="icon" />
       { name }
     </p>
-    <button class="hidden hover:text-blue-600 text-gray-400" on:click>
+    <button class="hidden hover:text-blue-600 text-gray-400 transition" on:click>
       <slot name="action" />
     </button>
   </div>

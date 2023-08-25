@@ -5,7 +5,7 @@
   import type { MouseEventHandler } from 'svelte/elements';
   import tracks from '$lib/stores/tracks';
 
-  const handleClick: MouseEventHandler<HTMLButtonElement> = (): void => tracks.add();
+  const handleClick: MouseEventHandler<any> = (): any => tracks.add();
 </script>
 
 <NavItem name="Tracks">

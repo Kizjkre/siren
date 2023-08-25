@@ -3,14 +3,17 @@
   import { fade } from 'svelte/transition';
   import { IconCircleX } from '@tabler/icons-svelte';
   import { createEventDispatcher, type EventDispatcher } from 'svelte';
+  import attrs from '$lib/actions/attrs';
+  import type { ComponentAttrs } from '$lib/util/definitions/componentAttr';
 
+  export let props: ComponentAttrs = {};
   export let selected: boolean = false;
 
-  const dispatch: EventDispatcher<{ [key: string]: void }> = createEventDispatcher();
+  const dispatch: EventDispatcher<None> = createEventDispatcher();
 
-  const forward: MouseEventHandler<HTMLButtonElement> = (): boolean => dispatch('close');
+  const forward: MouseEventHandler<HTMLButtonElement> = (): any => dispatch('close');
 
-  const handleClick: MouseEventHandler<HTMLButtonElement> = (): boolean => selected = !selected;
+  const handleClick: MouseEventHandler<HTMLButtonElement> = (): any => selected = !selected;
 </script>
 
 <button
@@ -21,6 +24,7 @@
   on:click
   on:click={ handleClick }
   transition:fade
+  use:attrs={ props }
 >
   <span class="flex items-center justify-between">
     <span class="flex gap-2 items-center">

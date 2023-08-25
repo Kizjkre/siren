@@ -4,8 +4,10 @@
   import { IconZoomIn, IconZoomOut } from '@tabler/icons-svelte';
   import type { MouseEventHandler } from 'svelte/elements';
 
-  const handleZoomIn: MouseEventHandler<HTMLButtonElement> = (): number => $width += 10;
-  const handleZoomOut: MouseEventHandler<HTMLButtonElement> = (): number => $width -= 10;
+  const handleZoomIn: MouseEventHandler<HTMLButtonElement> = (): any => $width = Math.min(300, $width + 10);
+  const handleZoomOut: MouseEventHandler<HTMLButtonElement> = (): any => $width = Math.max(20, $width - 10);
+
+  $: ($width < 50 && $duration < 40) && ($duration = 48);
 </script>
 
 <div class="border-b box-border flex">
@@ -13,7 +15,7 @@
     <button class="cursor-zoom-out h-5 w-5" on:click={ handleZoomOut }>
       <IconZoomOut class="h-5 w-5" />
     </button>
-    <input bind:value={ $width } max="300" min="25" type="range" />
+    <input bind:value={ $width } max="300" min="20" type="range" />
     <button class="cursor-zoom-in h-5 w-5" on:click={ handleZoomIn }>
       <IconZoomIn class="h-5 w-5" />
     </button>
@@ -24,7 +26,7 @@
         { #each Array(4).fill(null) as _ }
         	<div class="border-l first:border-l-0 h-4" style:width="{ $width / 4 }px" />
         { /each }
-        <p class="absolute ml-1 top-0">{ i }</p>
+        <p class="absolute ml-1 top-0" class:text-xs={ $width < 50 }>{ i }</p>
       </div>
     { /each }
   </div>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { slide } from 'svelte/transition';
   import init from '$lib/util/ace.js';
-  import { Ace } from 'ace-builds';
+  import type { Ace } from 'ace-builds';
   import mappings from '$lib/stores/mappings';
   import { onMount } from 'svelte';
   import type { Writable } from 'svelte/store';
@@ -16,7 +16,7 @@
   onMount((): void => {
     ace = init(editor);
     ace.setValue($map, 1);
-    ace.getSession().on('change', (): void => $map = ace.getValue());
+    ace.getSession().on('change', (): any => $map = ace.getValue());
   });
 </script>
 

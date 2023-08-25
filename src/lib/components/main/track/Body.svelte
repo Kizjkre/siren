@@ -4,15 +4,19 @@
   import RegionComponent from '$lib/components/main/track/region/Region.svelte';
   import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/data';
   import TimeRegion from '$lib/components/main/track/region/TimeRegion.svelte';
+  import type { EventListenerCreator } from '$lib/util/definitions/listener';
 
   export let id: number;
   export let parameter: string = 'timbral'; // TODO: Temporary fix
 
   const track: Track = $tracks[id];
-
   const timbral: TrackRegionStore = track.regions.timbral;
-
   const time: TrackRegionStore = track.regions.time;
+
+  const onTimbralRemove: EventListenerCreator<number> =
+    (id: number): EventListener => (): void => timbral.remove(parameter, id);
+  const onTimeRemove: EventListenerCreator<number> =
+    (id: number): EventListener => (): void => time.remove(parameter, id);
 </script>
 
 <div class="flex flex-col h-full w-full">
@@ -24,7 +28,7 @@
     role="region"
   >
     { #each Object.entries($timbral[parameter]) as [id, region] (id) }
-      <RegionComponent { region } />
+      <RegionComponent on:remove={ onTimbralRemove(+id) } { region } />
     { /each }
   </div>
   <div
@@ -35,7 +39,7 @@
     role="region"
   >
     { #each Object.entries($time[parameter]) as [id, region] (id) }
-      <TimeRegion { region } />
+      <TimeRegion on:remove={ onTimeRemove(+id) } { region } />
     { /each }
   </div>
 </div>

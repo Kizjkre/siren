@@ -5,6 +5,7 @@
   import data from '$lib/stores/data';
   import Data from '$lib/components/aside/components/dropdowns/Data.svelte';
   import handleImportCSVChange from '$lib/util/import/csv';
+  import type { EventListenerCreator } from '$lib/util/definitions/listener';
 
   const selected: boolean[] = [];
 
@@ -12,8 +13,8 @@
 
   const handleAction: EventListener = (): void => csv.click();
 
-  const handleClose: (id: number) => EventListener =
-    (id: number) => (): void => data.remove(id);
+  const handleClose: EventListenerCreator<number> =
+    (id: number): EventListener => (): void => data.remove(id);
 </script>
 
 <AsideItem name="Data" on:click={ handleAction }>

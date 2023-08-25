@@ -8,21 +8,15 @@
   import firstTrack from '$lib/util/init/firstTrack';
   import clickOutsideListener from '$lib/util/clickOutside';
   import defaultMapping from '$lib/util/init/defaultMapping';
-  import { onMount } from 'svelte';
-  import ace from 'ace-builds';
   import defaultSynth from '$lib/util/init/defaultSynth';
-  import Sandbox from '$lib/components/sandbox/Sandbox.svelte';
+  import MappingSandboxStore from '$lib/components/sandbox/SandboxManager.svelte';
+  import initAce from '$lib/util/init/initAce';
 
   defaultMapping();
   defaultSynth();
   firstTrack();
   sampleData();
-
-  // NOTE: For ACE Editor
-  onMount((): void => {
-    window.require = ace.require;
-    window.define = ace.define;
-  });
+  initAce();
 
   const handleBeforeUnload: OnBeforeUnloadEventHandler = (e: BeforeUnloadEvent): void =>
     e.returnValue = '';
@@ -50,7 +44,7 @@
   </footer>
 </div>
 
-<Sandbox />
+<MappingSandboxStore />
 
 <style lang="postcss">
   aside {

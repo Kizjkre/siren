@@ -1,17 +1,31 @@
-import { type Writable, writable } from 'svelte/store';
-import type { Track, TrackRegion, TrackRegionStore } from '$lib/util/definitions/tracks';
+import { get, type Writable, writable } from 'svelte/store';
+import type { Track, TrackRegion, TrackRegionStore, TrackRegionStoreStructure } from '$lib/util/definitions/tracks';
 import defaultdict from '$lib/util/defaultdict';
-import type { Region } from '$lib/util/definitions/region';
+import type { RegionSource } from '$lib/util/definitions/region';
 import region from '$lib/stores/region';
+import data from '$lib/stores/data';
+import synths from '$lib/stores/synths';
 
-const store: (dict: DefaultDict<{ [id: number]: Region }>) => TrackRegionStore =
-  (dict: DefaultDict<{ [id: number]: Region }>): TrackRegionStore => {
-    const { subscribe, update }: Writable<DefaultDict<{ [id: number]: Region }>> = writable(dict);
+const store: (dict: DefaultDict<TrackRegionStoreStructure>) => TrackRegionStore =
+  (dict: DefaultDict<TrackRegionStoreStructure>): TrackRegionStore => {
+    const { subscribe, update }: Writable<DefaultDict<TrackRegionStoreStructure>> = writable(dict);
 
     return {
-      add: (parameter: string, config: { source: { id: number, column: string } }) =>
-        update((store: DefaultDict<{ [id: number]: Region }>): DefaultDict<{ [id: number]: Region }> => {
+      add: (parameter: string, config: RegionSource): any => {
+        update((store: DefaultDict<TrackRegionStoreStructure>): DefaultDict<TrackRegionStoreStructure> => {
           store[parameter][new Date().getTime()] = region(config);
+          return store;
+        });
+        get(data)[config.source.id].references.update(
+          (ref: number): number => ref + 1
+        );
+      },
+      remove: (parameter: string, id: number): any =>
+        update((store: DefaultDict<TrackRegionStoreStructure>): DefaultDict<TrackRegionStoreStructure> => {
+          get(data)[store[parameter][id].source.id].references.update(
+            (ref: number): number => ref - 1
+          );
+          delete store[parameter][id];
           return store;
         }),
       subscribe
@@ -24,10 +38,14 @@ const track: () => Track = (): Track => {
     timbral: store(defaultdict({})),
     time: store(defaultdict({}))
   };
+  const synth: Writable<number> = writable(0);
+
+  get(synths)[0].references.update((refs: number): number => refs + 1);
 
   return {
     name,
-    regions
+    regions,
+    synth
   };
 };
 

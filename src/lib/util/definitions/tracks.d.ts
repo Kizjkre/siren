@@ -1,9 +1,15 @@
-import { Subscriber, Writable } from 'svelte/store';
-import type { Region } from '$lib/util/definitions/region';
+import type { Writable } from 'svelte/store';
+import type { Region, RegionSource } from '$lib/util/definitions/region';
+import type { Subscribe } from '$lib/util/definitions/store';
+
+interface TrackRegionStoreStructure {
+  [id: number]: Region;
+}
 
 interface TrackRegionStore {
-  add: (parameter: string, config: { source: { id: number, column: string } } ) => void;
-  subscribe: Subscriber<Subscriber<DefaultDict<{ [id: number]: Region }>>>;
+  add: (parameter: string, config: RegionSource ) => any;
+  remove: (parameter: string, id: number) => any;
+  subscribe: Subscribe<DefaultDict<TrackRegionStoreStructure>>;
 }
 
 interface TrackRegion {
@@ -14,6 +20,7 @@ interface TrackRegion {
 interface Track {
   name: Writable<string>;
   regions: TrackRegion;
+  synth: Writable<number>;
 }
 
 interface TrackStore {
@@ -22,6 +29,6 @@ interface TrackStore {
 
 interface TrackStoreObject {
   add: () => void;
-  remove: (id: number) => void;
-  subscribe: Subscriber<Subscriber<TrackStore>>;
+  remove: (id: number) => any;
+  subscribe: Subscribe<TrackStore>;
 }

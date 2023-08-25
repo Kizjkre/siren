@@ -5,9 +5,9 @@ import type { TrackStore, TrackStoreObject } from '$lib/util/definitions/tracks'
 const store: Writable<TrackStore> = writable({});
 
 const tracks: TrackStoreObject = {
-  add: (): void =>
+  add: (): any =>
     store.update((tracks: TrackStore): TrackStore => ({ ...tracks, [new Date().getTime()]: track() })),
-  remove: (id: number) => store.update((tracks: TrackStore): TrackStore => {
+  remove: (id: number): any => store.update((tracks: TrackStore): TrackStore => {
     delete tracks[id];
     return tracks;
   }),

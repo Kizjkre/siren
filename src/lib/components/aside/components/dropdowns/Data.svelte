@@ -7,7 +7,7 @@
 
   export let id: number;
 
-  const d: { name: string, data: DSVParsedArray<object> } = $data[id];
+  const d: { name: string, data: DSVParsedArray<{}> } = $data[id];
 </script>
 
 <div class="flex flex-col gap-1 ml-4 mt-2" transition:slide>

@@ -4,29 +4,42 @@
   import type { MouseEventHandler } from 'svelte/elements';
   import type { Writable } from 'svelte/store';
   import type { Track } from '$lib/util/definitions/tracks';
+  import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/synth';
+  import synths from '$lib/stores/synths';
 
   export let id: number;
 
   const track: Track = $tracks[id];
   const name: Writable<string> = track.name;
+  const synth: Writable<number> = track.synth;
 
-  const handleClick: MouseEventHandler<HTMLButtonElement> = (): void => tracks.remove(id);
+  const handleClick: MouseEventHandler<HTMLButtonElement> = (): any => tracks.remove(id);
 </script>
 
-<div class="bg-white border-x flex flex-col h-full left-0 px-2 py-1 shrink-0 sticky w-track-header z-[1]">
+<div class="bg-white border-x flex flex-col gap-4 h-full left-0 px-2 py-1 shrink-0 sticky w-track-header z-[1]">
   <div class="flex">
     <input bind:value={ $name } class="font-bold outline-none w-full" name="track-name" type="text" />
     <button class="hover:text-red-400" on:click={ handleClick }>
       <IconCircleX />
     </button>
   </div>
-  <p class="text-sm">Synth: asdf</p>
-  <div class="flex text-sm">
+  <p class="pl-4 text-sm">
+    Synth:
+    <button
+      class="hover:bg-gray-100 hover:text-blue-600 px-2 py-1 transition"
+      on:dragleave|preventDefault={ handleDragLeave }
+      on:dragover|preventDefault={ handleDragOver }
+      on:drop|preventDefault={ handleDrop(id) }
+    >
+      { $synths[$synth].name }
+    </button>
+  </p>
+  <div class="flex gap-2 pl-4 text-sm">
     <label for="view-{ id }">View:</label>
     <select class="outline-none" id="view-{ id }">
-      <option>asdf</option>
-      <option>asdf</option>
-      <option>asdf</option>
+      { #each Object.keys($synths[$synth].parameters.timbral) as parameter }
+      	<option value={ parameter }>{ parameter }</option>
+      { /each }
     </select>
   </div>
 </div>

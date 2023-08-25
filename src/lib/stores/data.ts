@@ -1,4 +1,4 @@
-import { type Writable, writable } from 'svelte/store';
+import { get, type Writable, writable } from 'svelte/store';
 import type { DataStore, DataStoreObject } from '$lib/util/definitions/data';
 import { autoType, csvParse } from 'd3-dsv';
 
@@ -12,16 +12,19 @@ const data: DataStoreObject = {
       ...data,
       [id]: {
         name,
-        data: csvParse(csv, autoType)
+        data: csvParse(csv, autoType),
+        references: writable(0)
       }
     }));
 
     return id;
   },
-  remove: (id: number) => store.update((data: DataStore): DataStore => {
-    delete data[id];
-    return data;
-  }),
+  remove: (id: number): any =>
+    get(get(data)[id].references) === 0 &&
+    store.update((data: DataStore): DataStore => {
+      delete data[id];
+      return data;
+    }),
   subscribe: store.subscribe
 };
 

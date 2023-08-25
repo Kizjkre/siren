@@ -1,6 +1,5 @@
 // REF: https://stackoverflow.com/a/47986946
-
-const module = (/** @type {string} */ toExport, /** @type {(url: string) => string} */ toImport) => {
+const module = (toExport, toImport) => {
   const blob = new Blob([toExport], { type: 'text/javascript' });
   const url = URL.createObjectURL(blob);
 

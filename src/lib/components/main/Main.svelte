@@ -7,7 +7,7 @@
   import Timeline from '$lib/components/main/Timeline.svelte';
   import width from '$lib/stores/width';
 
-  const handleDblClick: MouseEventHandler<HTMLElement> = (): void => tracks.add();
+  const handleDblClick: MouseEventHandler<HTMLElement> = (): any => tracks.add();
 </script>
 
 <main class="flex flex-col h-full overflow-scroll">

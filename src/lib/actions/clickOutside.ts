@@ -8,7 +8,7 @@ const clickOutside: Action<HTMLElement, MouseEventHandler<HTMLElement>> =
     nodes.set(node, callback);
 
     return {
-      destroy: (): boolean => nodes.delete(node)
+      destroy: (): any => nodes.delete(node)
     }
   };
 

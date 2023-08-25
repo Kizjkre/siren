@@ -1,4 +1,5 @@
 import adapter from '@sveltejs/adapter-auto';
+// noinspection JSUnresolvedReference
 import { vitePreprocess } from '@sveltejs/kit/vite';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -15,4 +16,5 @@ const config = {
 	}
 };
 
+// noinspection JSUnusedGlobalSymbols
 export default config;
