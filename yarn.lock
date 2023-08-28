@@ -225,6 +225,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ffmpeg/core@npm:^0.12.2":
+  version: 0.12.2
+  resolution: "@ffmpeg/core@npm:0.12.2"
+  checksum: c902a35aa671632a376e12b63e0c5ef74a47710771e90823acc235b8d1b6854659b3bde8173a17e6d34f9242b26b9acf5eaf0629e8ebd17ec3ff8a79987e97e6
+  languageName: node
+  linkType: hard
+
+"@ffmpeg/ffmpeg@npm:^0.12.5":
+  version: 0.12.5
+  resolution: "@ffmpeg/ffmpeg@npm:0.12.5"
+  dependencies:
+    "@ffmpeg/types": ^0.12.0
+  checksum: 6dc2865f91af2ca82eaa288cbe48e4b277ab7e640f1488bdef2221807f4715ea8263a0149b747beebe2527ddd7f4ef8280513f768edc0581f9e8cf2032e06112
+  languageName: node
+  linkType: hard
+
+"@ffmpeg/types@npm:^0.12.0":
+  version: 0.12.0
+  resolution: "@ffmpeg/types@npm:0.12.0"
+  checksum: 6d8261ba56e3406b4424e70bf709a2dac76252d4353f11998dd32f8acb247df4db2c9ca1f9a1ee860a97e6e959244f811a9159f6307af10ffbf71a35ffdcc979
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -2699,6 +2722,8 @@ __metadata:
     "@citation-js/core": ^0.6.8
     "@citation-js/plugin-csl": ^0.6.8
     "@citation-js/plugin-doi": ^0.6.8
+    "@ffmpeg/core": ^0.12.2
+    "@ffmpeg/ffmpeg": ^0.12.5
     "@sveltejs/adapter-auto": ^2.0.0
     "@sveltejs/kit": ^1.20.4
     "@tabler/icons-svelte": ^2.30.0

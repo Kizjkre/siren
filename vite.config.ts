@@ -25,5 +25,8 @@ export default defineConfig({
     fs: {
       allow: ['.yarn']
     }
+  },
+  optimizeDeps: {
+    exclude: ['@ffmpeg/core', '@ffmpeg/ffmpeg']
   }
 });

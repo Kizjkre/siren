@@ -6,12 +6,14 @@
   import { IconCircleX } from '@tabler/icons-svelte';
   import Timeline from '$lib/components/main/Timeline.svelte';
   import width from '$lib/stores/width';
+  import Seeker from '$lib/components/main/Seeker.svelte';
 
   const handleDblClick: MouseEventHandler<HTMLElement> = (): any => tracks.add();
 </script>
 
-<main class="flex flex-col h-full overflow-scroll">
+<main class="flex flex-col h-full overflow-scroll relative">
   <div style:width="{ $width * $duration + 200 }px" >
+    <Seeker />
     <Timeline />
     <div>
       { #each Object.keys($tracks) as id (id) }

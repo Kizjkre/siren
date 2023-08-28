@@ -1,6 +1,6 @@
 import type { DragEventHandler } from 'svelte/elements';
 import type { Region } from '$lib/util/definitions/region';
-import { emit } from '$lib/util/sandbox/useSandbox';
+import { createSandbox, onSandboxReturn } from '$lib/util/sandbox/useSandbox';
 import data from '$lib/stores/data';
 import { get } from 'svelte/store';
 import mappings from '$lib/stores/mappings';
@@ -31,17 +31,9 @@ export const handleDrop: DropHandlerCreator =
       const id: number = +e.dataTransfer!.getData('siren/mapping');
       (e.currentTarget as HTMLButtonElement).classList.remove('outline', 'outline-blue-600');
 
-      const listener: EventListener = (e: CustomEventInit): any => {
-        // @ts-ignore
-        document.removeEventListener('siren-sandbox-return-mapping', listener);
+      onSandboxReturn('mapping', (e: CustomEventInit): any => region.data.set(e.detail));
 
-        region.data.set(e.detail);
-      };
-
-      // @ts-ignore
-      document.addEventListener('siren-sandbox-return-mapping', listener);
-
-      emit(
+      createSandbox(
         'mapping',
         get(get(mappings)[id].map),
         process,

@@ -21,6 +21,7 @@ interface Track {
   name: Writable<string>;
   regions: TrackRegion;
   synth: Writable<number>;
+  view: Writable<string>;
 }
 
 interface TrackStore {

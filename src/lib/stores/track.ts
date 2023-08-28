@@ -6,6 +6,8 @@ import region from '$lib/stores/region';
 import data from '$lib/stores/data';
 import synths from '$lib/stores/synths';
 
+type TrackInit = () => Track;
+
 const store: (dict: DefaultDict<TrackRegionStoreStructure>) => TrackRegionStore =
   (dict: DefaultDict<TrackRegionStoreStructure>): TrackRegionStore => {
     const { subscribe, update }: Writable<DefaultDict<TrackRegionStoreStructure>> = writable(dict);
@@ -32,20 +34,22 @@ const store: (dict: DefaultDict<TrackRegionStoreStructure>) => TrackRegionStore 
     }
   };
 
-const track: () => Track = (): Track => {
+const track: TrackInit = (): Track => {
   const name: Writable<string> = writable('New Track');
   const regions: TrackRegion = {
-    timbral: store(defaultdict({})),
-    time: store(defaultdict({}))
+    timbral: store(defaultdict(Object as unknown as TrackRegionStoreStructure)),
+    time: store(defaultdict(Object as unknown as TrackRegionStoreStructure))
   };
   const synth: Writable<number> = writable(0);
+  const view: Writable<string> = writable('Frequency');
 
   get(synths)[0].references.update((refs: number): number => refs + 1);
 
   return {
     name,
     regions,
-    synth
+    synth,
+    view
   };
 };
 

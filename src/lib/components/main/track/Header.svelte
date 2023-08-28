@@ -1,7 +1,7 @@
 <script lang="ts">
   import tracks from '$lib/stores/tracks';
   import { IconCircleX } from '@tabler/icons-svelte';
-  import type { MouseEventHandler } from 'svelte/elements';
+  import type { ChangeEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { Writable } from 'svelte/store';
   import type { Track } from '$lib/util/definitions/tracks';
   import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/synth';
@@ -12,8 +12,10 @@
   const track: Track = $tracks[id];
   const name: Writable<string> = track.name;
   const synth: Writable<number> = track.synth;
+  const view: Writable<string> = track.view;
 
   const handleClick: MouseEventHandler<HTMLButtonElement> = (): any => tracks.remove(id);
+  const handleChange: ChangeEventHandler<HTMLSelectElement> = (e: Event): any => $view = e.target!.value;
 </script>
 
 <div class="bg-white border-x flex flex-col gap-4 h-full left-0 px-2 py-1 shrink-0 sticky w-track-header z-[1]">
@@ -36,7 +38,7 @@
   </p>
   <div class="flex gap-2 pl-4 text-sm">
     <label for="view-{ id }">View:</label>
-    <select class="outline-none" id="view-{ id }">
+    <select class="outline-none" id="view-{ id }" on:change={ handleChange }>
       { #each Object.keys($synths[$synth].parameters.timbral) as parameter }
       	<option value={ parameter }>{ parameter }</option>
       { /each }

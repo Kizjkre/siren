@@ -13,7 +13,7 @@
 
   const handleAction: EventListener = (): void => csv.click();
 
-  const handleClose: EventListenerCreator<number> =
+  const handleClose: EventListenerCreator<[number]> =
     (id: number): EventListener => (): void => data.remove(id);
 </script>
 

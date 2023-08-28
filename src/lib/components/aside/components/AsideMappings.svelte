@@ -22,7 +22,7 @@
 
   const handleClick: EventListener = (): void => mappings.add();
 
-  const handleClose: EventListenerCreator<number> =
+  const handleClose: EventListenerCreator<[number]> =
     (id: number): EventListener => (): void =>
       mappings.remove(id);
 

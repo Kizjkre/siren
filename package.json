@@ -7,7 +7,8 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"postinstall": "zsh postinstall.sh"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
@@ -26,6 +27,8 @@
 		"@citation-js/core": "^0.6.8",
 		"@citation-js/plugin-csl": "^0.6.8",
 		"@citation-js/plugin-doi": "^0.6.8",
+		"@ffmpeg/core": "^0.12.2",
+		"@ffmpeg/ffmpeg": "^0.12.5",
 		"@tabler/icons-svelte": "^2.30.0",
 		"@types/d3-dsv": "^3.0.1",
 		"@types/d3-scale": "^4.0.3",
