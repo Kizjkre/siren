@@ -58,11 +58,16 @@ port.onmessage = async e => {
   playing.add(s.context);
 
   let current = {};
-  const times = Object.keys(e.data.timeline).sort((a, b) => a - b);
+
+  const timeline = Object.fromEntries(
+    Object.entries(e.data.timeline).map(([key, value]) => [+key /* * 0.5 ** 3 */, value])
+  );
+  const times = Object.keys(timeline).sort((a, b) => a - b);
+
   times.forEach(time => {
-      current = { ...current, ...e.data.timeline[time] };
+      current = { ...current, ...timeline[time] };
       const functions = new Map();
-      Object.keys(e.data.timeline[time]).forEach(parameter =>
+      Object.keys(timeline[time]).forEach(parameter =>
         Array.from(s.updates.keys())
           .filter(params => params.includes(parameter))
           .forEach(params => !functions.has(params) && functions.set(params, s.updates.get(params)))
@@ -72,7 +77,5 @@ port.onmessage = async e => {
 
   s.start();
   recorder.start();
-  setTimeout(() => {
-    recorder.stop();
-  }, times.at(-1) * 1000 + 1000);
+  setTimeout(() => recorder.stop(), times.at(-1) * 1000 + 1000);
 };

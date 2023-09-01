@@ -3,15 +3,14 @@
   import frameMessage from '$lib/util/sandbox/message?raw';
   // @ts-ignore
   import html from '$lib/util/sandbox/sandbox.html?raw';
-  import message from '$lib/actions/message';
   // @ts-ignore
   import module from '$lib/util/sandbox/module?raw';
   // @ts-ignore
   import reset from '$lib/util/sandbox/reset?raw';
-  import { createEventDispatcher, type EventDispatcher, onDestroy } from 'svelte';
-  // @ts-ignore
-  import { browser } from '$app/environment';
+  import type { EventHandler } from 'svelte/elements';
+  import { createEventDispatcher, type EventDispatcher } from 'svelte';
 
+  export let message: string;
   export let process: string;
   export let script: string;
 
@@ -24,21 +23,27 @@
     });
   `);
 
-  const dispatch: EventDispatcher<{ [key: string]: MessagePort }> = createEventDispatcher();
+  const dispatch: EventDispatcher<any> = createEventDispatcher();
 
-  // REF: https://stackoverflow.com/q/49226309
-  const listener: EventListener = (e: CustomEventInit<MessagePort>): any => dispatch('port', e.detail!);
 
-  browser && document.addEventListener('siren-port', listener);
+  let port: MessagePort;
+  const handleLoad: EventHandler = (e: Event): any => {
+    const channel: MessageChannel = new MessageChannel();
+    port = channel.port1;
 
-  onDestroy((): void => browser && document.removeEventListener('siren-port', listener));
+    port.onmessage = (e: MessageEvent): any => dispatch('result', e.data);
+
+    (e.target as HTMLIFrameElement).contentWindow!.postMessage('', '*', [channel.port2]);
+  };
+
+  $: (port && message) && port.postMessage(message);
 </script>
 
 <iframe
   allow="autoplay"
   class="hidden"
+  on:load={ handleLoad }
   sandbox="allow-scripts"
   { srcdoc }
   title="Sandbox"
-  use:message
 />

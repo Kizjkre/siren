@@ -1,5 +1,5 @@
 import type { DragEventHandler } from 'svelte/elements';
-import { get, type Readable } from 'svelte/store';
+import { get } from 'svelte/store';
 import tracks from '$lib/stores/tracks';
 import type { TrackStore } from '$lib/util/definitions/tracks';
 import synths from '$lib/stores/synths';
@@ -25,12 +25,13 @@ export const handleDrop: HandlerCreator =
     (e: DragEvent): void => {
       if (!e.dataTransfer?.types.includes('siren/synth')) return;
       const id: number = +e.dataTransfer.getData('siren/synth');
-      (e.target as HTMLButtonElement)?.classList.remove('bg-gray-100', 'text-blue-600');
+      (e.target as HTMLButtonElement).classList.remove('bg-gray-100', 'text-blue-600');
 
-      const s: SynthStore = get(synths as unknown as Readable<SynthStore>);
-      const t: TrackStore = get(tracks as unknown as Readable<TrackStore>);
+      const s: SynthStore = get(synths);
+      const t: TrackStore = get(tracks);
 
       s[get(t[trackId].synth)].references.update((refs: number): any => refs - 1);
       s[id].references.update((refs: number): number => refs + 1);
       t[trackId].synth.set(id);
+      t[trackId].view.set(Object.keys(s[id].parameters.timbral)[0]);
     };

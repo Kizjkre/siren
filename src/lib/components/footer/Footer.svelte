@@ -26,7 +26,7 @@
   <div class="basis-1/4 flex"></div>
   <div class="basis-1/2 flex gap-2 items-center justify-center">
     <button
-      class=" border flex h-12 items-center justify-center rounded-full transition w-12"
+      class="border flex h-12 items-center justify-center rounded-full transition w-12"
       class:bg-gray-100={ $status !== Status.stop }
       class:border-blue-600={ $status !== Status.stop }
       class:text-blue-600={ $status !== Status.stop }
@@ -36,7 +36,7 @@
       <IconPlayerStop />
     </button>
     <button
-      class="bg-gray-100 border flex h-16 items-center justify-center rounded-full transition w-16"
+      class="border flex h-16 items-center justify-center rounded-full transition w-16"
       class:bg-gray-100={ $status !== Status.play }
       class:border-blue-600={ $status !== Status.play }
       class:text-blue-600={ $status !== Status.play }

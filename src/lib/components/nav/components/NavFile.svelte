@@ -11,7 +11,7 @@
   // @ts-ignore
   import process from '$lib/util/sandbox/process/processExport?raw';
   import download from '$lib/util/download';
-  import { convert, merge } from '$lib/util/ffmpeg';
+  import { merge } from '$lib/util/ffmpeg';
   import tracks from '$lib/stores/tracks';
 
   let csv: HTMLInputElement;
@@ -25,7 +25,10 @@
       onSandboxReturn(`export-${ i }`, async (e: CustomEventInit): Promise<any> => {
         t.push(e.detail);
 
-        if (t.length === Object.keys($tracks).length) download('siren.wav', await merge(t));
+        if (t.length === Object.keys($tracks).length) {
+          const blob: Blob | void = await merge(t);
+          blob && download('siren.wav', blob);
+        }
       });
 
       createSandbox(`export-${ i }`, get(synths)[timeline.synth].code, process, { timeline });

@@ -15,7 +15,8 @@
   const view: Writable<string> = track.view;
 
   const handleClick: MouseEventHandler<HTMLButtonElement> = (): any => tracks.remove(id);
-  const handleChange: ChangeEventHandler<HTMLSelectElement> = (e: Event): any => $view = e.target!.value;
+  const handleChange: ChangeEventHandler<HTMLSelectElement> = (e: Event): any =>
+    $view = (e.target as HTMLOptionElement).value;
 </script>
 
 <div class="bg-white border-x flex flex-col gap-4 h-full left-0 px-2 py-1 shrink-0 sticky w-track-header z-[1]">
