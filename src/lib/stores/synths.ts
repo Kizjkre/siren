@@ -1,8 +1,8 @@
 import { get, type Writable, writable } from 'svelte/store';
 import type { SynthStore, SynthStoreObject } from '$lib/util/definitions/synths';
-import { createSandbox, onSandboxReturn } from '$lib/util/sandbox/useSandbox';
+import { onSandboxReturn, useSandbox } from '$lib/util/sandbox/useSandbox';
 // @ts-ignore
-import process from '$lib/util/sandbox/process/processSynthParameters?raw';
+import action from '$lib/util/sandbox/action/params?raw';
 
 const store: Writable<SynthStore> = writable({});
 
@@ -17,7 +17,10 @@ const synths: SynthStoreObject = {
       }))
     );
 
-    createSandbox('synth', code, process);
+    useSandbox('synth', {
+      action,
+      script: code
+    });
 
     store.update((synths: SynthStore): SynthStore => ({
       ...synths,

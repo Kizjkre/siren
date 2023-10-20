@@ -1,30 +1,36 @@
 <script lang="ts">
   // @ts-ignore
-  import frameMessage from '$lib/util/sandbox/message?raw';
+  import portCode from '$lib/util/sandbox/port?raw';
   // @ts-ignore
   import html from '$lib/util/sandbox/sandbox.html?raw';
-  // @ts-ignore
-  import module from '$lib/util/sandbox/module?raw';
-  // @ts-ignore
-  import reset from '$lib/util/sandbox/reset?raw';
   import type { EventHandler } from 'svelte/elements';
   import { createEventDispatcher, type EventDispatcher } from 'svelte';
 
-  export let message: string;
-  export let process: string;
-  export let script: string;
+  export let action: string;
+  export let input: string;
+  export let userscript: string;
 
-  let srcdoc: string;
-  $: srcdoc = html.replace('// Script', `
-    ${ frameMessage }
-    message(() => {
-      ${ module }
-      module(\`${ reset }\` + atob('${ btoa(script) }'), url => \`${ process.replace('\'<URL>\'', '\'` + url + `\'') }\`);
-    });
-  `);
+  const doc: Document = new DOMParser().parseFromString(html, 'text/html');
+  const userscriptEl: HTMLScriptElement = doc.createElement('script');
+  const portEl: HTMLScriptElement = doc.createElement('script');
+  const actionEl: HTMLScriptElement = doc.createElement('script');
+
+  userscriptEl.type = 'inline-module';
+  portEl.type = 'inline-module';
+  actionEl.type = 'inline-module';
+
+  userscriptEl.id = 'userscript';
+  portEl.id = 'port';
+
+  userscriptEl.textContent = userscript;
+  portEl.textContent = portCode;
+  actionEl.textContent = action;
+
+  doc.body.append(userscriptEl, portEl, actionEl);
+
+  const srcdoc: string = doc.documentElement.outerHTML;
 
   const dispatch: EventDispatcher<any> = createEventDispatcher();
-
 
   let port: MessagePort;
   const handleLoad: EventHandler = (e: Event): any => {
@@ -36,7 +42,7 @@
     (e.target as HTMLIFrameElement).contentWindow!.postMessage('', '*', [channel.port2]);
   };
 
-  $: (port && message) && port.postMessage(message);
+  $: (port && input) && port.postMessage(input);
 </script>
 
 <iframe

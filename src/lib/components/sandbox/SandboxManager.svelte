@@ -6,32 +6,33 @@
   import { emitReturn } from '$lib/util/sandbox/useSandbox';
   import type { EventListenerCreator } from '$lib/util/definitions/listener';
 
-  let message: { [id: string]: { data: any, name: string, script: string, process: string } } = {};
+  // NOTE: let for reactivity
+  let sandboxes: SandboxStore = {};
 
   const listener: EventListener = (e: CustomEventInit): any => {
-    if (e.detail.name in message) {
-      message[e.detail.name].data = e.detail.data;
+    if (e.detail.name in sandboxes) {
+      sandboxes[e.detail.name].data = e.detail.data;
       return;
     }
-    message[e.detail.name] = { ...e.detail };
+    sandboxes[e.detail.name] = { ...e.detail };
   }
   browser && document.addEventListener('siren-sandbox', listener);
 
   const handleResult: EventListenerCreator<[string]> =
     (name: string): EventListener => (e: CustomEventInit) => {
-      emitReturn(message[name].name, e.detail);
-      delete message[name];
-      message = message; // NOTE: Reactivity
+      emitReturn(sandboxes[name].name, e.detail);
+      delete sandboxes[name];
+      sandboxes = sandboxes; // NOTE: Reactivity
     };
 
   onDestroy((): any => browser && document.removeEventListener('siren-sandbox', listener));
 </script>
 
-{ #each Object.keys(message) as name (name) }
+{ #each Object.keys(sandboxes) as name (name) }
 	<Sandbox
-    message={ message[name].data }
+    action={ sandboxes[name].action }
+    input={ sandboxes[name].data }
     on:result={ handleResult(name) }
-    process={ message[name].process }
-    script={ message[name].script }
+    userscript={ sandboxes[name].script }
   />
 { /each }

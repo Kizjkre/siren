@@ -4,14 +4,14 @@
   import { IconDeviceFloppy, IconFileExport, IconFileImport, IconFolderOpen } from '@tabler/icons-svelte';
   import type { MouseEventHandler } from 'svelte/elements';
   import handleImportCSVChange from '$lib/util/import/csv';
-  import { createSandbox, onSandboxReturn } from '$lib/util/sandbox/useSandbox';
+  import { onSandboxReturn, useSandbox } from '$lib/util/sandbox/useSandbox';
   import timeline from '$lib/util/timeline';
   import { get } from 'svelte/store';
   import synths from '$lib/stores/synths';
   // @ts-ignore
-  import process from '$lib/util/sandbox/process/processExport?raw';
-  import download from '$lib/util/download';
-  import { merge } from '$lib/util/ffmpeg';
+  import action from '$lib/util/sandbox/action/export?raw';
+  import download from '$lib/util/export/download';
+  import { merge } from '$lib/util/export/ffmpeg';
   import tracks from '$lib/stores/tracks';
 
   let csv: HTMLInputElement;
@@ -31,7 +31,11 @@
         }
       });
 
-      createSandbox(`export-${ i }`, get(synths)[timeline.synth].code, process, { timeline });
+      useSandbox(`export-${ i }`, {
+        action,
+        script: get(synths)[timeline.synth].code,
+        data: { timeline }
+      });
 
       i++;
     });

@@ -1,12 +1,12 @@
-let port;
-
-const message = module => {
+const port = await new Promise(resolve => {
   const listener = e => {
     window.removeEventListener('message', listener);
-    [port] = e.ports;
+    const [p] = e.ports;
 
-    module();
+    resolve(p);
   }
 
   window.addEventListener('message', listener);
-};
+});
+
+export default port;
