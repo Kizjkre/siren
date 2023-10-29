@@ -7,6 +7,9 @@
   import type { Track } from '$lib/util/definitions/tracks';
   import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/synth';
   import synths from '$lib/stores/synths';
+  import { onSandboxReturn, useSandbox } from '$lib/util/sandbox/useSandbox';
+  // @ts-ignore
+  import demo from '$lib/util/sandbox/action/demo?raw';
 
   export let id: number;
 
@@ -18,6 +21,13 @@
   const handleClick: MouseEventHandler<HTMLButtonElement> = (): any => tracks.remove(id);
   const handleChange: ChangeEventHandler<HTMLSelectElement> = (e: Event): any =>
     $view = (e.target as HTMLOptionElement).value;
+
+  const handleDemo: EventListener = (e: Event): void => {
+      if (!e.isTrusted) return;
+      useSandbox(`demo-${ $synths[$synth].name }`, { action: demo, script: $synths[$synth].code });
+      onSandboxReturn(`demo-${ $synths[$synth].name }`, () => (e.target as HTMLButtonElement)!.click());
+    };
+
 </script>
 
 <div class="bg-white border-x flex flex-col gap-4 h-full left-0 px-2 py-1 shrink-0 sticky w-track-header z-[1]">
@@ -31,6 +41,7 @@
     Synth:
     <button
       class="hover:bg-gray-100 hover:text-blue-600 px-2 py-1 transition"
+      on:click={ handleDemo }
       on:dragleave|preventDefault={ handleDragLeave }
       on:dragover|preventDefault={ handleDragOver }
       on:drop|preventDefault={ handleDrop(id) }

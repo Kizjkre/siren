@@ -10,6 +10,9 @@
   import AsideListItem from '$lib/components/aside/AsideListItem.svelte';
   import handleImportSynthChange from '$lib/util/import/synth';
   import { handleDragStart } from '$lib/util/drag/synth';
+  import { onSandboxReturn, useSandbox } from '$lib/util/sandbox/useSandbox';
+  // @ts-ignore
+  import demo from '$lib/util/sandbox/action/demo?raw';
 
   let js: HTMLInputElement;
 
@@ -22,6 +25,13 @@
 
   const handleAction: EventListener = (): void => js.click();
 
+  const handleClick: (id: number) => EventListener =
+    (id: number): EventListener => (e: Event): void => {
+      if (!e.isTrusted) return;
+      useSandbox(`demo-${ id }`, { action: demo, script: $synths[id].code });
+      onSandboxReturn(`demo-${ id }`, () => (e.target as HTMLButtonElement)!.click());
+    };
+
   const handleClose: (id: number) => EventListener =
     (id: number): EventListener => () => synths.remove(id);
 </script>
@@ -30,7 +40,7 @@
   <IconFileMusic slot="icon" />
   <IconCircleX class="rotate-45" slot="action" />
   { #each Object.entries($synths) as [id, { name }] (id) }
-  	<AsideListItem on:close={ handleClose(+id) } props={ props(+id) }>
+  	<AsideListItem on:click={ handleClick(+id) } on:close={ handleClose(+id) } props={ props(+id) }>
       <IconWaveSine slot="icon" />
       <svelte:fragment slot="name">{ name }</svelte:fragment>
     </AsideListItem>
