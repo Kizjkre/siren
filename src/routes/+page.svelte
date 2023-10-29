@@ -1,13 +1,20 @@
 <script lang="ts">
+  // @ts-ignore
   import bg1 from '$lib/assets/images/bg1.svg?raw';
-  import { IconAppWindow, IconNews } from '@tabler/icons-svelte';
   // noinspection TypeScriptCheckImport
+  import IconAppWindow from '~icons/tabler/app-window';
+  // noinspection TypeScriptCheckImport
+  import IconNews from '~icons/tabler/news';
+  // noinspection TypeScriptCheckImport
+  // @ts-ignore
   import { Cite } from '@citation-js/core';
-  import { sanitize } from 'isomorphic-dompurify';
+  import DOMPurify from 'isomorphic-dompurify';
   import '@citation-js/plugin-csl';
   import '@citation-js/plugin-doi';
 
-  const siren2021: Promise<string> = Cite.async('10.21785/icad2021.042');
+  const { sanitize } = DOMPurify;
+
+  const siren2021: Promise<any> = Cite.async('10.21785/icad2021.042');
 </script>
 
 <div class="flex h-full w-full">

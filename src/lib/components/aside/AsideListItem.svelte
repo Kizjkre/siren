@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { MouseEventHandler } from 'svelte/elements';
   import { fade } from 'svelte/transition';
-  import { IconCircleX } from '@tabler/icons-svelte';
+  // noinspection TypeScriptCheckImport
+  import IconCircleX from '~icons/tabler/circle-x';
   import { createEventDispatcher, type EventDispatcher } from 'svelte';
   import attrs from '$lib/actions/attrs';
-  import type { ComponentAttrs } from '$lib/util/definitions/componentAttr';
 
   export let props: ComponentAttrs = {};
   export let selected: boolean = false;

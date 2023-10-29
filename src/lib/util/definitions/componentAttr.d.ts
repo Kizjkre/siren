@@ -1,8 +1,6 @@
-import type { EventHandler } from 'svelte/elements';
-
 type Apply = (attr: string) => any;
 
-type ComponentAttrs = { [key: string]: boolean | EventHandler | string };
+type ComponentAttrs = { [key: string]: any };
 
 type ComponentAttrsCreator = (id: number) => ComponentAttrs;
 

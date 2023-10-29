@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { IconPlayerPause, IconPlayerPlay, IconPlayerStop } from '@tabler/icons-svelte';
+  // noinspection TypeScriptCheckImport
+  import IconPlayerPause from '~icons/tabler/player-pause';
+  // noinspection TypeScriptCheckImport
+  import IconPlayerPlay from '~icons/tabler/player-play';
+  // noinspection TypeScriptCheckImport
+  import IconPlayerStop from '~icons/tabler/player-stop';
   import type { MouseEventHandler } from 'svelte/elements';
   import rate from '$lib/stores/rate';
   import { pause, play, stop } from '$lib/util/status';

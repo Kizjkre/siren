@@ -1,6 +1,7 @@
 <script lang="ts">
   import data from '$lib/stores/data.js';
-  import { IconTableRow } from '@tabler/icons-svelte';
+  // noinspection TypeScriptCheckImport
+  import IconTableRow from '~icons/tabler/table-row';
   import type { DSVParsedArray } from 'd3-dsv';
   import { slide } from 'svelte/transition';
   import { handleDragStart } from '$lib/util/drag/data';

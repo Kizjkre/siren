@@ -3,7 +3,8 @@
   import TrackComponent from '$lib/components/main/track/Track.svelte';
   import duration from '$lib/stores/duration';
   import type { MouseEventHandler } from 'svelte/elements';
-  import { IconCircleX } from '@tabler/icons-svelte';
+  // noinspection TypeScriptCheckImport
+  import IconCircleX from '~icons/tabler/circle-x';
   import Timeline from '$lib/components/main/Timeline.svelte';
   import width from '$lib/stores/width';
   import Seeker from '$lib/components/main/Seeker.svelte';
@@ -12,7 +13,7 @@
 </script>
 
 <main class="flex flex-col h-full overflow-scroll relative">
-  <div style:width="{ $width * $duration + 200 }px" >
+  <div style:width="{ $width * $duration + 200 }px">
     <Seeker />
     <Timeline />
     <div>

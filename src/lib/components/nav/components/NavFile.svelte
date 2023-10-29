@@ -1,7 +1,14 @@
 <script lang="ts">
   import NavItem from '$lib/components/nav/NavItem.svelte';
   import NavDropdownItem from '$lib/components/nav/NavDropdownItem.svelte';
-  import { IconDeviceFloppy, IconFileExport, IconFileImport, IconFolderOpen } from '@tabler/icons-svelte';
+  // noinspection TypeScriptCheckImport
+  import IconDeviceFloppy from '~icons/tabler/device-floppy';
+  // noinspection TypeScriptCheckImport
+  import IconFileExport from '~icons/tabler/file-export';
+  // noinspection TypeScriptCheckImport
+  import IconFileImport from '~icons/tabler/file-import';
+  // noinspection TypeScriptCheckImport
+  import IconFolderOpen from '~icons/tabler/folder-open';
   import type { MouseEventHandler } from 'svelte/elements';
   import handleImportCSVChange from '$lib/util/import/csv';
   import { onSandboxReturn, useSandbox } from '$lib/util/sandbox/useSandbox';

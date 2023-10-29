@@ -1,11 +1,15 @@
 <script lang="ts">
-  import { IconCircleX, IconFileMusic, IconWaveSine } from '@tabler/icons-svelte';
+  // noinspection TypeScriptCheckImport
+  import IconCircleX from '~icons/tabler/circle-x';
+  // noinspection TypeScriptCheckImport
+  import IconFileMusic from '~icons/tabler/file-music';
+  // noinspection TypeScriptCheckImport
+  import IconWaveSine from '~icons/tabler/wave-sine';
   import AsideItem from '$lib/components/aside/AsideItem.svelte';
   import synths from '$lib/stores/synths';
   import AsideListItem from '$lib/components/aside/AsideListItem.svelte';
   import handleImportSynthChange from '$lib/util/import/synth';
   import { handleDragStart } from '$lib/util/drag/synth';
-  import type { ComponentAttrs, ComponentAttrsCreator } from '$lib/util/definitions/componentAttr';
 
   let js: HTMLInputElement;
 

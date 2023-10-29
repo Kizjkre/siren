@@ -9,7 +9,8 @@
   import type { MouseEventHandler } from 'svelte/elements';
   import displacement from '$lib/util/drag/displacement';
   import round from '$lib/util/drag/round';
-  import { IconCircleX } from '@tabler/icons-svelte';
+  // noinspection TypeScriptCheckImport
+  import IconCircleX from '~icons/tabler/circle-x';
   import { createEventDispatcher, type EventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
 

@@ -1,4 +1,4 @@
-import ace, { Ace } from 'ace-builds';
+import ace, { type Ace } from 'ace-builds';
 // REF: https://stackoverflow.com/a/24652084
 import 'ace-builds/src-min-noconflict/ext-language_tools';
 import 'ace-builds/src-min-noconflict/ext-spellcheck';

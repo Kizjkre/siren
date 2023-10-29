@@ -1,7 +1,10 @@
 <script lang="ts">
   import NavItem from '$lib/components/nav/NavItem.svelte';
   import NavDropdownItem from '$lib/components/nav/NavDropdownItem.svelte';
-  import { IconLayoutSidebarLeftCollapseFilled, IconLayoutSidebarLeftExpandFilled } from '@tabler/icons-svelte';
+  // noinspection TypeScriptCheckImport
+  import IconLayoutSidebarLeftCollapseFilled from '~icons/tabler/layout-sidebar-left-collapse-filled';
+  // noinspection TypeScriptCheckImport
+  import IconLayoutSidebarLeftExpandFilled from '~icons/tabler/layout-sidebar-left-expand-filled';
   import sidebar from '$lib/stores/sidebar';
   import type { MouseEventHandler } from 'svelte/elements';
 

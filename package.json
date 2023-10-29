@@ -12,7 +12,8 @@
 		"postinstall": "zsh postinstall.sh"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^2.0.0",
+		"@iconify-json/tabler": "^1.1.96",
+		"@sveltejs/adapter-static": "^2.0.3",
 		"@sveltejs/kit": "^1.20.4",
 		"autoprefixer": "^10.4.15",
 		"postcss": "^8.4.28",
@@ -21,6 +22,7 @@
 		"tailwindcss": "^3.3.3",
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
+		"unplugin-icons": "^0.17.1",
 		"vite": "^4.4.2"
 	},
 	"type": "module",
@@ -30,7 +32,6 @@
 		"@citation-js/plugin-doi": "^0.6.8",
 		"@ffmpeg/core": "^0.12.2",
 		"@ffmpeg/ffmpeg": "^0.12.5",
-		"@tabler/icons-svelte": "^2.30.0",
 		"@types/d3-dsv": "^3.0.1",
 		"@types/d3-scale": "^4.0.3",
 		"ace-builds": "^1.24.1",

@@ -3,7 +3,7 @@ import { get } from 'svelte/store';
 import tracks from '$lib/stores/tracks';
 import type { EventHandlerCreator } from '$lib/util/definitions/listener';
 
-type DragStartHandlerCreator = EventHandlerCreator<[number, string], DragEventHandler<HTMLDivElement>>;
+type DragStartHandlerCreator = EventHandlerCreator<[number, string], DragEventHandler<HTMLButtonElement>>;
 type DropHandlerCreator = EventHandlerCreator<[number, string, boolean], DragEventHandler<HTMLDivElement>>
 
 export const handleDragLeave: DragEventHandler<HTMLDivElement> = (e: DragEvent): any =>

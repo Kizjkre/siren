@@ -1,7 +1,8 @@
 <script lang="ts">
   import NavItem from '$lib/components/nav/NavItem.svelte';
   import NavDropdownItem from '$lib/components/nav/NavDropdownItem.svelte';
-  import { IconPlus } from '@tabler/icons-svelte';
+  // noinspection TypeScriptCheckImport
+  import IconPlus from '~icons/tabler/plus';
   import type { MouseEventHandler } from 'svelte/elements';
   import tracks from '$lib/stores/tracks';
 

@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { IconCircleX, IconFileFunction, IconMathFunction } from '@tabler/icons-svelte';
+  // noinspection TypeScriptCheckImport
+  import IconCircleX from '~icons/tabler/circle-x';
+  // noinspection TypeScriptCheckImport
+  import IconFileFunction from '~icons/tabler/file-function';
+  // noinspection TypeScriptCheckImport
+  import IconMathFunction from '~icons/tabler/math-function';
   import AsideItem from '$lib/components/aside/AsideItem.svelte';
   import mappings from '$lib/stores/mappings';
   import AsideListItem from '$lib/components/aside/AsideListItem.svelte';
@@ -8,16 +13,15 @@
   import { handleDragStart } from '$lib/util/drag/mapping';
   // @ts-ignore
   import { browser } from '$app/environment';
-  import type { ComponentAttrs, ComponentAttrsCreator } from '$lib/util/definitions/componentAttr';
   import type { EventListenerCreator } from '$lib/util/definitions/listener';
 
   const selected: boolean[] = [];
 
   const props: ComponentAttrsCreator = (id: number): ComponentAttrs => ({
-      'class:active:cursor-grabbing': true,
-      'class:cursor-grab': true,
-      draggable: true,
-      'on:dragstart': handleDragStart(id)
+    'class:active:cursor-grabbing': true,
+    'class:cursor-grab': true,
+    draggable: true,
+    'on:dragstart': handleDragStart(id)
   });
 
   const handleClick: EventListener = (): void => mappings.add();

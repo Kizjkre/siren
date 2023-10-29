@@ -1,7 +1,10 @@
 <script lang="ts">
   import duration from '$lib/stores/duration.js';
   import width from '$lib/stores/width';
-  import { IconZoomIn, IconZoomOut } from '@tabler/icons-svelte';
+  // noinspection TypeScriptCheckImport
+  import IconZoomIn from '~icons/tabler/zoom-in';
+  // noinspection TypeScriptCheckImport
+  import IconZoomOut from '~icons/tabler/zoom-out';
   import type { MouseEventHandler } from 'svelte/elements';
 
   const handleZoomIn: MouseEventHandler<HTMLButtonElement> = (): any => $width = Math.min(300, $width + 10);

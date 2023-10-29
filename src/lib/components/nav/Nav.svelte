@@ -1,4 +1,5 @@
 <script lang="ts">
+  // @ts-ignore
   import logo from '$lib/assets/images/logo.svg';
   import NavFile from '$lib/components/nav/components/NavFile.svelte';
   import NavEdit from '$lib/components/nav/components/NavEdit.svelte';
@@ -6,7 +7,8 @@
   import NavTracks from '$lib/components/nav/components/NavTracks.svelte';
   import NavSynths from '$lib/components/nav/components/NavSynths.svelte';
   import NavMappings from '$lib/components/nav/components/NavMappings.svelte';
-  import { IconHome } from '@tabler/icons-svelte';
+  // noinspection TypeScriptCheckImport
+  import IconHome from '~icons/tabler/home';
 </script>
 
 <nav class="flex h-full items-center justify-around w-full">

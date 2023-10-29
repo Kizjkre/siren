@@ -1,6 +1,7 @@
 <script lang="ts">
   import tracks from '$lib/stores/tracks';
-  import { IconCircleX } from '@tabler/icons-svelte';
+  // noinspection TypeScriptCheckImport
+  import IconCircleX from '~icons/tabler/circle-x';
   import type { ChangeEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { Writable } from 'svelte/store';
   import type { Track } from '$lib/util/definitions/tracks';
