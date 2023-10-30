@@ -1,6 +1,3 @@
-import synth, { parameters } from '#userscript';
-import port from '#port';
-
 // REF: https://github.com/hoch/canopy/blob/master/docs/js/canopy-exporter.js
 
 /**
@@ -10,8 +7,8 @@ import port from '#port';
  * @param {Uint8Array} targetArray - The array to write to.
  * @param {number} offset - The offset in the array to start writing at.
  */
-const _writeStringToArray = (aString, targetArray, offset) => {
-  for (let i = 0; i < aString.length; ++i) targetArray[offset + i] = aString.charCodeAt(i);
+const _writeStringToArray: BitWriter = (aString: string, targetArray: Uint8Array, offset: number): any => {
+  for (let i: number = 0; i < aString.length; ++i) targetArray[offset + i] = aString.charCodeAt(i);
 };
 
 /**
@@ -21,7 +18,7 @@ const _writeStringToArray = (aString, targetArray, offset) => {
  * @param {Uint8Array} targetArray - The array to write the integer to.
  * @param {number} offset - The offset at which to write the integer in the array.
  */
-const _writeInt16ToArray = (aNumber, targetArray, offset) => {
+const _writeInt16ToArray: BitWriter = (aNumber: number, targetArray: Uint8Array, offset: number): any => {
   aNumber = Math.floor(aNumber);
   targetArray[offset] = aNumber & 255;          // byte 1
   targetArray[offset + 1] = (aNumber >> 8) & 255;   // byte 2
@@ -34,7 +31,7 @@ const _writeInt16ToArray = (aNumber, targetArray, offset) => {
  * @param {Uint8Array} targetArray - The array to write the number to.
  * @param {number} offset - The offset at which to start writing.
  */
-const _writeInt32ToArray = (aNumber, targetArray, offset) => {
+const _writeInt32ToArray: BitWriter = (aNumber: number, targetArray: Uint8Array, offset: number): any => {
   aNumber = Math.floor(aNumber);
   targetArray[offset] = aNumber & 255;          // byte 1
   targetArray[offset + 1] = (aNumber >> 8) & 255;   // byte 2
@@ -43,8 +40,8 @@ const _writeInt32ToArray = (aNumber, targetArray, offset) => {
 };
 
 // Return the bits of the float as a 32-bit integer value.  This
-// produces the raw bits; no intepretation of the value is done.
-const _floatBits = f => {
+// produces the raw bits; no interpretation of the value is done.
+const _floatBits: FloatToIntConverter = (f: number): any => {
   const buf = new ArrayBuffer(4);
   (new Float32Array(buf))[0] = f;
   const bits = (new Uint32Array(buf))[0];
@@ -60,39 +57,40 @@ const _floatBits = f => {
  * @param {number} offset - The offset in the targetArray to start writing the converted samples.
  * @param {number} bitDepth - The desired bit depth of the converted samples (16 or 32).
  */
-const _writeAudioBufferToArray = (audioBuffer, targetArray, offset, bitDepth) => {
-  let index, channel = 0;
-  const length = audioBuffer.length;
-  const channels = audioBuffer.numberOfChannels;
-  let channelData, sample;
+const _writeAudioBufferToArray: AudioBufferToArrayConverter =
+  (audioBuffer: AudioBuffer, targetArray: Uint8Array, offset: number, bitDepth: number): any => {
+    let index, channel = 0;
+    const length = audioBuffer.length;
+    const channels = audioBuffer.numberOfChannels;
+    let channelData, sample;
 
-  // Clamping samples onto the 16-bit resolution.
-  for (index = 0; index < length; ++index) {
-    for (channel = 0; channel < channels; ++channel) {
-      channelData = audioBuffer.getChannelData(channel);
+    // Clamping samples onto the 16-bit resolution.
+    for (index = 0; index < length; ++index) {
+      for (channel = 0; channel < channels; ++channel) {
+        channelData = audioBuffer.getChannelData(channel);
 
-      // Branches upon the requested bit depth
-      if (bitDepth === 16) {
-        sample = channelData[index] * 32768.0;
-        if (sample < -32768)
-          sample = -32768;
-        else if (sample > 32767)
-          sample = 32767;
-        _writeInt16ToArray(sample, targetArray, offset);
-        offset += 2;
-      } else if (bitDepth === 32) {
-        // This assumes we're going to out 32-float, not 32-bit linear.
-        sample = _floatBits(channelData[index]);
-        _writeInt32ToArray(sample, targetArray, offset);
-        offset += 4;
-      } else {
-        console.error('Invalid bit depth for PCM encoding.');
-        return;
+        // Branches upon the requested bit depth
+        if (bitDepth === 16) {
+          sample = channelData[index] * 32768.0;
+          if (sample < -32768)
+            sample = -32768;
+          else if (sample > 32767)
+            sample = 32767;
+          _writeInt16ToArray(sample, targetArray, offset);
+          offset += 2;
+        } else if (bitDepth === 32) {
+          // This assumes we're going to out 32-float, not 32-bit linear.
+          sample = _floatBits(channelData[index]);
+          _writeInt32ToArray(sample, targetArray, offset);
+          offset += 4;
+        } else {
+          console.error('Invalid bit depth for PCM encoding.');
+          return;
+        }
+
       }
-
     }
-  }
-};
+  };
 
 /**
  * Converts an AudioBuffer object into a WAV file in the form of a binary blob.The resulting WAV file can be used for
@@ -105,7 +103,7 @@ const _writeAudioBufferToArray = (audioBuffer, targetArray, offset, bitDepth) =>
  * @param  {Boolean} as32BitFloat
  * @return {Blob} Resulting binary blob.
  */
-const audioBufferToWav = (audioBuffer, as32BitFloat) => {
+const audioBufferToWav: AudioBufferToWavConverter = (audioBuffer: AudioBuffer, as32BitFloat: any): Blob => {
   // Encoding setup.
   const frameLength = audioBuffer.length;
   const numberOfChannels = audioBuffer.numberOfChannels;
@@ -153,67 +151,41 @@ const audioBufferToWav = (audioBuffer, as32BitFloat) => {
   });
 };
 
-const graph = new Map();
+// REF: https://github.com/jaggad/crunker/blob/master/src/crunker.ts
+/**
+ * Merges an array of audio blobs into a single audio blob.
+ *
+ * @param {Blob[]} blobs - An array of audio blobs to be merged.
+ * @return {Promise<Blob>} - The merged audio blob.
+ */
+const merge: Merger = async (blobs: Blob[]): Promise<Blob> => {
+  const context: AudioContext = new AudioContext();
+  const sr: number = context.sampleRate;
 
-let length = 0;
-window.AudioContext = function () {
-  const sampleRate = arguments[0]?.sampleRate || 44100;
-  return new OfflineAudioContext({ numberOfChannels: 2, length: length * sampleRate, sampleRate });
-};
-
-AudioNode.prototype._SIREN_connect = AudioNode.prototype.connect;
-AudioNode.prototype._SIREN_disconnect = AudioNode.prototype.disconnect;
-
-AudioNode.prototype.connect = function () {
-  if (!graph.has(this.context)) {
-    graph.set(this.context, new Set());
-  }
-  graph.get(this.context).add([this, arguments[0]]);
-  return this._SIREN_connect(...arguments);
-};
-AudioNode.prototype.disconnect = function () {
-  graph.get(this.context).delete([this, arguments[0]]);
-  return this._SIREN_disconnect(...arguments);
-};
-
-const playing = new Set();
-
-port.onmessage = async e => {
-  let current = {};
-  const timeline = Object.fromEntries(
-    Object.entries(e.data.timeline).map(([key, value]) => [+key, value])
+  const buffers: AudioBuffer[] = await Promise.all(
+    blobs.map(async (blob: Blob): Promise<AudioBuffer> => context.decodeAudioData(await blob.arrayBuffer()))
   );
-  const times = Object.keys(timeline).sort((a, b) => a - b);
 
-  length = times.at(-1) + 1;
+  const buf: AudioBuffer = context.createBuffer(
+    Math.max(...buffers.map((buffer) => buffer.numberOfChannels)),
+    sr * Math.max(...buffers.map((buffer) => buffer.duration)),
+    sr
+  );
 
-  const s = await synth();
+  buffers.forEach((buffer: AudioBuffer): any => {
+    for (let i = 0; i < buffer.numberOfChannels; i++) {
+      const bufData: Float32Array = buf.getChannelData(i);
+      const bufferData: Float32Array = buffer.getChannelData(i);
 
-  times.forEach(time => {
-    current = { ...current, ...timeline[time] };
-    const functions = new Map();
-    Object.keys(timeline[time]).forEach(parameter =>
-      Array.from(s.updates.keys())
-        .filter(params => params.includes(parameter))
-        .forEach(params => !functions.has(params) && functions.set(params, s.updates.get(params)))
-    );
-    Array.from(functions.entries()).forEach(([params, update]) => update(...params.filter(p => !parameters.time.includes(p)).map(p => current[p]), time)); /* TODO: fix hack */
-  });
+      for (let j = buffer.getChannelData(i).length - 1; j >= 0; j--) {
+        bufData[j] += bufferData[j] / buffers.length;
+      }
 
-  const master = new GainNode(s.context);
-  master._SIREN_connect(s.context.destination);
-  graph.get(s.context)?.forEach(([from, to]) => {
-    if (to instanceof AudioDestinationNode) {
-      from._SIREN_disconnect(to);
-      from._SIREN_connect(master);
+      buf.getChannelData(i).set(bufData);
     }
   });
-  master.gain.value = 1;
-  graph.delete(s.context);
 
-  playing.add(s.context);
-
-  s.start();
-  const buf = await s.context.startRendering();
-  port.postMessage(audioBufferToWav(buf, false));
+  return audioBufferToWav(buf, false);
 };
+
+export default merge;

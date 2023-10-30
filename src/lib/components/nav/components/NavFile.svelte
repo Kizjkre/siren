@@ -18,7 +18,7 @@
   // @ts-ignore
   import action from '$lib/util/sandbox/action/export?raw';
   import download from '$lib/util/export/download';
-  import { merge } from '$lib/util/export/ffmpeg';
+  import merge from '$lib/util/export/merge';
   import tracks from '$lib/stores/tracks';
 
   let csv: HTMLInputElement;
@@ -33,7 +33,7 @@
         t.push(e.detail);
 
         if (t.length === Object.keys($tracks).length) {
-          const blob: Blob | void = await merge(t);
+          const blob: Blob = await merge(t);
           blob && download('siren.wav', blob);
         }
       });
