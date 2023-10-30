@@ -5,13 +5,5 @@ import Icons from 'unplugin-icons/vite';
 
 // noinspection JSUnusedGlobalSymbols
 export default defineConfig({
-  plugins: [sveltekit(), Icons({ compiler: 'svelte' })],
-  server: {
-    fs: {
-      allow: ['.yarn']
-    }
-  },
-  optimizeDeps: {
-    exclude: ['@ffmpeg/core', '@ffmpeg/ffmpeg']
-  }
+  plugins: [sveltekit(), Icons({ compiler: 'svelte' })]
 });
