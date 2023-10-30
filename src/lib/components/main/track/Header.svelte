@@ -25,7 +25,6 @@
   const handleDemo: EventListener = (e: Event): void => {
       if (!e.isTrusted) return;
       useSandbox(`demo-${ $synths[$synth].name }`, { action: demo, script: $synths[$synth].code });
-      onSandboxReturn(`demo-${ $synths[$synth].name }`, () => (e.target as HTMLButtonElement)!.click());
     };
 
 </script>

@@ -27,11 +27,11 @@
   };
 </script>
 
-<footer class="flex h-full w-full">
+<footer class="flex flex-col gap-2 h-full md:flex-row w-full">
   <div class="basis-1/4 flex"></div>
   <div class="basis-1/2 flex gap-2 items-center justify-center">
     <button
-      class="border flex h-12 items-center justify-center rounded-full transition w-12"
+      class="border flex h-6 items-center justify-center md:h-12 rounded-full transition w-12"
       class:bg-gray-100={ $status !== Status.stop }
       class:border-blue-600={ $status !== Status.stop }
       class:text-blue-600={ $status !== Status.stop }
@@ -41,7 +41,7 @@
       <IconPlayerStop />
     </button>
     <button
-      class="border flex h-16 items-center justify-center rounded-full transition w-16"
+      class="border flex h-8 items-center justify-center md:h-16 rounded-full transition w-16"
       class:bg-gray-100={ $status !== Status.play }
       class:border-blue-600={ $status !== Status.play }
       class:text-blue-600={ $status !== Status.play }
@@ -51,7 +51,7 @@
       <IconPlayerPlay />
     </button>
     <button
-      class="border flex h-12 items-center justify-center rounded-full transition w-12"
+      class="border flex h-6 items-center justify-center md:h-12 rounded-full transition w-12"
       class:bg-gray-100={ $status === Status.play }
       class:border-blue-600={ $status === Status.play }
       class:text-blue-600={ $status === Status.play }
@@ -61,12 +61,12 @@
       <IconPlayerPause />
     </button>
   </div>
-  <div class="basis-1/4 flex items-center">
-    <form>
-      <label for="rate">Playback Rate</label>
+  <div class="basis-1/4 flex items-center justify-center md:p-0 pb-2">
+    <form class="flex gap-2 items-center">
+      <label class="md:text-base text-xs" for="rate">Playback Rate</label>
       <input
         bind:value={ $rate }
-        class="border ml-1 px-2 py-1 rounded"
+        class="border md:text-base ml-1 px-2 py-1 rounded text-xs"
         class:cursor-not-allowed={ $status !== Status.stop }
         disabled={ $status !== Status.stop }
         id="rate"

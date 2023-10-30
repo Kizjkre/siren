@@ -29,7 +29,8 @@
     (id: number): EventListener => (e: Event): void => {
       if (!e.isTrusted) return;
       useSandbox(`demo-${ id }`, { action: demo, script: $synths[id].code });
-      onSandboxReturn(`demo-${ id }`, () => (e.target as HTMLButtonElement)!.click());
+      const target: HTMLButtonElement = e.currentTarget as HTMLButtonElement;
+      onSandboxReturn(`demo-${ id }`, () => target!.click());
     };
 
   const handleClose: (id: number) => EventListener =

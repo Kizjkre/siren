@@ -17,9 +17,9 @@
   const siren2021: Promise<any> = Cite.async('10.21785/icad2021.042');
 </script>
 
-<div class="flex h-full w-full">
+<div class="flex flex-col h-full md:flex-row w-full">
   <div class="basis-1/2 bg-[image:var(--bg)] bg-cover flex flex-col grow h-full justify-center px-8" style="--bg: url('data:image/svg+xml;base64,{ btoa(bg1) }')">
-    <h1 class="font-bold text-6xl">
+    <h1 class="font-bold md:text-6xl text-4xl">
       Sonification
       <br />
       Interface for
@@ -32,7 +32,7 @@
   </div>
   <div class="basis-1/2 bg-[#173740] flex flex-col grow px-8 py-4 text-white">
     <main class="flex flex-col justify-around grow">
-      <a class="after:border-b-white flex items-center link pb-2 text-5xl" href="/workstation">
+      <a class="after:border-b-white flex items-center link md:text-5xl pb-2 text-2xl" href="/workstation">
         <IconAppWindow class="h-12 w-12" />
         &nbsp;
         Go to Workstation

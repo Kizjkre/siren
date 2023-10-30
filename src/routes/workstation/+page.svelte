@@ -18,7 +18,7 @@
   sampleData();
   initAce();
 
-  const handleBeforeUnload: OnBeforeUnloadEventHandler = (e: BeforeUnloadEvent): void =>
+  const handleBeforeUnload: OnBeforeUnloadEventHandler = (e: BeforeUnloadEvent): any =>
     e.returnValue = '';
 </script>
 
@@ -33,7 +33,7 @@
   <nav>
     <Nav />
   </nav>
-  <aside class:!w-0={ !$sidebar }>
+  <aside class:!h-0={ !$sidebar } class:!w-0={ !$sidebar }>
     <Aside />
   </aside>
   <main>
@@ -47,6 +47,23 @@
 <MappingSandboxStore />
 
 <style lang="postcss">
+  @media screen and (max-width: 768px) {
+    aside {
+      @apply h-[20vh] !w-full;
+    }
+
+    .grid {
+      grid-template-areas:
+      'nav'
+      'aside'
+      'main'
+      'footer'
+      !important;
+      grid-template-columns: minmax(0, 1fr) !important;
+      grid-template-rows: auto auto minmax(0, 8fr) minmax(0, 2fr) !important;
+    }
+  }
+
   aside {
     @apply transition-all w-[20vw];
     grid-area: aside;

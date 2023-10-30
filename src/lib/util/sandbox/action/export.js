@@ -178,7 +178,8 @@ AudioNode.prototype.disconnect = function () {
 
 const playing = new Set();
 
-port.onmessage = async e => {
+// NOTE: Safari doesn't support importing/exporting top-level awaits
+(await port).onmessage = async e => {
   let current = {};
   const timeline = Object.fromEntries(
     Object.entries(e.data.timeline).map(([key, value]) => [+key, value])
@@ -215,5 +216,6 @@ port.onmessage = async e => {
 
   s.start();
   const buf = await s.context.startRendering();
-  port.postMessage(audioBufferToWav(buf, false));
+  // NOTE: Safari doesn't support importing/exporting top-level awaits
+  (await port).postMessage(audioBufferToWav(buf, false));
 };

@@ -1,4 +1,5 @@
 import { parameters } from '#userscript';
 import port from '#port';
 
-port.postMessage(parameters);
+// NOTE: Safari doesn't support importing/exporting top-level awaits
+(await port).postMessage(parameters);
