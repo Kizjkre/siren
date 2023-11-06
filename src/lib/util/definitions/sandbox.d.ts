@@ -1,23 +1,24 @@
-type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
+import type { Subscribe } from '$lib/util/definitions/store';
 
-interface SandboxEventDetail {
+interface Sandbox {
   action: string;
   data: any;
-  name: string;
+  result?: any;
   script: string;
 }
 
 interface SandboxStore {
-  [id: string]: SandboxEventDetail;
+  [id: string]: Sandbox;
 }
 
-type SandboxEvent = (name: string, message: SandboxMessage) => any;
-type SandboxEventCreator = (detail: SandboxEventDetail) => CustomEvent;
-type SandboxMessage = AtLeastOne<{
-  action: string;
-  data: any;
-  script: string;
-}>;
-type SandboxReturnEvent = (name: string, data: any) => any;
-type SandboxReturnEventCallback = (e: CustomEventInit) => any;
-type SandboxReturnEventCreator = (name: string, detail: any) => CustomEvent;
+interface SandboxStoreInterface {
+  add:  {
+    (id: string, sandbox: Sandbox): any;
+    (sandbox: Sandbox): any;
+  };
+  read: (id: string) => Promise<any>;
+  remove: (id: string) => any;
+  result: (id: string, result: any) => any;
+  send: (id: string, data: any) => any;
+  subscribe: Subscribe<SandboxStore>;
+}

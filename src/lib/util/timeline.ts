@@ -1,6 +1,6 @@
 import { get } from 'svelte/store';
 import tracks from '$lib/stores/tracks';
-import type { Track, TrackRegionStoreStructure } from '$lib/util/definitions/tracks';
+import type { Track, TrackRegionStore } from '$lib/util/definitions/tracks';
 import type { Region } from '$lib/util/definitions/region';
 import rate from '$lib/stores/rate';
 
@@ -10,12 +10,12 @@ import rate from '$lib/stores/rate';
  */
 const timeline: TimelineCreator = (callback: TimelineCallback): any => {
   // Iterate over each track
-  Object.values(get(tracks)).forEach(({ regions, synth }: Track): any => {
+  Object.entries(get(tracks)).forEach(([id, { regions, synth }]: [string, Track]): any => {
     // Create a timeline object for the track
     const timeline: Timeline = { synth: get(synth) };
 
     // Iterate over each timbral region
-    Object.entries(get(regions.timbral)).forEach(([parameter, region]: [string, TrackRegionStoreStructure]): any => {
+    Object.entries(get(regions.timbral)).forEach(([parameter, region]: [string, TrackRegionStore]): any => {
       // Iterate over each region data
       Object.values(region).forEach(({ data, offset }: Region): any => {
         const o: number = get(offset);
@@ -31,7 +31,7 @@ const timeline: TimelineCreator = (callback: TimelineCallback): any => {
     });
 
     // Call the callback function with the generated timeline
-    callback(timeline);
+    callback(+id, timeline);
   });
 };
 

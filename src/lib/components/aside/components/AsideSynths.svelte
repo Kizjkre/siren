@@ -10,9 +10,9 @@
   import AsideListItem from '$lib/components/aside/AsideListItem.svelte';
   import handleImportSynthChange from '$lib/util/import/synth';
   import { handleDragStart } from '$lib/util/drag/synth';
-  import { onSandboxReturn, useSandbox } from '$lib/util/sandbox/useSandbox';
   // @ts-ignore
   import demo from '$lib/util/sandbox/action/demo?raw';
+  import sandbox from '$lib/stores/sandbox';
 
   let js: HTMLInputElement;
 
@@ -28,9 +28,15 @@
   const handleClick: (id: number) => EventListener =
     (id: number): EventListener => (e: Event): void => {
       if (!e.isTrusted) return;
-      useSandbox(`demo-${ id }`, { action: demo, script: $synths[id].code });
+      sandbox.add(`demo-${ id }`, {
+        action: demo,
+        data: undefined,
+        script: $synths[id].code
+      });
       const target: HTMLButtonElement = e.currentTarget as HTMLButtonElement;
-      onSandboxReturn(`demo-${ id }`, () => target!.click());
+      sandbox
+        .read(`demo-${ id }`)
+        .then((): any => target.click());
     };
 
   const handleClose: (id: number) => EventListener =

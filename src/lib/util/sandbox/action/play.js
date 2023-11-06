@@ -20,25 +20,18 @@ AudioNode.prototype.disconnect = function () {
 
 const playing = new Set();
 
+let gain;
+
 // NOTE: Safari doesn't support importing/exporting top-level awaits
 (await port).onmessage = async e => {
+  // console.log(e.data);
   switch (e.data.action) {
-    case 'demo':
-      await (async () => {
-        const s = await synth();
-        graph.delete(s.context);
-
-        Array.from(s.updates.values()).forEach(update => update());
-        s.start();
-
-        setTimeout(() => s.stop(), 2000);
-      })();
-      break;
     case 'play':
       await (async () => {
         const s = await synth();
         const master = new GainNode(s.context);
-        master._SIREN_connect(s.context.destination);
+        gain = new GainNode(s.context);
+        master._SIREN_connect(gain)._SIREN_connect(s.context.destination);
         graph.get(s.context)?.forEach(([from, to]) => {
           if (to instanceof AudioDestinationNode) {
             from._SIREN_disconnect(to);
@@ -78,6 +71,10 @@ const playing = new Set();
       playing.clear();
       // NOTE: Safari doesn't support importing/exporting top-level awaits
       (await port).postMessage(true);
+      break;
+    case 'gain':
+      // console.log(e.data.gain);
+      gain.gain.value = e.data.gain;
       break;
     default:
   }

@@ -1,6 +1,6 @@
 <script lang="ts">
   import tracks from '$lib/stores/tracks';
-  import type { Track, TrackRegionStore } from '$lib/util/definitions/tracks';
+  import type { Track, TrackRegionStoreInterface } from '$lib/util/definitions/tracks';
   import RegionComponent from '$lib/components/main/track/region/Region.svelte';
   import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/data';
   import TimeRegion from '$lib/components/main/track/region/TimeRegion.svelte';
@@ -10,8 +10,8 @@
   export let id: number;
 
   const track: Track = $tracks[id];
-  const timbral: TrackRegionStore = track.regions.timbral;
-  const time: TrackRegionStore = track.regions.time;
+  const timbral: TrackRegionStoreInterface = track.regions.timbral;
+  const time: TrackRegionStoreInterface = track.regions.time;
   const view: Writable<string> = track.view;
 
   const onTimbralRemove: EventListenerCreator<[number]> =

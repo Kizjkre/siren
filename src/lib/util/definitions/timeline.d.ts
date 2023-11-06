@@ -3,5 +3,5 @@ interface Timeline {
   synth: number;
 }
 
-type TimelineCallback = (timeline: Timeline) => any;
+type TimelineCallback = (id: number, timeline: Timeline) => any;
 type TimelineCreator = (callback: TimelineCallback) => any;

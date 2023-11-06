@@ -7,7 +7,7 @@
   import { createEventDispatcher, type EventDispatcher } from 'svelte';
 
   export let action: string;
-  export let input: string;
+  export let input: any;
   export let userscript: string;
 
   const doc: Document = new DOMParser().parseFromString(html, 'text/html');
@@ -44,6 +44,9 @@
 
   $: (port && input) && port.postMessage(input);
 </script>
+
+<!-- REF: https://stackoverflow.com/a/75529235 -->
+<svelte:options immutable />
 
 <iframe
   allow="autoplay"

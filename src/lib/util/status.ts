@@ -1,9 +1,10 @@
 import { get } from 'svelte/store';
-import { useSandbox } from '$lib/util/sandbox/useSandbox';
 // @ts-ignore
 import action from '$lib/util/sandbox/action/play?raw';
 import synths from '$lib/stores/synths';
 import timeline from '$lib/util/timeline';
+import tracks from '$lib/stores/tracks';
+import sandbox from '$lib/stores/sandbox';
 
 enum PlayState {
   play = 'play',
@@ -11,7 +12,6 @@ enum PlayState {
 }
 
 let ps: PlayState = PlayState.play;
-let i: number = 0;
 
 /**
  * Pauses the execution of the program.
@@ -19,7 +19,7 @@ let i: number = 0;
  * @return {any} - The return value is not specified.
  */
 export const pause = (): any => {
-  Array(i).fill(0).map((_, i) => useSandbox(`play-${ i }`, { data: { action: 'pause' } }));
+  Object.keys(get(tracks)).forEach((id: string): any => sandbox.send(`play-${ id }`, { action: 'pause' }));
   ps = PlayState.resume;
 };
 
@@ -30,17 +30,17 @@ export const pause = (): any => {
  */
 export const play = (): any => {
   if (ps === PlayState.resume) {
-    Array(i).fill(0).map((_, i) => useSandbox(`play-${ i }`, { data: { action: 'resume' } }));
+    Object.keys(get(tracks)).forEach((id: string): any => sandbox.send(`play-${ id }`, { action: 'resume' }));
     return;
   }
 
-  timeline((timeline: Timeline): any => {
-    useSandbox(`play-${ i++ }`, {
+  timeline((id: number, timeline: Timeline): any =>
+    sandbox.add(`play-${ id }`, {
       action,
       data: { action: 'play', timeline, gain: 1 },
       script: get(synths)[timeline.synth].code
-    });
-  });
+    })
+  );
 };
 
 /**
@@ -49,7 +49,9 @@ export const play = (): any => {
  * @return {any} This function does not return anything.
  */
 export const stop = (): any => {
-  Array(i).fill(0).map((_, i) => useSandbox(`play-${ i }`, { data: { action: 'stop' } }));
+  Object.keys(get(tracks)).forEach((id: string): any => {
+    sandbox.send(`play-${ id }`, { action: 'stop' });
+    sandbox.remove(`play-${ id }`);
+  });
   ps = PlayState.play;
-  i = 0;
 };

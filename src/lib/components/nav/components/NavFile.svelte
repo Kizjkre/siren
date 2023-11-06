@@ -11,7 +11,6 @@
   import IconFolderOpen from '~icons/tabler/folder-open';
   import type { MouseEventHandler } from 'svelte/elements';
   import handleImportCSVChange from '$lib/util/import/csv';
-  import { onSandboxReturn, useSandbox } from '$lib/util/sandbox/useSandbox';
   import timeline from '$lib/util/timeline';
   import { get } from 'svelte/store';
   import synths from '$lib/stores/synths';
@@ -20,31 +19,31 @@
   import download from '$lib/util/export/download';
   import merge from '$lib/util/export/merge';
   import tracks from '$lib/stores/tracks';
+  import sandbox from '$lib/stores/sandbox';
 
   let csv: HTMLInputElement;
 
   const handleImportCSV: MouseEventHandler<any> = (): any => csv.click();
 
   const handleExport: MouseEventHandler<any> = (): any => {
-    let i: number = 0;
     const t: Blob[] = [];
-    timeline((timeline: Timeline): any => {
-      onSandboxReturn(`export-${ i }`, async (e: CustomEventInit): Promise<any> => {
-        t.push(e.detail);
+    timeline((id: number, timeline: Timeline): any => {
+      sandbox
+        .read(`export-${ id }`)
+        .then(async (result: any): Promise<any> => {
+          t.push(result);
 
-        if (t.length === Object.keys($tracks).length) {
-          const blob: Blob = await merge(t);
-          blob && download('siren.wav', blob);
-        }
-      });
+          if (t.length === Object.keys($tracks).length) {
+            const blob: Blob = await merge(t);
+            blob && download('siren.wav', blob);
+          }
+        });
 
-      useSandbox(`export-${ i }`, {
+      sandbox.add(`export-${ id }`, {
         action,
         script: get(synths)[timeline.synth].code,
         data: { timeline }
       });
-
-      i++;
     });
   };
 </script>
