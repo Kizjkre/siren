@@ -35,6 +35,7 @@ const store: (dict: DefaultDict<TrackRegionStore>) => TrackRegionStoreInterface 
   };
 
 const track: TrackInit = (): Track => {
+  const gain: Writable<number> = writable(1);
   const name: Writable<string> = writable('New Track');
   const regions: TrackRegion = {
     timbral: store(defaultdict(Object as unknown as TrackRegionStore)),
@@ -46,6 +47,7 @@ const track: TrackInit = (): Track => {
   get(synths)[0].references.update((refs: number): number => refs + 1);
 
   return {
+    gain,
     name,
     regions,
     synth,

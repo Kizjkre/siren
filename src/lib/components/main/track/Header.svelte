@@ -25,9 +25,8 @@
 
   export let id: number;
 
-  let gain: number = 1;
-
   const track: Track = $tracks[id];
+  const gain: Writable<number> = track.gain;
   const name: Writable<string> = track.name;
   const synth: Writable<number> = track.synth;
   const view: Writable<string> = track.view;
@@ -46,12 +45,12 @@
   };
 
   const handleGain: MouseEventHandler<HTMLButtonElement> = (): any => {
-    gain = gain === 0 ? 1 : 0;
+    $gain = $gain === 0 ? 1 : 0;
   };
 
   // NOTE: Using setTimeout to wait for the play action to post first. Not sure how to fix,
   //       tried using document.dispatchEvent after useSandbox in status.ts but it doesn't work.
-  $: $status === Status.play && setTimeout(() => sandbox.send(`play-${ id }`, { action: 'gain', gain }), 100);
+  $: $status === Status.play && setTimeout(() => sandbox.send(`play-${ id }`, { action: 'gain', gain: $gain }), 100);
 </script>
 
 <div class="bg-white border-x flex flex-col gap-4 h-full left-0 px-2 py-1 shrink-0 sticky w-track-header z-[1]">
@@ -86,14 +85,14 @@
 
   <form class="flex gap-2">
     <button on:click={ handleGain }>
-      { #if gain === 0 }
+      { #if $gain === 0 }
         <IconVolumeOff />
-      { :else if gain < 0.5 }
+      { :else if $gain < 0.5 }
         <IconVolume2 />
       { :else }
         <IconVolume />
       { /if }
     </button>
-    <input bind:value={ gain } id="track-{ id }-gain" max="1" min="0" step="any" type="range" />
+    <input bind:value={ $gain } id="track-{ id }-gain" max="1" min="0" step="any" type="range" />
   </form>
 </div>

@@ -18,6 +18,7 @@ interface TrackRegion {
 }
 
 interface Track {
+  gain: Writable<number>;
   name: Writable<string>;
   regions: TrackRegion;
   synth: Writable<number>;
