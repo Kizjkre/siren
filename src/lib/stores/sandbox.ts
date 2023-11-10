@@ -25,8 +25,7 @@ const sandbox: SandboxStoreInterface = {
         }
       });
     }
-    update((sandboxes: SandboxStore): SandboxStore => {
-      const store: SandboxStore = structuredClone(sandboxes);
+    update((store: SandboxStore): SandboxStore => {
       store[id ?? time] = s!;
       return store;
     });
@@ -53,8 +52,7 @@ const sandbox: SandboxStoreInterface = {
    * @param {string} id - The ID of the item to be removed.
    * @return {any} The updated SandboxStore after the item is removed.
    */
-  remove: (id: string): any => update((sandboxes: SandboxStore): SandboxStore => {
-    const store: SandboxStore = structuredClone(sandboxes);
+  remove: (id: string): any => update((store: SandboxStore): SandboxStore => {
     delete store[id];
     return store;
   }),
@@ -65,8 +63,7 @@ const sandbox: SandboxStoreInterface = {
    * @param {any} result - The result to be stored in the store.
    * @return {any} The updated store.
    */
-  result: (id: string, result: any): any => update((sandboxes: SandboxStore): SandboxStore => {
-    const store: SandboxStore = structuredClone(sandboxes);
+  result: (id: string, result: any): any => update((store: SandboxStore): SandboxStore => {
     store[id].result = result;
     return store;
   }),
@@ -77,8 +74,7 @@ const sandbox: SandboxStoreInterface = {
    * @param {any} data - The data to update the store with.
    * @return {any} The updated store.
    */
-  send: (id: string, data: any): any => update((sandboxes: SandboxStore): SandboxStore => {
-    const store: SandboxStore = structuredClone(sandboxes);
+  send: (id: string, data: any): any => update((store: SandboxStore): SandboxStore => {
     store[id].data = data;
     return store;
   }),
