@@ -12,18 +12,18 @@
   import { Status } from '$lib/util/definitions/status';
 
   const handlePause: MouseEventHandler<HTMLButtonElement> = (): any => {
-    $status = Status.pause;
     pause();
+    $status = Status.pause;
   };
 
   const handlePlay: MouseEventHandler<HTMLButtonElement> = (): any => {
-    $status = Status.play;
     play();
+    $status = Status.play;
   };
 
   const handleStop: MouseEventHandler<HTMLButtonElement> = (): any => {
-    $status = Status.stop;
     stop();
+    $status = Status.stop;
   };
 </script>
 

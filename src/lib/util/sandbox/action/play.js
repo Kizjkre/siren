@@ -54,6 +54,7 @@ let gain;
                 .filter(params => params.includes(parameter))
                 .forEach(params => !functions.has(params) && functions.set(params, s.updates.get(params)))
             );
+            if (functions.size === 0) [...s.updates.values()].forEach(fun => functions.set([undefined, time], fun)); /* NOTE: Might be hacky */
             Array.from(functions.entries()).forEach(([params, update]) => update(...params.filter(p => !parameters.time.includes(p)).map(p => current[p]), time)); /* TODO: fix hack */
           });
 

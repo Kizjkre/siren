@@ -5,13 +5,8 @@ import synths from '$lib/stores/synths';
 import timeline from '$lib/util/timeline';
 import tracks from '$lib/stores/tracks';
 import sandbox from '$lib/stores/sandbox';
-
-enum PlayState {
-  play = 'play',
-  resume = 'resume'
-}
-
-let ps: PlayState = PlayState.play;
+import status from '$lib/stores/status';
+import { Status } from '$lib/util/definitions/status';
 
 /**
  * Pauses the execution of the program.
@@ -20,7 +15,6 @@ let ps: PlayState = PlayState.play;
  */
 export const pause = (): any => {
   Object.keys(get(tracks)).forEach((id: string): any => sandbox.send(`play-${ id }`, { action: 'pause' }));
-  ps = PlayState.resume;
 };
 
 /**
@@ -29,7 +23,7 @@ export const pause = (): any => {
  * @return {any} The result of the execution.
  */
 export const play = (): any => {
-  if (ps === PlayState.resume) {
+  if (get(status) === Status.pause) {
     Object.keys(get(tracks)).forEach((id: string): any => sandbox.send(`play-${ id }`, { action: 'resume' }));
     return;
   }
@@ -53,5 +47,4 @@ export const stop = (): any => {
     sandbox.send(`play-${ id }`, { action: 'stop' });
     sandbox.remove(`play-${ id }`);
   });
-  ps = PlayState.play;
 };
