@@ -4,6 +4,7 @@ import port from '#port';
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const s = await synth();
+[...s.updates.values()].forEach(func => func(undefined, 0));
 s.start();
 
 await sleep(1000);

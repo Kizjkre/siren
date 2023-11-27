@@ -41,7 +41,7 @@ const _writeInt32ToArray: BitWriter = (aNumber: number, targetArray: Uint8Array,
 
 // Return the bits of the float as a 32-bit integer value.  This
 // produces the raw bits; no interpretation of the value is done.
-const _floatBits: FloatToIntConverter = (f: number): any => {
+const _floatBits: FloatToIntConverter = (f: number): number => {
   const buf = new ArrayBuffer(4);
   (new Float32Array(buf))[0] = f;
   const bits = (new Uint32Array(buf))[0];

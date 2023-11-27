@@ -9,8 +9,6 @@
 
   const handleZoomIn: MouseEventHandler<HTMLButtonElement> = (): any => $width = Math.min(300, $width + 10);
   const handleZoomOut: MouseEventHandler<HTMLButtonElement> = (): any => $width = Math.max(20, $width - 10);
-
-  $: ($width < 50 && $duration < 40) && ($duration = 48);
 </script>
 
 <div class="border-b box-border flex">

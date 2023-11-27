@@ -16,10 +16,11 @@
   import synths from '$lib/stores/synths';
   // @ts-ignore
   import action from '$lib/util/sandbox/action/export?raw';
-  import download from '$lib/util/export/download';
-  import merge from '$lib/util/export/merge';
+  import download from '$lib/util/download';
+  import merge from '$lib/util/merge';
   import tracks from '$lib/stores/tracks';
   import sandbox from '$lib/stores/sandbox';
+  import save from '$lib/util/save';
 
   let csv: HTMLInputElement;
 
@@ -46,6 +47,8 @@
       });
     });
   };
+
+  const handleSave: MouseEventHandler<any> = save;
 </script>
 
 <NavItem name="File">
@@ -53,7 +56,7 @@
     <IconFolderOpen slot="icon" />
     Open
   </NavDropdownItem>
-  <NavDropdownItem>
+  <NavDropdownItem on:click={ handleSave }>
     <IconDeviceFloppy slot="icon" />
     Save
   </NavDropdownItem>

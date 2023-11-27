@@ -70,8 +70,7 @@
         class:cursor-not-allowed={ $status !== Status.stop }
         disabled={ $status !== Status.stop }
         id="rate"
-        min="0.25"
-        max="16"
+        min="0.1"
         step="any"
         type="number"
       />

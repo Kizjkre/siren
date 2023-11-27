@@ -1,39 +1,43 @@
 {
-	"name": "siren",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"dev": "vite dev",
-		"host": "vite --host",
-		"build": "vite build",
-		"preview": "vite preview",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
-	},
-	"devDependencies": {
-		"@iconify-json/tabler": "^1.1.96",
-		"@sveltejs/adapter-static": "^2.0.3",
-		"@sveltejs/kit": "^1.20.4",
-		"autoprefixer": "^10.4.15",
-		"postcss": "^8.4.28",
-		"svelte": "^4.0.5",
-		"svelte-check": "^3.4.3",
-		"tailwindcss": "^3.3.3",
-		"tslib": "^2.4.1",
-		"typescript": "^5.0.0",
-		"unplugin-icons": "^0.17.1",
-		"vite": "^4.4.2"
-	},
-	"type": "module",
-	"dependencies": {
-		"@citation-js/core": "^0.6.8",
-		"@citation-js/plugin-csl": "^0.6.8",
-		"@citation-js/plugin-doi": "^0.6.8",
-		"@types/d3-dsv": "^3.0.1",
-		"@types/d3-scale": "^4.0.3",
-		"ace-builds": "^1.24.1",
-		"d3-dsv": "^3.0.1",
-		"d3-scale": "^4.0.2",
-		"isomorphic-dompurify": "^1.8.0"
-	}
+  "name": "siren",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "vite dev",
+    "host": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+  },
+  "devDependencies": {
+    "@iconify-json/tabler": "^1.1.96",
+    "@sveltejs/adapter-static": "^2.0.3",
+    "@sveltejs/kit": "^1.20.4",
+    "autoprefixer": "^10.4.15",
+    "postcss": "^8.4.28",
+    "svelte": "^4.0.5",
+    "svelte-check": "^3.4.3",
+    "tailwindcss": "^3.3.3",
+    "tslib": "^2.4.1",
+    "typescript": "^5.0.0",
+    "unplugin-icons": "^0.17.1",
+    "vite": "^4.4.2"
+  },
+  "type": "module",
+  "dependencies": {
+    "@citation-js/core": "^0.6.8",
+    "@citation-js/plugin-csl": "^0.6.8",
+    "@citation-js/plugin-doi": "^0.6.8",
+    "@types/d3-dsv": "^3.0.1",
+    "@types/d3-scale": "^4.0.3",
+    "ace-builds": "^1.24.1",
+    "d3-dsv": "^3.0.1",
+    "d3-scale": "^4.0.2",
+    "isomorphic-dompurify": "^1.8.0",
+    "webchuck": "^1.2.3"
+  },
+  "overrides": {
+    "@polka/url": "1.0.0-next.20"
+  }
 }

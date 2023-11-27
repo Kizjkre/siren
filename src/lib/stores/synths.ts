@@ -1,12 +1,12 @@
 import { get, type Writable, writable } from 'svelte/store';
-import type { SynthStore, SynthStoreObject } from '$lib/util/definitions/synths';
+import type { SynthStore, SynthStoreInterface } from '$lib/util/definitions/synths';
 // @ts-ignore
 import action from '$lib/util/sandbox/action/params?raw';
 import sandbox from '$lib/stores/sandbox';
 
 const store: Writable<SynthStore> = writable({});
 
-const synths: SynthStoreObject = {
+const synths: SynthStoreInterface = {
   add: (name: string, code: string, def?: boolean): any => {
     const id: number = def ? 0 : new Date().getTime();
 

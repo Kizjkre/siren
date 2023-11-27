@@ -1,11 +1,13 @@
 import type { Writable } from 'svelte/store';
 import type { Subscribe } from '$lib/util/definitions/store';
 
+interface Mapping {
+  name: Writable<string>;
+  map: Writable<string>;
+}
+
 interface MappingStore {
-  [id: number]: {
-    name: Writable<string>;
-    map: Writable<string>;
-  };
+  [id: number]: Mapping;
 }
 
 interface MappingStoreObject {

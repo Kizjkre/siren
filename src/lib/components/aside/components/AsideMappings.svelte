@@ -45,7 +45,7 @@
       <IconMathFunction slot="icon" />
       <MappingsTitle { name } slot="name" />
       { #if selected[i] }
-        <Mappings { id } />
+        <Mappings id={ +id } />
       { /if }
     </AsideListItem>
   { /each }

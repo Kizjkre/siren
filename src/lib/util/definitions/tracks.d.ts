@@ -7,7 +7,7 @@ interface TrackRegionStore {
 }
 
 interface TrackRegionStoreInterface {
-  add: (parameter: string, config: RegionSource ) => any;
+  add: (parameter: string, config: RegionSource) => any;
   remove: (parameter: string, id: number) => any;
   subscribe: Subscribe<DefaultDict<TrackRegionStore>>;
 }

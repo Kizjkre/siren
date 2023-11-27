@@ -21,14 +21,15 @@ AudioNode.prototype.disconnect = function () {
 const playing = new Set();
 
 let gain;
+let context;
 
 // NOTE: Safari doesn't support importing/exporting top-level awaits
 (await port).onmessage = async e => {
-  // console.log(e.data);
   switch (e.data.action) {
     case 'play':
       await (async () => {
         const s = await synth();
+        context = s.context;
         const master = new GainNode(s.context);
         gain = new GainNode(s.context);
         master._SIREN_connect(gain)._SIREN_connect(s.context.destination);
@@ -54,7 +55,7 @@ let gain;
                 .filter(params => params.includes(parameter))
                 .forEach(params => !functions.has(params) && functions.set(params, s.updates.get(params)))
             );
-            if (functions.size === 0) [...s.updates.values()].forEach(fun => functions.set([undefined, time], fun)); /* NOTE: Might be hacky */
+            // if (functions.size === 0) [...s.updates.values()].forEach(fun => functions.set([undefined, time], fun)); /* NOTE: Might be hacky */
             Array.from(functions.entries()).forEach(([params, update]) => update(...params.filter(p => !parameters.time.includes(p)).map(p => current[p]), time)); /* TODO: fix hack */
           });
 
@@ -74,8 +75,7 @@ let gain;
       (await port).postMessage(true);
       break;
     case 'gain':
-      // console.log(e.data.gain);
-      gain.gain.value = e.data.gain;
+      gain.gain.linearRampToValueAtTime(e.data.gain, context.currentTime + 1);
       break;
     default:
   }

@@ -1,10 +1,10 @@
 import { get, type Writable, writable } from 'svelte/store';
-import type { DataStore, DataStoreObject } from '$lib/util/definitions/data';
+import type { DataStore, DataStoreInterface } from '$lib/util/definitions/data';
 import { autoType, csvParse } from 'd3-dsv';
 
 const store: Writable<DataStore> = writable({});
 
-const data: DataStoreObject = {
+const data: DataStoreInterface = {
   add: (name: string, csv: string): number => {
     const id: number = new Date().getTime();
 

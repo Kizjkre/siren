@@ -3,10 +3,14 @@
   import NavDropdownItem from '$lib/components/nav/NavDropdownItem.svelte';
   // noinspection TypeScriptCheckImport
   import IconPlus from '~icons/tabler/plus';
+  import type { MouseEventHandler } from 'svelte/elements';
+  import mappings from '$lib/stores/mappings';
+
+  const handleClick: MouseEventHandler<any> = (): any => mappings.add();
 </script>
 
 <NavItem name="Mappings">
-  <NavDropdownItem>
+  <NavDropdownItem on:click={ handleClick }>
     <IconPlus slot="icon" />
     Add Mapping
   </NavDropdownItem>
