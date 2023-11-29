@@ -1,9 +1,20 @@
-import synth from '#userscript';
+import * as synth from '#userscript';
 import port from '#port';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const s = await synth();
+const urls = Object.fromEntries(Object.entries(synth.worklets ?? {}).map(([name, worklet]) => {
+  const blob = new Blob([`registerProcessor('${ name }', ${ worklet.toString() });`], { type: 'application/javascript' });
+  return [name, URL.createObjectURL(blob)];
+}));
+
+const addModule = AudioWorklet.prototype.addModule;
+AudioWorklet.prototype.addModule = async function (...args) {
+  args[0] = urls[args[0]];
+  return await addModule.apply(this, args);
+};
+
+const s = await synth.default();
 [...s.updates.values()].forEach(func => func(undefined, 0));
 s.start();
 

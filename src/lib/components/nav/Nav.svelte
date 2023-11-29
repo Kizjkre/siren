@@ -8,8 +8,6 @@
   import NavSynths from '$lib/components/nav/components/NavSynths.svelte';
   import NavMappings from '$lib/components/nav/components/NavMappings.svelte';
   // noinspection TypeScriptCheckImport
-  import IconHome from '~icons/tabler/home';
-  // noinspection TypeScriptCheckImport
   import IconMenu2 from '~icons/tabler/menu-2';
   import type { MouseEventHandler } from 'svelte/elements';
 

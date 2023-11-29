@@ -35,6 +35,7 @@
     "d3-dsv": "^3.0.1",
     "d3-scale": "^4.0.2",
     "isomorphic-dompurify": "^1.8.0",
+    "osc": "^2.4.4",
     "webchuck": "^1.2.3"
   },
   "overrides": {

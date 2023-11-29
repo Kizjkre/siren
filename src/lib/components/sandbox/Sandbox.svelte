@@ -1,6 +1,10 @@
+<!-- NOTE: https://web.dev/articles/sandboxed-iframes -->
+
 <script lang="ts">
   // @ts-ignore
   import portCode from '$lib/util/sandbox/port?raw';
+  // @ts-ignore
+  import worklet from '$lib/util/sandbox/worklet?raw';
   // @ts-ignore
   import html from '$lib/util/sandbox/sandbox.html?raw';
   import type { EventHandler } from 'svelte/elements';
@@ -14,10 +18,12 @@
   const userscriptEl: HTMLScriptElement = doc.createElement('script');
   const portEl: HTMLScriptElement = doc.createElement('script');
   const actionEl: HTMLScriptElement = doc.createElement('script');
+  const workletEl: HTMLScriptElement = doc.createElement('script');
 
   userscriptEl.type = 'inline-module';
   portEl.type = 'inline-module';
   actionEl.type = 'inline-module';
+  workletEl.type = 'inline-module';
 
   userscriptEl.id = 'userscript';
   portEl.id = 'port';
@@ -25,8 +31,9 @@
   userscriptEl.textContent = userscript;
   portEl.textContent = portCode;
   actionEl.textContent = action;
+  workletEl.textContent = worklet;
 
-  doc.body.append(userscriptEl, portEl, actionEl);
+  doc.body.append(workletEl, userscriptEl, portEl, actionEl);
 
   const srcdoc: string = doc.documentElement.outerHTML;
 
@@ -48,11 +55,12 @@
 <!-- REF: https://stackoverflow.com/a/75529235 -->
 <svelte:options immutable />
 
+<!-- TODO: FIX allow-same-origin -->
 <iframe
   allow="autoplay"
   class="hidden"
   on:load={ handleLoad }
-  sandbox="allow-scripts"
+  sandbox="allow-scripts allow-same-origin"
   { srcdoc }
   title="Sandbox"
 />

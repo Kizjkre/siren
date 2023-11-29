@@ -1,4 +1,4 @@
-import synth, { parameters } from '#userscript';
+import * as synth from '#userscript';
 import port from '#port';
 
 // REF: https://github.com/hoch/canopy/blob/master/docs/js/canopy-exporter.js
@@ -161,19 +161,30 @@ window.AudioContext = function () {
   return new OfflineAudioContext({ numberOfChannels: 2, length: length * sampleRate, sampleRate });
 };
 
-AudioNode.prototype._SIREN_connect = AudioNode.prototype.connect;
-AudioNode.prototype._SIREN_disconnect = AudioNode.prototype.disconnect;
+const urls = Object.fromEntries(Object.entries(synth.worklets ?? {}).map(([name, worklet]) => {
+  const blob = new Blob([`registerProcessor('${ name }', ${ worklet.toString() });`], { type: 'application/javascript' });
+  return [name, URL.createObjectURL(blob)];
+}));
+
+const addModule = AudioWorklet.prototype.addModule;
+AudioWorklet.prototype.addModule = async function () {
+  arguments[0] = urls[arguments[0]];
+  return await addModule.apply(this, arguments);
+};
+
+const connect = AudioNode.prototype.connect;
+const disconnect = AudioNode.prototype.disconnect;
 
 AudioNode.prototype.connect = function () {
   if (!graph.has(this.context)) {
     graph.set(this.context, new Set());
   }
   graph.get(this.context).add([this, arguments[0]]);
-  return this._SIREN_connect(...arguments);
+  return connect.apply(this, arguments);
 };
 AudioNode.prototype.disconnect = function () {
   graph.get(this.context).delete([this, arguments[0]]);
-  return this._SIREN_disconnect(...arguments);
+  return disconnect.apply(this, arguments);
 };
 
 const playing = new Set();
@@ -188,7 +199,7 @@ const playing = new Set();
 
   length = times.at(-1) + 1;
 
-  const s = await synth();
+  const s = await synth.default();
 
   times.forEach(time => {
     current = { ...current, ...timeline[time] };
@@ -198,15 +209,15 @@ const playing = new Set();
         .filter(params => params.includes(parameter))
         .forEach(params => !functions.has(params) && functions.set(params, s.updates.get(params)))
     );
-    Array.from(functions.entries()).forEach(([params, update]) => update(...params.filter(p => !parameters.time.includes(p)).map(p => current[p]), time)); /* TODO: fix hack */
+    Array.from(functions.entries()).forEach(([params, update]) => update(...params.filter(p => !synth.parameters.time.includes(p)).map(p => current[p]), time)); /* TODO: fix hack */
   });
 
   const master = new GainNode(s.context);
-  master._SIREN_connect(s.context.destination);
+  connect.call(master, s.context.destination);
   graph.get(s.context)?.forEach(([from, to]) => {
     if (to instanceof AudioDestinationNode) {
-      from._SIREN_disconnect(to);
-      from._SIREN_connect(master);
+      disconnect.call(from, to);
+      connect.call(from, master);
     }
   });
   master.gain.value = 1;

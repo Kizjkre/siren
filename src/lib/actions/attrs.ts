@@ -1,5 +1,4 @@
 import type { Action, ActionReturn } from 'svelte/action';
-import type { Apply, ComponentAttrs, DirectiveFinder, EventListenerSetter } from '$lib/util/definitions/componentAttr';
 
 // REF: https://github.com/sveltejs/svelte/issues/5112#issuecomment-671019753
 const attrs: Action<HTMLElement, ComponentAttrs> = (node: HTMLElement, attrs: ComponentAttrs): ActionReturn<ComponentAttrs> => {

@@ -36,6 +36,7 @@
       class:border-blue-600={ $status !== Status.stop }
       class:text-blue-600={ $status !== Status.stop }
       class:text-gray-100={ $status === Status.stop }
+      disabled={ $status === Status.stop }
       on:click={ handleStop }
     >
       <IconPlayerStop />
@@ -46,6 +47,7 @@
       class:border-blue-600={ $status !== Status.play }
       class:text-blue-600={ $status !== Status.play }
       class:text-gray-100={ $status === Status.play }
+      disabled={ $status === Status.play }
       on:click={ handlePlay }
     >
       <IconPlayerPlay />
@@ -56,6 +58,7 @@
       class:border-blue-600={ $status === Status.play }
       class:text-blue-600={ $status === Status.play }
       class:text-gray-100={ $status !== Status.play }
+      disabled={ $status !== Status.play }
       on:click={ handlePause }
     >
       <IconPlayerPause />

@@ -77,8 +77,8 @@
       <IconBoxMultiple />
     </label>
     <select class="outline-none" id="track-view-{ id }" on:change={ handleChange }>
-      { #each Object.keys($synths[$synth].parameters.timbral) as parameter }
-      	<option value={ parameter }>{ parameter }</option>
+      { #each Object.entries($synths[$synth].parameters.timbral) as [parameter, type] }
+      	<option value={ parameter }>{ parameter } ({ type === 'quantitative' ? 'Q' : 'N' })</option>
       { /each }
     </select>
   </div>
