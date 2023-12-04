@@ -13,7 +13,7 @@
   import { handleDragStart } from '$lib/util/drag/mapping';
   // @ts-ignore
   import { browser } from '$app/environment';
-  import type { EventListenerCreator } from '$lib/util/definitions/listener';
+  import type { EventListenerCreator } from '$lib/util/definitions/client/listener';
 
   const selected: boolean[] = [];
 

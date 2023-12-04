@@ -1,12 +1,16 @@
 import { get, type Writable, writable } from 'svelte/store';
-import type { Track, TrackRegion, TrackRegionStoreInterface, TrackRegionStore } from '$lib/util/definitions/tracks';
+import type {
+  Track,
+  TrackRegion,
+  TrackRegionStoreInterface,
+  TrackRegionStore,
+  TrackInit
+} from '$lib/util/definitions/client/tracks';
 import defaultdict from '$lib/util/defaultdict';
-import type { RegionSource } from '$lib/util/definitions/region';
+import type { RegionSource } from '$lib/util/definitions/client/region';
 import region from '$lib/stores/region';
 import data from '$lib/stores/data';
 import synths from '$lib/stores/synths';
-
-type TrackInit = () => Track;
 
 const store: (dict: DefaultDict<TrackRegionStore>) => TrackRegionStoreInterface =
   (dict: DefaultDict<TrackRegionStore>): TrackRegionStoreInterface => {

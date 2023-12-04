@@ -1,4 +1,4 @@
-import type { Subscribe } from '$lib/util/definitions/store';
+import type { Subscribe } from '$lib/util/definitions/client/store';
 
 interface Sandbox {
   action: string;

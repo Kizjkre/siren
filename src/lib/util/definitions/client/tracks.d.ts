@@ -1,6 +1,6 @@
 import type { Writable } from 'svelte/store';
-import type { Region, RegionSource } from '$lib/util/definitions/region';
-import type { Subscribe } from '$lib/util/definitions/store';
+import type { Region, RegionSource } from '$lib/util/definitions/client/region';
+import type { Subscribe } from '$lib/util/definitions/client/store';
 
 interface TrackRegionStore {
   [id: number]: Region;
@@ -34,3 +34,5 @@ interface TrackStoreInterface {
   remove: (id: number) => any;
   subscribe: Subscribe<TrackStore>;
 }
+
+type TrackInit = () => Track;

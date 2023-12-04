@@ -1,6 +1,6 @@
 <script lang="ts">
   import Sandbox from '$lib/components/sandbox/Sandbox.svelte';
-  import type { EventListenerCreator } from '$lib/util/definitions/listener';
+  import type { EventListenerCreator } from '$lib/util/definitions/client/listener';
   import sandbox from '$lib/stores/sandbox';
 
   const handleResult: EventListenerCreator<[string]> =

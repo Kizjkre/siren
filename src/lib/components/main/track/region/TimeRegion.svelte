@@ -2,7 +2,7 @@
 
 <script lang="ts">
   import { derived, type Writable } from 'svelte/store';
-  import type { Region } from '$lib/util/definitions/region';
+  import type { Region } from '$lib/util/definitions/client/region';
   import { type ScaleLinear, scaleLinear } from 'd3-scale';
   import data from '$lib/stores/data';
   import width from '$lib/stores/width';

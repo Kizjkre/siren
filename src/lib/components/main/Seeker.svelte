@@ -1,10 +1,10 @@
 <script lang="ts">
   import status from '$lib/stores/status';
-  import { Status } from '$lib/util/definitions/status';
   import width from '$lib/stores/width';
   // @ts-ignore
   import { browser } from '$app/environment';
   import rate from '$lib/stores/rate';
+  import { Status } from '$lib/util/definitions/client/status.d';
 
   enum StatusTime {
     stop = -1,

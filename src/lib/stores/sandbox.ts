@@ -1,5 +1,5 @@
 import { type Unsubscriber, type Writable, writable } from 'svelte/store';
-import type { Sandbox, SandboxStore, SandboxStoreInterface } from '$lib/util/definitions/sandbox';
+import type { Sandbox, SandboxStore, SandboxStoreInterface } from '$lib/util/definitions/client/sandbox';
 
 const { subscribe, update }: Writable<SandboxStore> = writable({});
 

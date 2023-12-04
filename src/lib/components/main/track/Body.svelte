@@ -1,11 +1,12 @@
 <script lang="ts">
   import tracks from '$lib/stores/tracks';
-  import type { Track, TrackRegionStoreInterface } from '$lib/util/definitions/tracks';
+  import type { Track, TrackRegionStoreInterface } from '$lib/util/definitions/client/tracks';
   import RegionComponent from '$lib/components/main/track/region/Region.svelte';
   import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/data';
   import TimeRegion from '$lib/components/main/track/region/TimeRegion.svelte';
-  import type { EventListenerCreator } from '$lib/util/definitions/listener';
+  import type { EventListenerCreator } from '$lib/util/definitions/client/listener';
   import type { Writable } from 'svelte/store';
+  import trackSelect from '$lib/stores/trackSelect';
 
   export let id: number;
 
@@ -20,7 +21,7 @@
     (id: number): EventListener => (): void => time.remove($view, id);
 </script>
 
-<div class="flex flex-col h-full w-full">
+<div class="flex flex-col h-full transition w-full" class:bg-gray-100={ $trackSelect === id }>
   <div
     class="h-timbral relative w-full"
     on:dragleave|preventDefault={ handleDragLeave }

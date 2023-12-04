@@ -1,5 +1,5 @@
 import { get, type Writable, writable } from 'svelte/store';
-import type { Region, RegionConstructor, RegionSource } from '$lib/util/definitions/region';
+import type { Region, RegionConstructor, RegionSource } from '$lib/util/definitions/client/region';
 import data from '$lib/stores/data';
 
 const region: RegionConstructor =

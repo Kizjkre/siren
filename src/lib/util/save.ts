@@ -7,11 +7,12 @@ import sidebar from '$lib/stores/sidebar';
 import synths from '$lib/stores/synths';
 import tracks from '$lib/stores/tracks';
 import width from '$lib/stores/width';
-import type { Data, DataStore } from '$lib/util/definitions/data';
-import type { Mapping, MappingStore } from '$lib/util/definitions/mappings';
-import type { Synth, SynthStore } from '$lib/util/definitions/synths';
-import type { Track, TrackRegionStore, TrackStore } from '$lib/util/definitions/tracks';
-import type { Region } from '$lib/util/definitions/region';
+import type { Data, DataStore } from '$lib/util/definitions/client/data';
+import type { Mapping, MappingStore } from '$lib/util/definitions/client/mappings';
+import type { Synth, SynthStore } from '$lib/util/definitions/client/synths';
+import type { Track, TrackRegionStore, TrackStore } from '$lib/util/definitions/client/tracks';
+import type { Region } from '$lib/util/definitions/client/region';
+import download from '$lib/util/download';
 
 const save: () => any = (): any => {
   // NOTE: Change to zip once sound files are implemented
@@ -106,9 +107,7 @@ const save: () => any = (): any => {
     width: get(width)
   };
 
-  console.log(state);
-
-  // download('siren-session.json', new Blob([JSON.stringify(state)]));
+  download('siren-session.json', new Blob([JSON.stringify(state)]));
 };
 
 export default save;

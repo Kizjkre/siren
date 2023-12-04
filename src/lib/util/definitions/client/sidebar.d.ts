@@ -1,4 +1,4 @@
-import { Subscribe } from '$lib/util/definitions/store';
+import { Subscribe } from '$lib/util/definitions/client/store';
 
 interface SidebarStore {
   subscribe: Subscribe<boolean>;

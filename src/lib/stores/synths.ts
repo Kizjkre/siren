@@ -1,5 +1,5 @@
 import { get, type Writable, writable } from 'svelte/store';
-import type { SynthStore, SynthStoreInterface } from '$lib/util/definitions/synths';
+import type { SynthStore, SynthStoreInterface } from '$lib/util/definitions/client/synths';
 // @ts-ignore
 import action from '$lib/util/sandbox/action/params?raw';
 import sandbox from '$lib/stores/sandbox';

@@ -1,11 +1,11 @@
 import type { DragEventHandler } from 'svelte/elements';
-import type { Region } from '$lib/util/definitions/region';
+import type { Region } from '$lib/util/definitions/client/region';
 import data from '$lib/stores/data';
 import { get } from 'svelte/store';
 import mappings from '$lib/stores/mappings';
 // @ts-ignore
 import action from '$lib/util/sandbox/action/map?raw';
-import type { EventHandlerCreator } from '$lib/util/definitions/listener';
+import type { EventHandlerCreator } from '$lib/util/definitions/client/listener';
 import sandbox from '$lib/stores/sandbox';
 
 type DragStartHandlerCreator = EventHandlerCreator<[number], DragEventHandler<HTMLButtonElement>>;

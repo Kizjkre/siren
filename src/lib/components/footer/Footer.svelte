@@ -1,5 +1,7 @@
 <script lang="ts">
   // noinspection TypeScriptCheckImport
+  import IconPlayerRecord from '~icons/tabler/player-record';
+  // noinspection TypeScriptCheckImport
   import IconPlayerPause from '~icons/tabler/player-pause';
   // noinspection TypeScriptCheckImport
   import IconPlayerPlay from '~icons/tabler/player-play';
@@ -7,9 +9,9 @@
   import IconPlayerStop from '~icons/tabler/player-stop';
   import type { MouseEventHandler } from 'svelte/elements';
   import rate from '$lib/stores/rate';
-  import { pause, play, stop } from '$lib/util/status';
+  import { pause, play, record, stop } from '$lib/util/status';
   import status from '$lib/stores/status';
-  import { Status } from '$lib/util/definitions/status';
+  import { Status } from '$lib/util/definitions/client/status.d';
 
   const handlePause: MouseEventHandler<HTMLButtonElement> = (): any => {
     pause();
@@ -19,6 +21,16 @@
   const handlePlay: MouseEventHandler<HTMLButtonElement> = (): any => {
     play();
     $status = Status.play;
+  };
+
+  const handleRecord: MouseEventHandler<HTMLButtonElement> = (): any => {
+    if ($status === Status.record) {
+      $status = Status.stop;
+      return;
+    }
+
+    record();
+    $status = Status.record;
   };
 
   const handleStop: MouseEventHandler<HTMLButtonElement> = (): any => {
@@ -32,22 +44,33 @@
   <div class="basis-1/2 flex gap-2 items-center justify-center">
     <button
       class="border flex h-6 items-center justify-center md:h-12 rounded-full transition w-12"
-      class:bg-gray-100={ $status !== Status.stop }
-      class:border-blue-600={ $status !== Status.stop }
-      class:text-blue-600={ $status !== Status.stop }
-      class:text-gray-100={ $status === Status.stop }
-      disabled={ $status === Status.stop }
+      class:bg-gray-100={ $status === Status.stop || $status === Status.record }
+      class:border-red-600={ $status === Status.stop || $status === Status.record }
+      class:text-red-600={ $status === Status.stop || $status === Status.record }
+      class:text-gray-100={ $status !== Status.stop && $status !== Status.record }
+      disabled={ $status !== Status.stop && $status !== Status.record }
+      on:click={ handleRecord }
+    >
+      <IconPlayerRecord />
+    </button>
+    <button
+      class="border flex h-6 items-center justify-center md:h-12 rounded-full transition w-12"
+      class:bg-gray-100={ $status !== Status.stop && $status !== Status.record }
+      class:border-blue-600={ $status !== Status.stop && $status !== Status.record }
+      class:text-blue-600={ $status !== Status.stop && $status !== Status.record }
+      class:text-gray-100={ $status === Status.stop || $status === Status.record }
+      disabled={ $status === Status.stop || $status === Status.record }
       on:click={ handleStop }
     >
       <IconPlayerStop />
     </button>
     <button
       class="border flex h-8 items-center justify-center md:h-16 rounded-full transition w-16"
-      class:bg-gray-100={ $status !== Status.play }
-      class:border-blue-600={ $status !== Status.play }
-      class:text-blue-600={ $status !== Status.play }
-      class:text-gray-100={ $status === Status.play }
-      disabled={ $status === Status.play }
+      class:bg-gray-100={ $status !== Status.play && $status !== Status.record }
+      class:border-blue-600={ $status !== Status.play && $status !== Status.record }
+      class:text-blue-600={ $status !== Status.play && $status !== Status.record }
+      class:text-gray-100={ $status === Status.play || $status === Status.record }
+      disabled={ $status === Status.play || $status === Status.record }
       on:click={ handlePlay }
     >
       <IconPlayerPlay />
@@ -57,8 +80,8 @@
       class:bg-gray-100={ $status === Status.play }
       class:border-blue-600={ $status === Status.play }
       class:text-blue-600={ $status === Status.play }
-      class:text-gray-100={ $status !== Status.play }
-      disabled={ $status !== Status.play }
+      class:text-gray-100={ $status !== Status.play || $status === Status.record }
+      disabled={ $status !== Status.play || $status === Status.record }
       on:click={ handlePause }
     >
       <IconPlayerPause />

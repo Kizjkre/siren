@@ -12,16 +12,17 @@
   import IconVolumeOff from '~icons/tabler/volume-off';
   // noinspection TypeScriptCheckImport
   import IconWaveSine from '~icons/tabler/wave-sine';
-  import type { ChangeEventHandler, MouseEventHandler } from 'svelte/elements';
+  import type { ChangeEventHandler, KeyboardEventHandler, MouseEventHandler } from 'svelte/elements';
   import type { Writable } from 'svelte/store';
-  import type { Track } from '$lib/util/definitions/tracks';
+  import type { Track } from '$lib/util/definitions/client/tracks';
   import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/synth';
   import synths from '$lib/stores/synths';
   // @ts-ignore
   import demo from '$lib/util/sandbox/action/demo?raw';
   import status from '$lib/stores/status';
-  import { Status } from '$lib/util/definitions/status';
   import sandbox from '$lib/stores/sandbox';
+  import trackSelect from '$lib/stores/trackSelect';
+  import { Status } from '$lib/util/definitions/client/status.d';
 
   export let id: number;
 
@@ -44,18 +45,27 @@
     });
   };
 
-  const handleGain: MouseEventHandler<HTMLButtonElement> = (): any => {
-    $gain = $gain === 0 ? 1 : 0;
-  };
+  const handleGain: MouseEventHandler<HTMLButtonElement> = (): any => $gain = $gain === 0 ? 1 : 0;
+
+  const handleSelect: MouseEventHandler<HTMLDivElement> & KeyboardEventHandler<HTMLDivElement> =
+    (): any => $trackSelect = $trackSelect === id ? -1 : id;
 
   // NOTE: Using setTimeout to wait for the play action to post first. Not sure how to fix,
   //       tried using document.dispatchEvent after useSandbox in status.ts but it doesn't work.
   $: $status === Status.play && setTimeout(() => sandbox.send(`play-${ id }`, { action: 'gain', gain: $gain }), 100);
 </script>
 
-<div class="bg-white border-x flex flex-col gap-4 h-full left-0 px-2 py-1 shrink-0 sticky w-track-header z-[1]">
+<div
+  class="border-x cursor-pointer flex flex-col gap-4 h-full left-0 px-2 py-1 shrink-0 sticky transition w-track-header z-[1]"
+  class:bg-gray-100={ $trackSelect === id }
+  class:bg-white={ $trackSelect !== id }
+  on:click={ handleSelect }
+  on:keypress={ handleSelect }
+  role="button"
+  tabindex="-1"
+>
   <div class="flex">
-    <input bind:value={ $name } class="font-bold outline-none w-full" name="track-name" type="text" />
+    <input bind:value={ $name } class="bg-transparent font-bold outline-none w-full" name="track-name" type="text" />
     <button class="hover:text-red-400" on:click={ handleClick }>
       <IconCircleX />
     </button>
@@ -76,7 +86,7 @@
     <label for="track-view-{ id }">
       <IconBoxMultiple />
     </label>
-    <select class="outline-none" id="track-view-{ id }" on:change={ handleChange }>
+    <select class="bg-transparent outline-none" id="track-view-{ id }" on:change={ handleChange }>
       { #each Object.entries($synths[$synth].parameters.timbral) as [parameter, type] }
       	<option value={ parameter }>{ parameter } ({ type === 'quantitative' ? 'Q' : 'N' })</option>
       { /each }

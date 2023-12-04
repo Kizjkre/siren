@@ -1,5 +1,5 @@
 import { type Writable, writable } from 'svelte/store';
-import type { MappingStore, MappingStoreObject } from '$lib/util/definitions/mappings';
+import type { MappingStore, MappingStoreObject } from '$lib/util/definitions/client/mappings';
 
 const store: Writable<MappingStore> = writable({});
 
