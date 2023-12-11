@@ -16,7 +16,7 @@
   class="bg-transparent cursor-text outline-none"
   contenteditable
   on:click|stopPropagation
-  on:keydown={ handleKeyDown }
+  on:keydown|stopPropagation={ handleKeyDown }
   on:keyup|preventDefault
   role="textbox"
   tabindex="0"

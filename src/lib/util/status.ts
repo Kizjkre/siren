@@ -7,7 +7,14 @@ import tracks from '$lib/stores/tracks';
 import sandbox from '$lib/stores/sandbox';
 import status from '$lib/stores/status';
 import { Status, type StatusChange } from '$lib/util/definitions/client/status.d';
-import { io, Socket } from 'socket.io-client';
+import { io } from 'socket.io-client';
+import recordStore from '$lib/stores/record';
+
+export const end: StatusChange = (): any => {
+  get(recordStore)?.disconnect();
+
+  status.set(Status.stop);
+};
 
 /**
  * Pauses the execution of the program.
@@ -16,6 +23,8 @@ import { io, Socket } from 'socket.io-client';
  */
 export const pause: StatusChange = (): any => {
   Object.keys(get(tracks)).forEach((id: string): any => sandbox.send(`play-${ id }`, { action: 'pause' }));
+
+  status.set(Status.pause);
 };
 
 /**
@@ -26,16 +35,17 @@ export const pause: StatusChange = (): any => {
 export const play: StatusChange = (): any => {
   if (get(status) === Status.pause) {
     Object.keys(get(tracks)).forEach((id: string): any => sandbox.send(`play-${ id }`, { action: 'resume' }));
-    return;
+  } else {
+    timeline((id: number, timeline: Timeline): any =>
+      sandbox.add(`play-${ id }`, {
+        action,
+        data: { action: 'play', timeline, gain: 1 },
+        script: get(synths)[timeline.synth].code
+      })
+    );
   }
 
-  timeline((id: number, timeline: Timeline): any =>
-    sandbox.add(`play-${ id }`, {
-      action,
-      data: { action: 'play', timeline, gain: 1 },
-      script: get(synths)[timeline.synth].code
-    })
-  );
+  status.set(Status.play);
 };
 
 export const record: StatusChange = async (): Promise<any> => {
@@ -54,13 +64,16 @@ export const record: StatusChange = async (): Promise<any> => {
     return token;
   })();
 
-  const socket: Socket =
-    io(`${ window.location.protocol === 'https:' ? 'wss' : 'ws' }://${ window.location.hostname }:3001`);
+  recordStore.set(
+    io(`${ window.location.protocol === 'https:' ? 'wss' : 'ws' }://${ window.location.hostname }:3001`)
+  );
 
-  socket.emit('access', jwt);
-  socket.on(`/${ jwt }`, (message: string): any => {
+  get(recordStore).emit('access', jwt);
+  get(recordStore).on(`/${ jwt }`, (message: string): any => {
     console.log(message);
   });
+
+  status.set(Status.record);
 };
 
 /**
@@ -73,4 +86,6 @@ export const stop: StatusChange = (): any => {
     sandbox.send(`play-${ id }`, { action: 'stop' });
     sandbox.remove(`play-${ id }`);
   });
+
+  status.set(Status.stop);
 };

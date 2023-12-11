@@ -13,7 +13,7 @@
 </script>
 
 <main class="flex flex-col h-full overflow-scroll relative">
-  <div style:width="{ $width * $duration + 200 }px">
+  <div class="relative" style:width="{ $width * $duration + 200 }px">
     <Seeker />
     <Timeline />
     <div>

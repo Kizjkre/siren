@@ -11,9 +11,7 @@
   import defaultSynth from '$lib/util/init/defaultSynth';
   import MappingSandboxStore from '$lib/components/sandbox/SandboxManager.svelte';
   import initAce from '$lib/util/init/initAce';
-  // import io from 'socket.io-client';
-  //
-  // const socket = io('http://localhost:3001');
+  import hotkeys from '$lib/util/hotkeys';
 
   defaultMapping();
   defaultSynth();
@@ -26,7 +24,7 @@
 </script>
 
 <svelte:window on:beforeunload|preventDefault={ handleBeforeUnload } />
-<svelte:document on:click={ clickOutsideListener } />
+<svelte:document on:click={ clickOutsideListener } on:keydown={ hotkeys } />
 
 <svelte:head>
   <title>Workstation | SIREN</title>

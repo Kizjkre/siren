@@ -3,7 +3,7 @@
 <script lang="ts">
   import { derived, type Writable } from 'svelte/store';
   import type { Region } from '$lib/util/definitions/client/region';
-  import { type ScaleLinear, scaleLinear } from 'd3-scale';
+  import { type ScaleBand, scaleBand, type ScaleLinear, scaleLinear } from 'd3-scale';
   import data from '$lib/stores/data';
   import width from '$lib/stores/width';
   import type { MouseEventHandler } from 'svelte/elements';
@@ -15,10 +15,11 @@
   import { fade } from 'svelte/transition';
   import duration from '$lib/stores/duration';
   import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/mapping';
+  // import Alert from '$lib/components/util/Alert.svelte';
 
   export let region: Region;
 
-  const column: Writable<number[]> = region.data;
+  const column: Writable<any[]> = region.data;
 
   const rects: RegionPoint[] = [];
 
@@ -49,11 +50,16 @@
     const x: ScaleLinear<number, number> = scaleLinear()
       .domain([0, $column.length])
       .range([0, $column.length * $width / 4]);
-    const y: ScaleLinear<number, number> = scaleLinear()
-      .domain([Math.min(...$column), Math.max(...$column)])
-      .range([100 - 2.5, 25]);
 
-    $column.forEach((d: number, i: number): RegionPoint => rects[i] = { x: x(i), y: y(d) });
+    const y: ScaleLinear<number, number> | ScaleBand<number> = !isNaN($column[0]) ?
+      scaleLinear()
+        .domain([Math.min(...$column), Math.max(...$column)])
+        .range([100 - 2.5, 25]) :
+      scaleBand()
+        .domain($column)
+        .range([100 - 2.5, 25]);
+
+    $column.forEach((d: number, i: number): RegionPoint => rects[i] = { x: x(i), y: y(d)! });
   }
 
   $: if ($column.length + $offset * 4 > $duration * 4)
@@ -61,7 +67,7 @@
 </script>
 
 <button
-  class="absolute active:cursor-grabbing bg-gray-100 border-x border-blue-600 box-content cursor-grab h-full"
+  class="absolute active:cursor-grabbing bg-blue-100 box-border cursor-grab h-full rounded-xl"
   on:dragleave|capture|preventDefault|stopPropagation={ handleDragLeave }
   on:dragover|capture|preventDefault|stopPropagation={ handleDragOver }
   on:drop|capture|preventDefault|stopPropagation={ handleDrop(region) }
@@ -70,17 +76,17 @@
   style:width="{ $w }px"
   transition:fade={ { duration: 100 } }
 >
-  <span class="absolute flex gap-2 items-center left-1 text-xs">
+  <span class="absolute flex gap-2 items-center left-2 text-xs">
     <button class="hover:text-red-400 text-blue-600" on:click|stopPropagation={ forward }>
       <IconCircleX class="h-3 w-3" />
     </button>
-    <span>{ $data[region.source.id].name } / { region.source.column }</span>
+    <span class="text-blue-900">{ $data[region.source.id].name } / { region.source.column }</span>
   </span>
   <svg class="h-full" width={ $w }>
     { #each rects as { x, y } }
       { #key y }
         <rect
-          class="cursor-pointer hover:fill-blue-600"
+          class="cursor-pointer fill-blue-900 hover:fill-blue-600"
           height="5"
           transition:fade
           width={ $width / 4 } { x } y={ y - 2.5 }

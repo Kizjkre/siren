@@ -65,7 +65,14 @@
   tabindex="-1"
 >
   <div class="flex">
-    <input bind:value={ $name } class="bg-transparent font-bold outline-none w-full" name="track-name" type="text" />
+    <input
+      bind:value={ $name }
+      class="bg-transparent font-bold outline-none w-full"
+      on:keydown|stopPropagation
+      on:keypress|stopPropagation
+      name="track-name"
+      type="text"
+    />
     <button class="hover:text-red-400" on:click={ handleClick }>
       <IconCircleX />
     </button>

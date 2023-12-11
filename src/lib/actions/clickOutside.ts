@@ -9,7 +9,7 @@ const clickOutside: Action<HTMLElement, MouseEventHandler<HTMLElement>> =
 
     return {
       destroy: (): any => nodes.delete(node)
-    }
+    };
   };
 
 export default clickOutside;

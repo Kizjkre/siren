@@ -24,6 +24,7 @@
   <div
     bind:this={ editor }
     on:click|stopPropagation
+    on:keydown|stopPropagation
     on:keyup|preventDefault
     role="none"
   />

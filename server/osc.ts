@@ -19,9 +19,16 @@ const oscServer: Object = {
     });
 
     io.on('connection', (socket: Socket): any => {
-      socket.on('access', (token: string): any => {
-        jwt.verify(token, process.env.JWT_ACCESS_TOKEN!);
-        connections.add(`/${ token }`);
+      let token: string;
+
+      socket.on('access', (t: string): any => {
+        jwt.verify(t, process.env.JWT_ACCESS_TOKEN!);
+        connections.add(`/${ t }`);
+        token = t;
+      });
+
+      socket.on('disconnect', () => {
+        connections.delete(`/${ token }`);
       });
     });
 
@@ -29,7 +36,7 @@ const oscServer: Object = {
       metadata: true
     });
 
-    udp.on('message', ({ address, args }: Object): any => {
+    udp.on('message', ({ address, args }: { address: string, args: any }): any => {
       if (!connections.has(address)) return;
       io.emit(address, args);
     });

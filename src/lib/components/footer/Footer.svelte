@@ -9,38 +9,34 @@
   import IconPlayerStop from '~icons/tabler/player-stop';
   import type { MouseEventHandler } from 'svelte/elements';
   import rate from '$lib/stores/rate';
-  import { pause, play, record, stop } from '$lib/util/status';
+  import { end, pause, play, record, stop } from '$lib/util/status';
   import status from '$lib/stores/status';
   import { Status } from '$lib/util/definitions/client/status.d';
 
   const handlePause: MouseEventHandler<HTMLButtonElement> = (): any => {
     pause();
-    $status = Status.pause;
   };
 
   const handlePlay: MouseEventHandler<HTMLButtonElement> = (): any => {
     play();
-    $status = Status.play;
   };
 
   const handleRecord: MouseEventHandler<HTMLButtonElement> = (): any => {
     if ($status === Status.record) {
-      $status = Status.stop;
+      end();
       return;
     }
 
     record();
-    $status = Status.record;
   };
 
   const handleStop: MouseEventHandler<HTMLButtonElement> = (): any => {
     stop();
-    $status = Status.stop;
   };
 </script>
 
 <footer class="flex flex-col gap-2 h-full md:flex-row w-full">
-  <div class="basis-1/4 flex"></div>
+  <div class="basis-1/4 flex relative" id="alert-container"></div>
   <div class="basis-1/2 flex gap-2 items-center justify-center">
     <button
       class="border flex h-6 items-center justify-center md:h-12 rounded-full transition w-12"
@@ -51,7 +47,11 @@
       disabled={ $status !== Status.stop && $status !== Status.record }
       on:click={ handleRecord }
     >
-      <IconPlayerRecord />
+      { #if $status === Status.record }
+        <IconPlayerStop />
+      { :else }
+        <IconPlayerRecord />
+      { /if }
     </button>
     <button
       class="border flex h-6 items-center justify-center md:h-12 rounded-full transition w-12"
