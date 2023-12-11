@@ -7,7 +7,7 @@ import type { Action, ActionReturn } from 'svelte/action';
  * Usage: <div use:portal={'css selector'}> or <div use:portal={document.body}>
  *
  * @param { HTMLElement } el
- * @param { HTMLElement | string } target DOM Element or CSS Selector
+ * @param { string | HTMLElement } target DOM Element or CSS Selector
  */
 const portal: Action<HTMLElement, HTMLElement> = (el: HTMLElement, target?: string | HTMLElement): ActionReturn<HTMLElement> => {
   target ??= document.body.firstElementChild as HTMLElement;

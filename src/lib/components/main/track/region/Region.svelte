@@ -1,7 +1,7 @@
 <!-- TODO: Hitbox -->
 
 <script lang="ts">
-  import { derived, type Writable } from 'svelte/store';
+  import { derived, type Readable, type Writable } from 'svelte/store';
   import type { Region } from '$lib/util/definitions/client/region';
   import { type ScaleBand, scaleBand, type ScaleLinear, scaleLinear } from 'd3-scale';
   import data from '$lib/stores/data';
@@ -24,7 +24,7 @@
   const rects: RegionPoint[] = [];
 
   const offset: Writable<number> = region.offset;
-  const w = derived(width, (width: number): number => $column.length * width / 4);
+  const w: Readable<number> = derived(width, (width: number): number => $column.length * width / 4);
 
   const dispatch: EventDispatcher<None> = createEventDispatcher();
 

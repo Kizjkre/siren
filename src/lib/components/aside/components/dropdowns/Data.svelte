@@ -5,41 +5,53 @@
   import type { DSVParsedArray } from 'd3-dsv';
   import { slide } from 'svelte/transition';
   import { handleDragStart as handleDragStartCore } from '$lib/util/drag/data';
-  import Region from '$lib/components/main/track/region/Region.svelte';
   import portal from '$lib/actions/portal';
-  import { writable } from 'svelte/store';
+  import { derived, type Readable } from 'svelte/store';
   import type { DragEventHandler } from 'svelte/elements';
+  import Region from '$lib/components/main/track/region/Region.svelte';
+  import type { Region as RegionInterface } from '$lib/util/definitions/client/region';
+  import width from '$lib/stores/width';
+  import region from '$lib/stores/region';
+  import type { EventHandlerCreator } from '$lib/util/definitions/client/listener';
 
   type StrongDragEvent = DragEvent & { currentTarget: EventTarget & HTMLButtonElement; };
 
   export let id: number;
 
-  const d: { name: string, data: DSVParsedArray<{}> } = $data[id];
+  const d: { name: string, data: DSVParsedArray<any> } = $data[id];
 
   let dragging: boolean = false;
-  let column: string;
   let image: HTMLImageElement;
   let x: number = 0;
   let y: number = 0;
+  let r: RegionInterface;
+  let column: string;
+  const w: Readable<number> = derived(width, (width: number): number => column?.length * width / 4);
 
-  const handleDragStart = (id: number, c: string) => (e: StrongDragEvent): void => {
-    dragging = true;
-    column = c;
-    handleDragStartCore(id, c)(e);
-    e.dataTransfer!.setDragImage(image, 0, 0);
-  };
+  const handleDragStart: EventHandlerCreator<[string], DragEventHandler<HTMLButtonElement>> =
+    (c: string) => (e: StrongDragEvent): any => {
+      dragging = true;
+      column = c;
+      e.dataTransfer!.setDragImage(image, 0, 0);
 
-  const handleDrag: DragEventHandler<HTMLButtonElement> = (e: DragEvent): void => {
+      r = region({ source: { id, column } });
+
+      handleDragStartCore(id, column)(e);
+    };
+
+  const handleDrag: DragEventHandler<HTMLButtonElement> = (e: DragEvent): any => {
     if (!dragging) return;
 
-    x = e.clientX + 10;
+    x = e.clientX - 50;
     y = e.clientY - 50;
   };
 
-  const handleDragEnd: DragEventHandler<HTMLButtonElement> = (): void => {
+  const handleDragEnd: DragEventHandler<HTMLButtonElement> = (): any =>
     dragging = false;
-  }
 </script>
+
+<!-- REF: https://stackoverflow.com/a/51697038 -->
+<svelte:body on:dragover|preventDefault />
 
 <div class="flex flex-col gap-1 ml-4 mt-2" transition:slide>
   { #each d.data.columns as column }
@@ -48,7 +60,7 @@
         class="after:border-b-blue-600 active:cursor-grabbing cursor-grab flex gap-2 items-center link"
         draggable="true"
         on:drag={ handleDrag }
-        on:dragstart={ handleDragStart(id, column) }
+        on:dragstart={ handleDragStart(column) }
         on:dragend={ handleDragEnd }
       >
         <IconTableRow class="h-4 w-4" />
@@ -65,14 +77,14 @@
   { /each }
 </div>
 
-<!-- NOTE: Refactor -->
 { #if dragging }
-  <div class="absolute h-[100px] left-0 top-0 z-10" style:transform="translate({ x }px, { y }px)" style:width="{ d.data.map((row) => row[column]).length * 20 }px" use:portal>
-    <Region region={ {
-      data: writable(d.data.map((row) => row[column])),
-      offset: writable(0),
-      source: { id, column }
-    } } />
+  <div
+    class="absolute h-[100px] left-0 pointer-events-none top-0 z-10"
+    style:transform="translate({ x }px, { y }px)"
+    style:width="{ $w }px"
+    use:portal
+  >
+    <Region region={ r } />
   </div>
 { /if }
 
@@ -80,6 +92,6 @@
   alt="Data drag clearfix"
   bind:this={ image }
   class="fixed"
-  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
+  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
   use:portal
 />
