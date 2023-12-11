@@ -12,6 +12,7 @@ interface Region {
 
 interface RegionSource {
   source: { id: number, column: string };
+  offset?: number;
 }
 
 type RegionConstructor = ({ source }: RegionSource) => Region;

@@ -51,7 +51,7 @@
       .domain([0, $column.length])
       .range([0, $column.length * $width / 4]);
 
-    const y: ScaleLinear<number, number> | ScaleBand<number> = !isNaN($column[0]) ?
+    const y: ScaleLinear<number, number> | ScaleBand<string> = !isNaN($column[0]) ?
       scaleLinear()
         .domain([Math.min(...$column), Math.max(...$column)])
         .range([100 - 2.5, 25]) :
@@ -59,7 +59,7 @@
         .domain($column)
         .range([100 - 2.5, 25]);
 
-    $column.forEach((d: number, i: number): RegionPoint => rects[i] = { x: x(i), y: y(d)! });
+    $column.forEach((d: any, i: number): RegionPoint => rects[i] = { x: x(i), y: y(d)! });
   }
 
   $: if ($column.length + $offset * 4 > $duration * 4)

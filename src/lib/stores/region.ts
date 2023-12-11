@@ -3,8 +3,8 @@ import type { DSVRowAny, Region, RegionConstructor, RegionSource } from '$lib/ut
 import data from '$lib/stores/data';
 
 const region: RegionConstructor =
-  ({ source = { id: -1, column: '' } }: RegionSource): Region => {
-    const o: Writable<number> = writable(0);
+  ({ source = { id: -1, column: '' }, offset }: RegionSource): Region => {
+    const o: Writable<number> = writable(!offset || (isNaN(offset) || offset < 0) ? 0 : offset);
     const d: Writable<any[]> = writable(
       get(data)[source.id].data
         .map((row: DSVRowAny): any => row[source.column])

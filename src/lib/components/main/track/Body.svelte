@@ -24,6 +24,7 @@
 <div class="flex flex-col h-full transition w-full" class:bg-gray-100={ $trackSelect === id }>
   <div
     class="h-timbral relative w-full"
+    data-accept="siren/region"
     on:dragleave|preventDefault={ handleDragLeave }
     on:dragover|preventDefault={ handleDragOver }
     on:drop|preventDefault={ handleDrop(id, $view, false) }

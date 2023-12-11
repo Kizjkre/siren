@@ -20,18 +20,19 @@
 
   const d: { name: string, data: DSVParsedArray<any> } = $data[id];
 
+  let column: string;
   let dragging: boolean = false;
+  let hovering: boolean = false;
   let image: HTMLImageElement;
+  let r: RegionInterface;
   let x: number = 0;
   let y: number = 0;
-  let r: RegionInterface;
-  let column: string;
   const w: Readable<number> = derived(width, (width: number): number => column?.length * width / 4);
 
-  const handleDragStart: EventHandlerCreator<[string], DragEventHandler<HTMLButtonElement>> =
-    (c: string) => (e: StrongDragEvent): any => {
+  const handleDragStart: EventHandlerCreator<[string | number | symbol], DragEventHandler<HTMLButtonElement>> =
+    (c: string | number | symbol) => (e: StrongDragEvent): any => {
       dragging = true;
-      column = c;
+      column = c as string;
       e.dataTransfer!.setDragImage(image, 0, 0);
 
       r = region({ source: { id, column } });
@@ -40,18 +41,28 @@
     };
 
   const handleDrag: DragEventHandler<HTMLButtonElement> = (e: DragEvent): any => {
-    if (!dragging) return;
-
+    if (!dragging || hovering) return;
     x = e.clientX - 50;
     y = e.clientY - 50;
   };
 
   const handleDragEnd: DragEventHandler<HTMLButtonElement> = (): any =>
     dragging = false;
+
+  const handleDragOver: DragEventHandler<HTMLElement> = (e: DragEvent): any => {
+    const target: HTMLElement = e.target as HTMLElement;
+    hovering = target.getAttribute('data-accept') === 'siren/region';
+    if (!hovering) return;
+
+    const { left, top }: DOMRect = target.getBoundingClientRect();
+
+    x = e.clientX - 50 - left < 0 ? left : e.clientX - 50;
+    y = top;
+  };
 </script>
 
 <!-- REF: https://stackoverflow.com/a/51697038 -->
-<svelte:body on:dragover|preventDefault />
+<svelte:body on:dragover|preventDefault={ handleDragOver } />
 
 <div class="flex flex-col gap-1 ml-4 mt-2" transition:slide>
   { #each d.data.columns as column }
@@ -88,6 +99,7 @@
   </div>
 { /if }
 
+<!-- NOTE: Transparent pixel for clearing out drag image. -->
 <img
   alt="Data drag clearfix"
   bind:this={ image }
