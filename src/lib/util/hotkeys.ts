@@ -4,7 +4,7 @@ import status from '$lib/stores/status';
 import { get } from 'svelte/store';
 import { Status } from '$lib/util/definitions/client/status.d';
 
-const hotkeys:KeyboardEventHandler<HTMLElement>  = (e: KeyboardEvent): any => {
+const hotkeys:KeyboardEventHandler<any>  = (e: KeyboardEvent): any => {
   switch (e.key) {
     case ' ':
       if (get(status) === Status.play) pause();

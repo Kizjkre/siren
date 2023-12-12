@@ -29,6 +29,10 @@ const sandbox: SandboxStoreInterface = {
       store[id ?? time] = s!;
       return store;
     });
+
+    // fetch(`http://localhost:3000/${ localStorage.getItem('access') }`, { method: 'post', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userscript: 'asdfasdf' }) }).then(() =>
+    //   fetch(`http://localhost:3000/${ localStorage.getItem('access') }`).then(r => r.text()).then(r => console.log(r))
+    // );
   },
   /**
    * Reads the result of a sandbox with the given ID.

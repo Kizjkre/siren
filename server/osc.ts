@@ -22,9 +22,11 @@ const oscServer: Object = {
       let token: string;
 
       socket.on('access', (t: string): any => {
-        jwt.verify(t, process.env.JWT_ACCESS_TOKEN!);
-        connections.add(`/${ t }`);
-        token = t;
+        try {
+          jwt.verify(t, process.env.JWT_ACCESS_TOKEN!);
+          connections.add(`/${ t }`);
+          token = t;
+        } catch {}
       });
 
       socket.on('disconnect', () => {
