@@ -36,12 +36,12 @@ export const play: StatusChange = (): any => {
   if (get(status) === Status.pause) {
     Object.keys(get(tracks)).forEach((id: string): any => sandbox.send(`play-${ id }`, { action: 'resume' }));
   } else {
-    timeline((id: number, timeline: Timeline): any =>
-      sandbox.add(`play-${ id }`, {
-        action,
-        data: { action: 'play', timeline, gain: 1 },
-        script: get(synths)[timeline.synth].code
-      })
+    timeline((id: number, timeline: Timeline): any => {}
+      // sandbox.add(`play-${ id }`, {
+      //   action,
+      //   data: { action: 'play', timeline, gain: 1 },
+      //   script: get(synths)[timeline.synth].code
+      // })
     );
   }
 

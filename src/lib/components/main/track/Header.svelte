@@ -38,11 +38,12 @@
 
   const handleDemo: EventListener = (e: Event): void => {
     if (!e.isTrusted) return;
-    sandbox.add({
+    sandbox.add(`demo-${ id }`, {
       action: demo,
-      data: undefined,
-      script: $synths[$synth].code
+      address: `demo-${ id }`,
+      scripts: { userscript: $synths[$synth].code }
     });
+    sandbox.read(`demo-${ id }`);
   };
 
   const handleGain: MouseEventHandler<HTMLButtonElement> = (): any => $gain = $gain === 0 ? 1 : 0;

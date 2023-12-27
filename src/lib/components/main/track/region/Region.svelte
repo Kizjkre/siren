@@ -15,16 +15,25 @@
   import { fade } from 'svelte/transition';
   import duration from '$lib/stores/duration';
   import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/mapping';
-  // import Alert from '$lib/components/util/Alert.svelte';
+  import Alert from '$lib/components/util/Alert.svelte';
+  import { ntoq, qton, type as getType } from '$lib/util/types';
+  import { Types } from '$lib/util/definitions/client/types.d';
 
   export let region: Region;
+  export let type: Types | undefined = undefined;
 
   const column: Writable<any[]> = region.data;
+  const rtype: Writable<Types> = region.type;
+
+  let autoConvert: boolean = false;
 
   const rects: RegionPoint[] = [];
 
   const offset: Writable<number> = region.offset;
-  const w: Readable<number> = derived(width, (width: number): number => $column.length * width / 4);
+  const w: Readable<number> = derived<[Writable<number>, Writable<any[]>], number>(
+    [width, column],
+    ([width, column]: [number, any[]]): number => column.length * width / 4
+  );
 
   const dispatch: EventDispatcher<None> = createEventDispatcher();
 
@@ -47,23 +56,35 @@
   };
 
   $: {
-    const x: ScaleLinear<number, number> = scaleLinear()
+    const x: ScaleLinear<number, number> = scaleLinear<number, number>()
       .domain([0, $column.length])
       .range([0, $column.length * $width / 4]);
 
-    const y: ScaleLinear<number, number> | ScaleBand<string> = !isNaN($column[0]) ?
-      scaleLinear()
+    const y: ScaleLinear<number, number> | ScaleBand<string> = $rtype === Types.QUANTITATIVE ?
+      scaleLinear<number, number>()
         .domain([Math.min(...$column), Math.max(...$column)])
         .range([100 - 2.5, 25]) :
-      scaleBand()
+      scaleBand<string>()
         .domain($column)
         .range([100 - 2.5, 25]);
 
+    rects.splice(0, rects.length);
     $column.forEach((d: any, i: number): RegionPoint => rects[i] = { x: x(i), y: y(d)! });
   }
 
   $: if ($column.length + $offset * 4 > $duration * 4)
     $duration = round($column.length / 4 + $offset, 4) + 4;
+
+  $: {
+    if (type && $rtype !== type) {
+      if (type === Types.QUANTITATIVE) $column = ntoq($column);
+      else $column = qton($column);
+
+      autoConvert = true;
+    }
+
+    $rtype = getType($column);
+  }
 </script>
 
 <button
@@ -89,9 +110,18 @@
           class="cursor-pointer fill-blue-900 hover:fill-blue-600"
           height="5"
           transition:fade
-          width={ $width / 4 } { x } y={ y - 2.5 }
+          width={ $width / 4 }
+          { x }
+          y={ y - 2.5 }
         />
       { /key }
     { /each }
   </svg>
 </button>
+
+{ #if autoConvert }
+  <Alert>
+    Placing { $rtype } data <b><kbd>{ region.source.column }</kbd></b> of dataset <b><kbd>{ $data[region.source.id].name }</kbd></b> in a { type } parameter.
+    The data has been automatically casted to a { type } type.
+  </Alert>
+{ /if }

@@ -1,4 +1,5 @@
 import type { Writable } from 'svelte/store';
+import type { Types } from '$lib/util/definitions/client/types.d';
 
 interface DSVRowAny {
   [key: string]: any;
@@ -8,6 +9,7 @@ interface Region {
   data: Writable<any[]>;
   offset: Writable<number>;
   source: { id: number, column: string };
+  type: Writable<Types>;
 }
 
 interface RegionSource {

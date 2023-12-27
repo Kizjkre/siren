@@ -13,7 +13,7 @@ const sandbox = {
     const app: Express = express();
     const port: 3000 = 3000;
 
-    const tokens: { [key: string]: {} } = {};
+    const tokens: { [key: string]: { [key: string]: { [key: string]: string } } } = {};
 
     app.use(express.json());
 
@@ -23,42 +23,37 @@ const sandbox = {
       next();
     });
 
-    app.get('/:token', (req: Request, res: Response): any => {
-      if (!(req.params.token in tokens)) {
+    app.get('/:token/:key', (req: Request, res: Response): any => {
+      if (!(req.params.token in tokens) || !(req.params.key in tokens[req.params.token])) {
         res.sendStatus(403);
         return;
       }
 
       const html: JSDOM = new JSDOM(readFileSync(__dirname + '/sandbox.html', 'utf8'));
       const doc: Document = html.window.document;
-      const userscriptEl: HTMLScriptElement = doc.createElement('script');
-      const portEl: HTMLScriptElement = doc.createElement('script');
-      const actionEl: HTMLScriptElement = doc.createElement('script');
-      const workletEl: HTMLScriptElement = doc.createElement('script');
+      const scripts: HTMLScriptElement[] = Object.entries(tokens[req.params.token][req.params.key])
+        .map(([key, value]: [string, string]): HTMLScriptElement => {
+          const script: HTMLScriptElement = doc.createElement('script');
+          script.type = 'inline-module';
+          script.id = key;
+          script.textContent = value;
+          return script;
+        });
 
-      userscriptEl.type = 'inline-module';
-      portEl.type = 'inline-module';
-      actionEl.type = 'inline-module';
-      workletEl.type = 'inline-module';
+      doc.body.append(...scripts);
 
-      userscriptEl.id = 'userscript';
-      portEl.id = 'port';
-
-      userscriptEl.textContent = tokens[req.params.token].userscript;
-      // portEl.textContent = portCode;
-      // actionEl.textContent = action;
-      // workletEl.textContent = worklet;
-
-      doc.body.append(workletEl, userscriptEl, portEl, actionEl);
+      delete tokens[req.params.token][req.params.key];
 
       res.send(html.serialize());
     });
 
-    app.post('/:token', (req: Request, res: Response): any => {
+    app.post('/:token/:key', (req: Request, res: Response): any => {
       try {
         jwt.verify(req.params.token, process.env.JWT_ACCESS_TOKEN!);
 
-        tokens[req.params.token] = req.body;
+        if (!(req.params.token in tokens)) tokens[req.params.token] = {};
+
+        tokens[req.params.token][req.params.key] = req.body;
 
         res.sendStatus(200);
       } catch {

@@ -40,11 +40,12 @@
           }
         });
 
-      sandbox.add(`export-${ id }`, {
-        action,
-        script: get(synths)[timeline.synth].code,
-        data: { timeline }
-      });
+      // sandbox.add(`export-${ id }`, {
+      //   action,
+      //   address: 'export',
+      //   data: { timeline },
+      //   scripts: { userscript: get(synths)[timeline.synth].code }
+      // });
     });
   };
 

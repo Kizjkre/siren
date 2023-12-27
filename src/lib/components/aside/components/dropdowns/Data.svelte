@@ -13,6 +13,9 @@
   import width from '$lib/stores/width';
   import region from '$lib/stores/region';
   import type { EventHandlerCreator } from '$lib/util/definitions/client/listener';
+  import TimeRegion from '$lib/components/main/track/region/TimeRegion.svelte';
+  import { Types } from '$lib/util/definitions/client/types.d';
+  import { type } from '$lib/util/types';
 
   type StrongDragEvent = DragEvent & { currentTarget: EventTarget & HTMLButtonElement; };
 
@@ -25,6 +28,7 @@
   let hovering: boolean = false;
   let image: HTMLImageElement;
   let r: RegionInterface;
+  let time: boolean = false;
   let x: number = 0;
   let y: number = 0;
   const w: Readable<number> = derived(width, (width: number): number => column?.length * width / 4);
@@ -52,6 +56,7 @@
   const handleDragOver: DragEventHandler<HTMLElement> = (e: DragEvent): any => {
     const target: HTMLElement = e.target as HTMLElement;
     hovering = target.getAttribute('data-accept') === 'siren/region';
+    time = target.getAttribute('data-type') === 'time';
     if (!hovering) return;
 
     const { left, top }: DOMRect = target.getBoundingClientRect();
@@ -78,9 +83,9 @@
         { column }
       </button>
       <p class="border border-blue-600 flex h-6 items-center justify-center rounded text-xs w-6">
-        { #if typeof d.data[0][column] === 'string' }
+        { #if type(d.data.map(datum => datum[column])) === Types.NOMINAL }
           N
-        { :else if typeof d.data[0][column] === 'number' }
+        { :else }
           Q
         { /if }
       </p>
@@ -90,12 +95,17 @@
 
 { #if dragging }
   <div
-    class="absolute h-[100px] left-0 pointer-events-none top-0 z-10"
+    class="absolute left-0 pointer-events-none top-0 z-10"
+    style:height="{ time ? 50 : 100 }px"
     style:transform="translate({ x }px, { y }px)"
     style:width="{ $w }px"
     use:portal
   >
-    <Region region={ r } />
+    { #if time }
+      <TimeRegion hovering={ true } region={ r } />
+    { :else }
+      <Region region={ r } />
+    { /if }
   </div>
 { /if }
 

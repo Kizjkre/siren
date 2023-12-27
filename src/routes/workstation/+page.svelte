@@ -12,7 +12,7 @@
   import MappingSandboxStore from '$lib/components/sandbox/SandboxManager.svelte';
   import initAce from '$lib/util/init/initAce';
   import hotkeys from '$lib/util/hotkeys';
-  import token from '$lib/util/token';
+  import getToken from '$lib/util/token';
   import { onMount } from 'svelte';
 
   defaultMapping();
@@ -21,7 +21,7 @@
   sampleData();
   initAce();
 
-  onMount(token);
+  onMount(getToken);
 
   const handleBeforeUnload: OnBeforeUnloadEventHandler = (e: BeforeUnloadEvent): any =>
     e.returnValue = '';

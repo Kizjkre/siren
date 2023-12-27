@@ -1,12 +1,13 @@
 import type { Writable } from 'svelte/store';
 import type { Subscribe } from '$lib/util/definitions/client/store';
+import type { Types } from '$lib/util/definitions/client/types';
 
 interface Synth {
   name: string;
   code: string;
   parameters: {
     timbral: {
-      [key: string]: 'nominal' | 'ordinal' | 'quantitative'
+      [key: string]: Types
     },
     time: string[]
   };

@@ -1,7 +1,15 @@
-type Token = () => Promise<string>;
+import token from '$lib/stores/token';
 
-const token: Token = async (): Promise<string> => {
-  const token = (
+type Token = () => Promise<any>;
+
+const getToken: Token = async (): Promise<any> => {
+  const tok: string | null = localStorage.getItem('access');
+  if (tok) {
+    token.set(tok);
+    return;
+  }
+
+  const t = (
     await (
       await fetch('/workstation/auth', {
         method: 'post',
@@ -10,9 +18,9 @@ const token: Token = async (): Promise<string> => {
     ).json()
   ).access;
 
-  localStorage.setItem('access', token);
+  localStorage.setItem('access', t);
 
-  return token;
+  token.set(t);
 };
 
-export default token;
+export default getToken;

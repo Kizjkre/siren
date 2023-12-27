@@ -13,6 +13,14 @@ import type { Synth, SynthStore } from '$lib/util/definitions/client/synths';
 import type { Track, TrackRegionStore, TrackStore } from '$lib/util/definitions/client/tracks';
 import type { Region } from '$lib/util/definitions/client/region';
 import download from '$lib/util/download';
+import type {
+  State,
+  StateData,
+  StateMap, StateRegion,
+  StateSynths,
+  StateTrack,
+  StateTracks
+} from '$lib/util/definitions/client/save';
 
 const save: () => any = (): any => {
   // NOTE: Change to zip once sound files are implemented
@@ -84,7 +92,8 @@ const save: () => any = (): any => {
             serializable[key].regions.time[key2][key3] = {} as unknown as StateRegion;
             serializable[key].regions.time[key2][key3].data = get(value3.data);
             serializable[key].regions.time[key2][key3].offset = get(value3.offset);
-            serializable[key].regions.time[key2][key3].source = structuredClone(value3.source)
+            serializable[key].regions.time[key2][key3].source = structuredClone(value3.source);
+            serializable[key].regions.time[key2][key3].type = get(value3.type);
           });
         });
 
@@ -94,7 +103,8 @@ const save: () => any = (): any => {
             serializable[key].regions.timbral[key2][key3] = {} as unknown as StateRegion;
             serializable[key].regions.timbral[key2][key3].data = get(value3.data);
             serializable[key].regions.timbral[key2][key3].offset = get(value3.offset);
-            serializable[key].regions.timbral[key2][key3].source = structuredClone(value3.source)
+            serializable[key].regions.timbral[key2][key3].source = structuredClone(value3.source);
+            serializable[key].regions.timbral[key2][key3].type = get(value3.type);
           });
         });
 
@@ -106,6 +116,8 @@ const save: () => any = (): any => {
     })(),
     width: get(width)
   };
+
+  console.log(state);
 
   download('siren-session.json', new Blob([JSON.stringify(state)]));
 };

@@ -1,5 +1,8 @@
 import { type Unsubscriber, type Writable, writable } from 'svelte/store';
 import type { Sandbox, SandboxStore, SandboxStoreInterface } from '$lib/util/definitions/client/sandbox';
+import port from '$lib/util/sandbox/port?raw';
+import worklet from '$lib/util/sandbox/worklet?raw';
+import token from '$lib/stores/token';
 
 const { subscribe, update }: Writable<SandboxStore> = writable({});
 
@@ -11,7 +14,7 @@ const sandbox: SandboxStoreInterface = {
    * @param {Sandbox} [s] - The sandbox object to be added, if an ID is provided.
    * @return {any} Returns nothing.
    */
-  add: (idOrSandbox: string | Sandbox, s?: Sandbox): any => {
+  add: (idOrSandbox: string | Sandbox, s?: Sandbox): SandboxStoreInterface => {
     let id: string | null = null;
     const time: number = new Date().getTime();
     if (s) id = idOrSandbox as string;
@@ -25,14 +28,33 @@ const sandbox: SandboxStoreInterface = {
         }
       });
     }
-    update((store: SandboxStore): SandboxStore => {
-      store[id ?? time] = s!;
-      return store;
+
+    const headers: Headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    const unsub: Unsubscriber = token.subscribe(async (t: string): Promise<any> => {
+      if (!t) return;
+
+      await fetch(`http://localhost:3000/${ localStorage.getItem('access') }/${ s!.address }`, {
+        method: 'post',
+        headers,
+        body: JSON.stringify({
+          worklet,
+          ...s!.scripts,
+          port,
+          action: s!.action
+        })
+      });
+
+      update((store: SandboxStore): SandboxStore => {
+        store[id ?? time] = s!;
+        return store;
+      });
+
+      unsub();
     });
 
-    // fetch(`http://localhost:3000/${ localStorage.getItem('access') }`, { method: 'post', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userscript: 'asdfasdf' }) }).then(() =>
-    //   fetch(`http://localhost:3000/${ localStorage.getItem('access') }`).then(r => r.text()).then(r => console.log(r))
-    // );
+    return sandbox;
   },
   /**
    * Reads the result of a sandbox with the given ID.
@@ -40,9 +62,9 @@ const sandbox: SandboxStoreInterface = {
    * @param {string} id - The ID of the sandbox.
    * @return {Promise<any>} A promise that resolves with the result of the sandbox.
    */
-  read: (id: string): Promise<any> => new Promise((resolve: any) => {
+  read: (id: string): Promise<any> => new Promise((resolve: any): any => {
     const unsub: Unsubscriber = subscribe((sandboxes: SandboxStore): any => {
-      if (sandboxes[id]?.result) {
+      if (sandboxes[id]?.result !== undefined) {
         const result: any = sandboxes[id].result;
         sandbox.remove(id);
         unsub();

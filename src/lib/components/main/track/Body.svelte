@@ -7,6 +7,7 @@
   import type { EventListenerCreator } from '$lib/util/definitions/client/listener';
   import type { Writable } from 'svelte/store';
   import trackSelect from '$lib/stores/trackSelect';
+  import synths from '$lib/stores/synths';
 
   export let id: number;
 
@@ -14,6 +15,7 @@
   const timbral: TrackRegionStoreInterface = track.regions.timbral;
   const time: TrackRegionStoreInterface = track.regions.time;
   const view: Writable<string> = track.view;
+  const synth: Writable<number> = track.synth;
 
   const onTimbralRemove: EventListenerCreator<[number]> =
     (id: number): EventListener => (): void => timbral.remove($view, id);
@@ -25,17 +27,20 @@
   <div
     class="h-timbral relative w-full"
     data-accept="siren/region"
+    data-type="timbral"
     on:dragleave|preventDefault={ handleDragLeave }
     on:dragover|preventDefault={ handleDragOver }
     on:drop|preventDefault={ handleDrop(id, $view, false) }
     role="region"
   >
     { #each Object.entries($timbral[$view]) as [id, region] (id) }
-      <RegionComponent on:remove={ onTimbralRemove(+id) } { region } />
+      <RegionComponent on:remove={ onTimbralRemove(+id) } { region } type={ $synths[$synth].parameters.timbral[$view] } />
     { /each }
   </div>
   <div
     class="border-t h-time relative w-full"
+    data-accept="siren/region"
+    data-type="time"
     on:dragleave|preventDefault={ handleDragLeave }
     on:dragover|preventDefault={ handleDragOver }
     on:drop|preventDefault={ handleDrop(id, $view, true) }

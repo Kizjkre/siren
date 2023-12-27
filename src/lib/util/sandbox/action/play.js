@@ -84,7 +84,7 @@ let context;
       playing.forEach(p => p?.suspend());
       playing.clear();
       // NOTE: Safari doesn't support importing/exporting top-level awaits
-      (await port).postMessage(true);
+      (await port).postMessage({ action: 'close', payload: null });
       break;
     case 'gain':
       gain?.gain.linearRampToValueAtTime(e.data.gain, context.currentTime + 1); // NOTE: Temporary hacky solution

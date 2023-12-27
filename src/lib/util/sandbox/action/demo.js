@@ -23,4 +23,4 @@ await sleep(1000);
 s.stop();
 
 // NOTE: Safari doesn't support importing/exporting top-level awaits
-(await port).postMessage(true);
+(await port).postMessage({ action: 'close', payload: null });

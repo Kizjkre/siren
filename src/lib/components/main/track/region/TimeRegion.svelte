@@ -1,7 +1,7 @@
 <!-- TODO: Hitbox -->
 
 <script lang="ts">
-  import { derived, type Writable } from 'svelte/store';
+  import { derived, type Readable, type Writable } from 'svelte/store';
   import type { Region } from '$lib/util/definitions/client/region';
   import { type ScaleLinear, scaleLinear } from 'd3-scale';
   import data from '$lib/stores/data';
@@ -13,17 +13,29 @@
   import IconCircleX from '~icons/tabler/circle-x';
   import { createEventDispatcher, type EventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
+  import duration from '$lib/stores/duration';
+  import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/mapping';
+  import { Types } from '$lib/util/definitions/client/types.d';
+  import Alert from '$lib/components/util/Alert.svelte';
+  import { ntoq } from '$lib/util/types';
+
+  type CustomScaleLinear<T, U> = (d: T) => U;
 
   export let region: Region;
+  export let hovering: boolean = false;
 
-  const column: number[] = $data[region.source.id].data.map((row: any): number =>
-    +(row[region.source.column] || 0)
-  );
+  const column: Writable<any[]> = region.data;
+  const rtype: Writable<Types> = region.type;
+
+  let alert: boolean = false;
 
   const rects: RegionPoint[] = [];
 
   const offset: Writable<number> = region.offset;
-  const w = derived(width, (width: number): number => column.length * width / 4);
+  const w: Readable<number> = derived<[Writable<number>, Writable<any[]>], number>(
+    [width, column],
+    ([width, column]: [number, any[]]): number => column.reduce((a: number, v: number): number => a + v) * width
+  );
 
   const dispatch: EventDispatcher<None> = createEventDispatcher();
 
@@ -45,34 +57,66 @@
     document.removeEventListener('mouseup', handleMouseUp);
   };
 
-  $: {
-    const x: ScaleLinear<number, number> = scaleLinear()
-      .domain([0, column.length])
-      .range([0, column.length * $width / 4]);
-    const y: ScaleLinear<number, number> = scaleLinear()
-      .domain([Math.min(...column), Math.max(...column)])
-      .range([49 - 2.5, 25]);
-
-    column.forEach((d: number, i: number): RegionPoint => rects[i] = { x: x(i), y: y(d) });
+  if ($rtype === Types.NOMINAL) {
+    !hovering && (alert = true);
+    $column = ntoq($column);
   }
+
+  $: {
+    let dist: number = 0;
+    const x: CustomScaleLinear<any, number> = (d: any): number => {
+      const pos: number = dist * $width;
+      dist += d;
+      return pos;
+    };
+
+    const y: ScaleLinear<number, number> = scaleLinear<number, number>()
+      .domain([Math.min(...$column), Math.max(...$column)])
+      .range([50 - 2.5, 25]);
+
+    $column.forEach((d: any, i: number): RegionPoint => rects[i] = { x: x(d), y: y(d)!, d });
+  }
+
+  let sum: number = -1;
+  $: if ((sum = $column.reduce((a: number, v: number): number => a + v) + $offset + 4) > $duration)
+    $duration = round(sum, 4);
 </script>
 
 <button
-  class="absolute active:cursor-grabbing bg-gray-100 border-x border-blue-600 box-content cursor-grab h-full"
+  class="absolute active:cursor-grabbing bg-blue-100 box-border cursor-grab h-full rounded-xl"
+  on:dragleave|capture|preventDefault|stopPropagation={ handleDragLeave }
+  on:dragover|capture|preventDefault|stopPropagation={ handleDragOver }
+  on:drop|capture|preventDefault|stopPropagation={ handleDrop(region) }
   on:mousedown={ handleMouseDown }
   style:left="{ $offset * $width }px"
   style:width="{ $w }px"
   transition:fade={ { duration: 100 } }
 >
-  <span class="absolute flex gap-2 items-center left-1 text-xs">
+  <span class="absolute flex gap-2 items-center left-2 text-xs">
     <button class="hover:text-red-400 text-blue-600" on:click|stopPropagation={ forward }>
       <IconCircleX class="h-3 w-3" />
     </button>
-    <span>{ $data[region.source.id].name } / { region.source.column }</span>
+    <span class="text-blue-900">{ $data[region.source.id].name } / { region.source.column }</span>
   </span>
   <svg class="h-full" width={ $w }>
-    { #each rects as { x, y } }
-    	<rect class="cursor-pointer hover:fill-blue-600" height="5" width={ $width / 4 } { x } y={ y - 2.5 }></rect>
+    { #each rects as { x, y, d } }
+      { #key y }
+        <rect
+          class="cursor-pointer fill-blue-900 hover:fill-blue-600"
+          height="2.5"
+          transition:fade
+          width={ (d || 0) * $width }
+          { x }
+          y={ y - 2.5 }
+        />
+      { /key }
     { /each }
   </svg>
 </button>
+
+{ #if alert }
+  <Alert>
+    Placing nominal data <b><kbd>{ region.source.column }</kbd></b> of dataset <b><kbd>{ $data[region.source.id].name }</kbd></b> in a quantitative time parameter.
+    The data has been automatically casted to a quantitative type.
+  </Alert>
+{ /if }

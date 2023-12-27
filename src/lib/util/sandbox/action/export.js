@@ -228,5 +228,5 @@ const playing = new Set();
   s.start();
   const buf = await s.context.startRendering();
   // NOTE: Safari doesn't support importing/exporting top-level awaits
-  (await port).postMessage(audioBufferToWav(buf, false));
+  (await port).postMessage({ action: 'close', payload: audioBufferToWav(buf, false) });
 };

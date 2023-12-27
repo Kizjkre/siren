@@ -1,19 +1,21 @@
+import type { Types } from '$lib/util/definitions/client/types';
+
 interface StateData {
   [id: string]: {
-    name: string,
-    columns: (string | number | symbol)[]
+    name: string;
+    columns: (string | number | symbol)[];
     data: {
-      [column: string]: any
-    }[],
-    references: number
-  }
+      [column: string]: any;
+    }[];
+    references: number;
+  };
 }
 
 interface StateMap {
   [id: string]: {
-    map: string,
-    name: string
-  }
+    map: string;
+    name: string;
+  };
 }
 
 interface StateSynths {
@@ -22,46 +24,47 @@ interface StateSynths {
     code: string;
     parameters: {
       timbral: {
-        [key: string]: 'nominal' | 'ordinal' | 'quantitative'
-      },
-      time: string[]
+        [key: string]: Types;
+      };
+      time: string[];
     };
     references: number;
   };
 }
 
 interface StateRegion {
-  data: any[],
-  offset: number,
-  source: { id: number, column: string }
+  data: any[];
+  offset: number;
+  source: { id: number, column: string };
+  type: Types;
 }
 
 interface StateRegions {
-  [id: string]: StateRegion
+  [id: string]: StateRegion;
 }
 
 interface StateTrack {
-  gain: number,
-  name: string,
+  gain: number;
+  name: string;
   regions: {
-    time: { [id: string]: StateRegions },
-    timbral: { [id: string]: StateRegions }
-  }
-  synth: number,
-  view: string
+    time: { [id: string]: StateRegions };
+    timbral: { [id: string]: StateRegions };
+  };
+  synth: number;
+  view: string;
 }
 
 interface StateTracks {
-  [id: string]: StateTrack
+  [id: string]: StateTrack;
 }
 
 interface State {
-  data: StateData,
-  duration: number,
-  mappings: StateMap,
-  rate: number,
-  sidebar: boolean,
-  synths: StateSynths,
-  tracks: StateTracks,
-  width: number
+  data: StateData;
+  duration: number;
+  mappings: StateMap;
+  rate: number;
+  sidebar: boolean;
+  synths: StateSynths;
+  tracks: StateTracks;
+  width: number;
 }

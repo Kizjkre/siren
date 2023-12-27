@@ -2,9 +2,10 @@ import type { Subscribe } from '$lib/util/definitions/client/store';
 
 interface Sandbox {
   action: string;
-  data: any;
+  address: string;
+  data?: any;
   result?: any;
-  script: string;
+  scripts: { [id: string]: string };
 }
 
 interface SandboxStore {
@@ -13,8 +14,8 @@ interface SandboxStore {
 
 interface SandboxStoreInterface {
   add:  {
-    (id: string, sandbox: Sandbox): any;
-    (sandbox: Sandbox): any;
+    (id: string, sandbox: Sandbox): SandboxStoreInterface;
+    (sandbox: Sandbox): SandboxStoreInterface;
   };
   read: (id: string) => Promise<any>;
   remove: (id: string) => any;

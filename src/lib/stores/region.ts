@@ -1,6 +1,7 @@
 import { get, type Writable, writable } from 'svelte/store';
 import type { DSVRowAny, Region, RegionConstructor, RegionSource } from '$lib/util/definitions/client/region';
 import data from '$lib/stores/data';
+import { type } from '$lib/util/types';
 
 const region: RegionConstructor =
   ({ source = { id: -1, column: '' }, offset }: RegionSource): Region => {
@@ -13,7 +14,8 @@ const region: RegionConstructor =
     return {
       data: d,
       offset: o,
-      source
+      source,
+      type: writable(type(get(d)))
     };
   };
 

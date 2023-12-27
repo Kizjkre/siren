@@ -4,9 +4,11 @@ import data from '$lib/stores/data';
 import { get } from 'svelte/store';
 import mappings from '$lib/stores/mappings';
 // @ts-ignore
-import action from '$lib/util/sandbox/action/map?raw';
+import map from '$lib/util/sandbox/action/map?raw';
 import type { EventHandlerCreator } from '$lib/util/definitions/client/listener';
 import sandbox from '$lib/stores/sandbox';
+import type { DSVRowAny } from '$lib/util/definitions/client/region.d';
+import { type } from '$lib/util/types';
 
 type DragStartHandlerCreator = EventHandlerCreator<[number], DragEventHandler<HTMLButtonElement>>;
 type DropHandlerCreator = EventHandlerCreator<[Region], DragEventHandler<HTMLButtonElement>>;
@@ -57,13 +59,18 @@ export const handleDrop: DropHandlerCreator =
 
       sandbox
         .read(`mapping-${ id }`)
-        .then((result: any): any => region.data.set(result));
+        .then((result: any[]): any => {
+          region.data.set(result);
+          region.type.set(type(result));
+        });
 
+      // noinspection JSIgnoredPromiseFromCall
       sandbox.add(`mapping-${ id }`,{
-        action,
-        data: get(data)[region.source.id].data.map((row: any): number =>
-          +(row[region.source.column] || 0)
-        ),
-        script: get(get(mappings)[id].map)
+        action: map,
+        address: 'map',
+        data: get(data)[region.source.id].data
+          .map((row: DSVRowAny): any => row[region.source.column])
+          .filter((row: any): boolean => row !== null),
+        scripts: { userscript: get(get(mappings)[id].map) }
       });
     };

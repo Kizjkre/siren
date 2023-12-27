@@ -30,8 +30,8 @@
       if (!e.isTrusted) return;
       sandbox.add(`demo-${ id }`, {
         action: demo,
-        data: undefined,
-        script: $synths[id].code
+        address: `demo-${ id }`,
+        scripts: { userscript: $synths[id].code }
       });
       const target: HTMLButtonElement = e.currentTarget as HTMLButtonElement;
       sandbox

@@ -1,66 +1,35 @@
-<!-- NOTE: https://web.dev/articles/sandboxed-iframes -->
-
 <script lang="ts">
-  // @ts-ignore
-  import portCode from '$lib/util/sandbox/port?raw';
-  // @ts-ignore
-  import worklet from '$lib/util/sandbox/worklet?raw';
-  // @ts-ignore
-  import html from '$lib/util/sandbox/sandbox.html?raw';
   import type { EventHandler } from 'svelte/elements';
-  import { createEventDispatcher, type EventDispatcher } from 'svelte';
+  import sandbox from '$lib/stores/sandbox';
+  import token from '$lib/stores/token';
 
-  export let action: string;
-  export let input: any;
-  export let userscript: string;
-
-  const doc: Document = new DOMParser().parseFromString(html, 'text/html');
-  const userscriptEl: HTMLScriptElement = doc.createElement('script');
-  const portEl: HTMLScriptElement = doc.createElement('script');
-  const actionEl: HTMLScriptElement = doc.createElement('script');
-  const workletEl: HTMLScriptElement = doc.createElement('script');
-
-  userscriptEl.type = 'inline-module';
-  portEl.type = 'inline-module';
-  actionEl.type = 'inline-module';
-  workletEl.type = 'inline-module';
-
-  userscriptEl.id = 'userscript';
-  portEl.id = 'port';
-
-  userscriptEl.textContent = userscript;
-  portEl.textContent = portCode;
-  actionEl.textContent = action;
-  workletEl.textContent = worklet;
-
-  doc.body.append(workletEl, userscriptEl, portEl, actionEl);
-
-  const srcdoc: string = doc.documentElement.outerHTML;
-
-  const dispatch: EventDispatcher<any> = createEventDispatcher();
+  export let id: string;
 
   let port: MessagePort;
+
   const handleLoad: EventHandler = (e: Event): any => {
     const channel: MessageChannel = new MessageChannel();
     port = channel.port1;
 
-    port.onmessage = (e: MessageEvent): any => dispatch('result', e.data);
+    port.onmessage = (e: MessageEvent): any =>
+      e.data.action === 'close' && sandbox.result(id, e.data.payload);
 
-    (e.target as HTMLIFrameElement).contentWindow!.postMessage('', '*', [channel.port2]);
+    (e.target as HTMLIFrameElement).contentWindow!.postMessage('', `${ window.location.protocol }//${ window.location.hostname }:3000`, [channel.port2]);
   };
 
-  $: (port && input) && port.postMessage(input);
+  $: (port && $sandbox[id].data) && port.postMessage($sandbox[id].data);
 </script>
 
 <!-- REF: https://stackoverflow.com/a/75529235 -->
 <svelte:options immutable />
 
-<!-- TODO: FIX allow-same-origin -->
-<iframe
-  allow="autoplay"
-  class="hidden"
-  on:load={ handleLoad }
-  sandbox="allow-scripts allow-same-origin"
-  { srcdoc }
-  title="Sandbox"
-/>
+{ #if $token }
+  <iframe
+    allow="midi; geolocation; microphone; camera; display-capture; encrypted-media; clipboard-read; clipboard-write; notifications; payment-handler; persistent-storage; background-sync; ambient-light-sensor; accessibility-events;"
+    class="hidden"
+    on:load={ handleLoad }
+    sandbox="allow-modals allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation allow-downloads"
+    src="http://localhost:3000/{ $token }/{ $sandbox[id].address }"
+    title="SIREN Sandbox"
+  />
+{ /if }
