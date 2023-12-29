@@ -4,7 +4,7 @@ const IndexHeader = ({ offset }) => (
   <IndexSectionTemplate
     offset={ offset }
     title="SIREN: Sonification Interface for REmapping Nature"
-    subtitle="A Web Audio based sonification mapping system designed as an example of the possibilities of Web Audio as a flexible, modular, extensible and shareable framework for sonification."
+    subtitle="SIREN v0.2: A Web Audio based sonification mapping system designed as an example of the possibilities of Web Audio as a flexible, modular, extensible and shareable framework for sonification."
     color="primary"
   >
     <div className="box">

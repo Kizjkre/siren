@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { focusWindow } from '../../actions';
 import { PLAYING_STATUS } from '../../constants/workstation';
 import play from '../../util/synth/play';
+import pause from '../../util/synth/pause';
 
 const Controls = ({ disabled, focusWindow }) => {
   const [status, setStatus] = useState(PLAYING_STATUS.STOPPED);

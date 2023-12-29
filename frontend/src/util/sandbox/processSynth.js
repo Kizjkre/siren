@@ -50,7 +50,7 @@ const processSynth = (name, synth, parameters, port) => {
           Object.keys(e.data.timeline)
             .sort((a, b) => a - b)
             .forEach(percent => {
-              current = { ...current, ...e.data.timeline[percent] };
+              current = { ...current, ...e.data.timeline[percent], Time: +percent / 4 };
               const functions = new Map();
               Object.keys(e.data.timeline[percent]).forEach(parameter =>
                 Array.from(s.updates.keys())

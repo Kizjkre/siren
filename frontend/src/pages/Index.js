@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
 import IndexFeatures from '../components/index/IndexFeatures';
 import IndexHeader from '../components/index/IndexHeader';
+import IndexNotice from '../components/index/IndexNotice';
 import IndexUseCases from '../components/index/IndexUseCases';
 import Navbar from '../components/Navbar';
 
 const Index = () => {
-  const components = [IndexHeader, IndexFeatures, IndexUseCases];
+  const components = [IndexHeader, IndexFeatures, IndexUseCases, IndexNotice];
 
   return (
     <>
