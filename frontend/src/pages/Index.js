@@ -9,7 +9,7 @@ const Index = () => {
   const components = [IndexHeader, IndexFeatures, IndexUseCases, IndexNotice];
 
   return (
-    <>
+    <div className="index">
       <Navbar>
         <div className="navbar-start">
           <Link to="/workstation" className="navbar-item">
@@ -38,7 +38,7 @@ const Index = () => {
       <div className="about pb-6">
         { components.map((Component, i) => <Component key={ i } offset={ i % 2 } />) }
       </div>
-    </>
+    </div>
   );
 };
 

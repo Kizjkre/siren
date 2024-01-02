@@ -18,7 +18,7 @@ code, .code {
   font-family: 'JetBrains Mono', monospace !important;
 }
 
-html {
+.index {
   background: url('assets/polygon-scatter-haikei.svg') no-repeat;
   background-size: 100%;
 }
@@ -36,7 +36,7 @@ summary {
 }
 
 .control-background {
-  background: url('assets/wave-haikei.svg') no-repeat 0 !important;
+  //background: url('assets/wave-haikei.svg') no-repeat 0 !important;
   background-size: 100% !important;
 }
 
