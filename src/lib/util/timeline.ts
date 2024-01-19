@@ -6,13 +6,13 @@ import rate from '$lib/stores/rate';
 
 /**
  * Generate a timeline based on tracks, regions, and parameters.
- * @param callback - The callback function to be called with the generated timeline.
+ * @return {Timeline[]} - All of the timelines
  */
-const timeline: TimelineCreator = (callback: TimelineCallback): any => {
+const timeline: TimelineCreator = (): Timeline[] =>
   // Iterate over each track
-  Object.entries(get(tracks)).forEach(([id, { regions, synth }]: [string, Track]): any => {
+  Object.entries(get(tracks)).map(([id, { regions, synth }]: [string, Track]): any => {
     // Create a timeline object for the track
-    const timeline: Timeline = { synth: get(synth) };
+    const timeline: Timeline = { id: +id, synth: get(synth) };
 
     // Iterate over each timbral region
     Object.entries(get(regions.timbral)).forEach(([parameter, region]: [string, TrackRegionStore]): any => {
@@ -30,9 +30,7 @@ const timeline: TimelineCreator = (callback: TimelineCallback): any => {
       });
     });
 
-    // Call the callback function with the generated timeline
-    callback(+id, timeline);
-  });
-};
+    return timeline;
+  });;
 
 export default timeline;

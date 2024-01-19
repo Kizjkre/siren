@@ -1,7 +1,7 @@
 interface Timeline {
   [key: number]: any;
+  id: number;
   synth: number;
 }
 
-type TimelineCallback = (id: number, timeline: Timeline) => any;
-type TimelineCreator = (callback: TimelineCallback) => any;
+type TimelineCreator = () => Timeline[];
