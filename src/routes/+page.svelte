@@ -14,7 +14,10 @@
 
   const { sanitize } = DOMPurify;
 
-  const siren2021: Promise<any> = Cite.async('10.21785/icad2021.042');
+  const papers: Promise<any> = Promise.all([
+    Cite.async('10.21785/icad2023.6167'),
+    Cite.async('10.21785/icad2021.042')
+  ]);
 </script>
 
 <div class="flex flex-col h-full md:flex-row w-full">
@@ -43,21 +46,24 @@
           &nbsp;
           SIREN's Scholarship
         </h2>
-        { #await siren2021 }
-          <div class="motion-safe:animate-pulse bg-gray rounded h-full w-6" />
-          <div class="motion-safe:animate-pulse bg-gray rounded h-full w-6" />
-          <div class="motion-safe:animate-pulse bg-gray rounded h-full w-6" />
-          <div class="motion-safe:animate-pulse bg-gray rounded h-full w-6" />
-        { :then bib }
-          <p class="text-sm">
-            {
-              @html sanitize(bib.format('bibliography', {
+        { #await papers }
+          <div class="motion-safe:animate-pulse bg-gray-500 rounded h-4 my-2 w-full" />
+          <div class="motion-safe:animate-pulse bg-gray-500 rounded h-4 my-2 w-full" />
+          <div class="motion-safe:animate-pulse bg-gray-500 rounded h-4 my-2 w-full" />
+          <div class="motion-safe:animate-pulse bg-gray-500 rounded h-4 my-2 w-full" />
+          <div class="motion-safe:animate-pulse bg-gray-500 rounded h-4 my-2 w-full" />
+        { :then papers }
+          { #each papers as paper }
+          	<p class="text-sm my-2">
+              {
+                @html sanitize(paper.format('bibliography', {
                 format: 'html',
                 template: 'apa',
                 lang: 'en-US'
               }))
-            }
-          </p>
+              }
+            </p>
+          { /each }
         { /await }
       </div>
     </main>

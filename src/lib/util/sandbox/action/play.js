@@ -1,21 +1,21 @@
 import * as synth from '#userscript';
 import port from '#port';
+import * as s1 from '#userscript-0';
 
-const urls = Object.fromEntries(Object.entries(synth.worklets ?? {}).map(([name, worklet]) => {
-  const blob = new Blob([`registerProcessor('${ name }', ${ worklet.toString() });`], { type: 'application/javascript' });
-  return [name, URL.createObjectURL(blob)];
-}));
+const context = new AudioContext();
 
-const addModule = AudioWorklet.prototype.addModule;
-AudioWorklet.prototype.addModule = async function () {
-  arguments[0] = urls[arguments[0]];
-  return await addModule.apply(this, arguments);
-};
+const synths = [s1];
+// const synths = await Promise.all(
+//   [...document.getElementsByTagName('script')]
+//     .filter(e => e.id.includes('userscript-'))
+//     .map(async e => await import(e.src))
+// );
 
 const graph = new Map();
 
 const connect = AudioNode.prototype.connect;
 const disconnect = AudioNode.prototype.disconnect;
+const addModule = AudioWorklet.prototype.addModule;
 
 AudioNode.prototype.connect = function () {
   if (!graph.has(this.context)) {
@@ -28,6 +28,36 @@ AudioNode.prototype.disconnect = function () {
   graph.get(this.context).delete([this, arguments[0]]);
   return disconnect.apply(this, arguments);
 };
+
+const res = synths.map((synth, i) => {
+  const urls = Object.fromEntries(Object.entries(synth.worklets ?? {}).map(([name, worklet]) => {
+    const blob = new Blob([`registerProcessor('${ name }', ${ worklet.toString() });`], { type: 'application/javascript' });
+    return [name, URL.createObjectURL(blob)];
+  }));
+
+  AudioWorklet.prototype.addModule = async function () {
+    arguments[0] = urls[arguments[0]];
+    return await addModule.apply(this, arguments);
+  };
+
+  const gain = new GainNode(context);
+
+  const s = synth.default(context);
+  graph.get(context)?.forEach(([from, to]) => {
+    if (to instanceof AudioDestinationNode) {
+      console.log(from, to);
+      disconnect.call(from, to);
+      connect.call(from, gain);
+    }
+  });
+  graph.delete(context);
+
+  const control = new GainNode(context);
+  gain.connect(control).connect(context.destination);
+  control.gain.value = 1 / synths.length;
+
+  return [synth, s, gain];
+});
 
 const playing = new Set();
 

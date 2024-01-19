@@ -14,7 +14,9 @@ AudioWorklet.prototype.addModule = async function (...args) {
   return await addModule.apply(this, args);
 };
 
-const s = await synth.default();
+const context = new AudioContext();
+
+const s = await synth.default(context);
 [...s.updates.values()].forEach(func => func(undefined, 0));
 s.start();
 

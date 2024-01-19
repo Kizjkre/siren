@@ -22,7 +22,7 @@ export const end: StatusChange = (): any => {
  * @return {any} - The return value is not specified.
  */
 export const pause: StatusChange = (): any => {
-  Object.keys(get(tracks)).forEach((id: string): any => sandbox.send(`play-${ id }`, { action: 'pause' }));
+  sandbox.send('play', { action: 'pause' });
 
   status.set(Status.pause);
 };
@@ -34,15 +34,16 @@ export const pause: StatusChange = (): any => {
  */
 export const play: StatusChange = (): any => {
   if (get(status) === Status.pause) {
-    Object.keys(get(tracks)).forEach((id: string): any => sandbox.send(`play-${ id }`, { action: 'resume' }));
+    sandbox.send('play', { action: 'resume' })
   } else {
-    timeline((id: number, timeline: Timeline): any => {}
-      // sandbox.add(`play-${ id }`, {
-      //   action,
-      //   data: { action: 'play', timeline, gain: 1 },
-      //   script: get(synths)[timeline.synth].code
-      // })
-    );
+    const t: Timeline[] = timeline();
+
+    sandbox.add('play', {
+      action,
+      address: 'play',
+      data: { action: 'play', timeline: t, gain: 1 },
+      scripts: Object.fromEntries(t.map((timeline: Timeline, i: number): [string, string] => [`userscript-${ i }`, get(synths)[timeline.synth].code]))
+    });
   }
 
   status.set(Status.play);
@@ -83,8 +84,8 @@ export const record: StatusChange = async (): Promise<any> => {
  */
 export const stop: StatusChange = (): any => {
   Object.keys(get(tracks)).forEach((id: string): any => {
-    sandbox.send(`play-${ id }`, { action: 'stop' });
-    sandbox.remove(`play-${ id }`);
+    sandbox.send('play', { action: 'stop' });
+    sandbox.remove('play');
   });
 
   status.set(Status.stop);

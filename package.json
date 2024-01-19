@@ -1,6 +1,6 @@
 {
   "name": "siren",
-  "version": "0.0.1",
+  "version": "0.4.0",
   "private": true,
   "scripts": {
     "dev": "vite dev",
@@ -27,7 +27,7 @@
     "tslib": "^2.4.1",
     "typescript": "^5.0.0",
     "unplugin-icons": "^0.17.1",
-    "vite": "^4.4.2"
+    "vite": "4.4.2"
   },
   "type": "module",
   "dependencies": {

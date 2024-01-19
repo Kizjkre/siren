@@ -53,7 +53,7 @@
 
   // NOTE: Using setTimeout to wait for the play action to post first. Not sure how to fix,
   //       tried using document.dispatchEvent after useSandbox in status.ts but it doesn't work.
-  $: $status === Status.play && setTimeout(() => sandbox.send(`play-${ id }`, { action: 'gain', gain: $gain }), 100);
+  // $: $status === Status.play && setTimeout(() => sandbox.send('play', { action: 'gain', gain: $gain }), 100);
 </script>
 
 <div

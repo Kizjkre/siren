@@ -117,8 +117,6 @@ const save: () => any = (): any => {
     width: get(width)
   };
 
-  console.log(state);
-
   download('siren-session.json', new Blob([JSON.stringify(state)]));
 };
 
