@@ -1,14 +1,13 @@
 import port from '#port';
-import * as s1 from '#userscript-0';
 
 const context = new AudioContext();
+context.suspend();
 
-const synths = [s1];
-// const synths = await Promise.all(
-//   [...document.getElementsByTagName('script')]
-//     .filter(e => e.id.includes('userscript-'))
-//     .map(async e => await import(e.src))
-// );
+const synths = await Promise.all(
+  [...document.getElementsByTagName('script')]
+    .filter(e => e.id.includes('userscript-'))
+    .map(async e => await import(e.src))
+);
 
 const graph = new Map();
 
@@ -28,7 +27,7 @@ AudioNode.prototype.disconnect = function () {
   return disconnect.apply(this, arguments);
 };
 
-const res = synths.map((synth, i) => {
+const res = synths.map(synth => {
   const urls = Object.fromEntries(Object.entries(synth.worklets ?? {}).map(([name, worklet]) => {
     const blob = new Blob([`registerProcessor('${ name }', ${ worklet.toString() });`], { type: 'application/javascript' });
     return [name, URL.createObjectURL(blob)];
@@ -40,20 +39,19 @@ const res = synths.map((synth, i) => {
   };
 
   const gain = new GainNode(context);
+  const control = new GainNode(context);
+  connect.call(gain, control);
+  connect.call(gain, context.destination);
+  control.gain.value = 1 / synths.length;
 
   const s = synth.default(context);
   graph.get(context)?.forEach(([from, to]) => {
     if (to instanceof AudioDestinationNode) {
-      console.log(from, to);
       disconnect.call(from, to);
       connect.call(from, gain);
     }
   });
   graph.delete(context);
-
-  const control = new GainNode(context);
-  gain.connect(control).connect(context.destination);
-  control.gain.value = 1 / synths.length;
 
   return [synth, s, gain];
 });
@@ -79,11 +77,24 @@ const res = synths.map((synth, i) => {
             );
 
             // if (functions.size === 0) [...s.updates.values()].forEach(fun => functions.set([undefined, time], fun)); /* NOTE: Might be hacky */
-            Array.from(functions.entries()).forEach(([params, update]) => (console.log(update,params.filter(p => !synth.parameters.time.includes(p)).map(p => current[p]), time),update(...params.filter(p => !synth.parameters.time.includes(p)).map(p => current[p]), +time))); /* TODO: fix hack */
+            Array.from(functions.entries()).forEach(([params, update]) => update(...params.filter(p => !synth.parameters.time.includes(p)).map(p => current[p]), +time)); /* TODO: fix hack */
           });
 
+        (await port).postMessage({ action: 'start', payload: null });
+        // noinspection ES6MissingAwait
+        context.resume();
         s.start();
       })
+      break;
+    case 'pause':
+      // noinspection ES6MissingAwait
+      context.suspend();
+      break;
+    case 'stop':
+      // noinspection ES6MissingAwait
+      context.suspend();
+      // NOTE: Safari doesn't support importing/exporting top-level awaits
+      (await port).postMessage({ action: 'close', payload: null });
       break;
   }
 };

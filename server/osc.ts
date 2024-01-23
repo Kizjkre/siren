@@ -2,7 +2,6 @@ import type { ViteDevServer } from 'vite';
 import { Server, Socket } from 'socket.io';
 // @ts-ignore
 import osc from 'osc';
-import jwt from 'jsonwebtoken';
 
 // noinspection JSUnusedGlobalSymbols
 const oscServer: Object = {
@@ -23,7 +22,6 @@ const oscServer: Object = {
 
       socket.on('access', (t: string): any => {
         try {
-          jwt.verify(t, process.env.JWT_ACCESS_TOKEN!);
           connections.add(`/${ t }`);
           token = t;
         } catch {}

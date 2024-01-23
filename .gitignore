@@ -11,6 +11,6 @@ vite.config.ts.timestamp-*
 /.idea
 .pnp.*
 /.yarn
-!/static/ffmpeg
-/static/ffmpeg/*
-!/static/ffmpeg/docfix.js
+/.wrangler
+*/.wrangler
+.dev.vars

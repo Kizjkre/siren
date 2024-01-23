@@ -1,8 +1,5 @@
 import { type Unsubscriber, type Writable, writable } from 'svelte/store';
 import type { Sandbox, SandboxStore, SandboxStoreInterface } from '$lib/util/definitions/client/sandbox';
-import port from '$lib/util/sandbox/port?raw';
-import worklet from '$lib/util/sandbox/worklet?raw';
-import token from '$lib/stores/token';
 
 const { subscribe, update }: Writable<SandboxStore> = writable({});
 
@@ -32,26 +29,9 @@ const sandbox: SandboxStoreInterface = {
     const headers: Headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    const unsub: Unsubscriber = token.subscribe(async (t: string): Promise<any> => {
-      if (!t) return;
-
-      await fetch(`http://localhost:3000/${ localStorage.getItem('access') }/${ s!.address }`, {
-        method: 'post',
-        headers,
-        body: JSON.stringify({
-          worklet,
-          ...s!.scripts,
-          port,
-          action: s!.action
-        })
-      });
-
-      update((store: SandboxStore): SandboxStore => {
-        store[id ?? time] = s!;
-        return store;
-      });
-
-      unsub();
+    update((store: SandboxStore): SandboxStore => {
+      store[id ?? time] = s!;
+      return store;
     });
 
     return sandbox;

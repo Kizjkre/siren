@@ -4,11 +4,110 @@
     <meta charset="UTF-8">
     <!--  REF: https://stackoverflow.com/a/43834063  -->
     <!--suppress CommaExpressionJS -->
-    <script type="module">
-      let l,e,t='script',p=/(from\s+|import\s+)['"](#[\w\-]+)['"]/g,x='textContent',d=document,o;for(o of d.querySelectorAll(t+'[type=inline-module]'))l=d.createElement(t),o.id?l.id=o.id:0,l.type='module',l[x]=o[x].replace(p,(u,a,z)=>(e=d.querySelector(t+z+'[type=module][src]'))?a+`/* ${z} */'${e.src}'`:u),l.src=URL.createObjectURL(new Blob([l[x]],{type:'application/java'+t})),o.replaceWith(l)//inline
+    <script type="module-blocked">
+      let l,e,t='script',p=/(from\s+|import\s+)['"](#[\w\-]+)['"]/g,x='textContent',d=document,o;for(o of d.querySelectorAll(t+'[type=siren-userscript]'))l=d.createElement(t),o.id?l.id=o.id:0,l.type='module',l[x]=o[x].replace(p,(u,a,z)=>(e=d.querySelector(t+z+'[type=module][src]'))?a+`/* ${z} */'${e.src}'`:u),l.src=URL.createObjectURL(new Blob([l[x]],{type:'application/java'+t})),o.replaceWith(l)//inline
     </script>
-    <title>Sandbox</title>
+    <script type="module">
+      const map = {};
+      const scripts = [];
+
+      document.querySelectorAll('script[type=siren-init]').forEach(el => {
+        const text = el.textContent.replace(/(from\s+|import\s+)['"](#[\w\-]+)['"]/g, (u, a, z) =>
+          a + `/* ${ z } */ '${ map[z] }'`
+        );
+
+        if (el.id !== 'init') {
+          map[`#${ el.id }`] = URL.createObjectURL(new Blob([text], { type: 'application/javascript' }));
+          el.remove();
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.textContent = text;
+        script.id = 'init';
+        document.body.appendChild(script);
+
+        el.remove();
+      });
+
+      const listener = async e => {
+        const { action, payload } = e.data;
+
+        if (action !== 'init') return;
+
+        document.querySelector('#scripts').append(...Object.entries(payload.scripts).map(([id, script]) => {
+          map[`#${ id }`] = URL.createObjectURL(new Blob([script], { type: 'application/javascript' }));
+
+          const scriptEl = document.createElement('script');
+          scriptEl.type = 'module';
+          scriptEl.src = map[`#${ id }`];
+          return scriptEl;
+        }));
+
+        const actionEl = document.createElement('script');
+        actionEl.type = 'module';
+        actionEl.textContent = payload.action.replace(/(from\s+|import\s+)['"](#[\w\-]+)['"]/g, (u, a, z) =>
+          a + `/* ${ z } */ '${ map[z] }'`
+        );
+        document.querySelector('#action').append(actionEl);
+
+        // noinspection JSValidateTypes
+        document.querySelector('script[type=module-blocked]').type = 'module';
+
+        window.removeEventListener('message', listener);
+
+        document.querySelector('#init').remove();
+      };
+
+      // NOTE: Safari doesn't support importing/exporting top-level awaits
+      window.addEventListener('message', listener);
+
+      const addEventListener = MessagePort.prototype.addEventListener;
+      MessagePort.prototype.addEventListener = function () {
+        // NOTE: https://bugs.chromium.org/p/chromium/issues/detail?id=515732
+        this.start();
+        addEventListener.apply(this, arguments);
+      }
+    </script>
+    <title>SIREN Sandbox</title>
   </head>
   <body>
+    <script type="module">
+      class AudioWorkletProcessor {
+        // noinspection JSUnusedGlobalSymbols
+        port = new MessagePort();
+
+        // noinspection JSUnusedGlobalSymbols
+        static get parameterDescriptors() {
+          return [];
+        }
+
+        // noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
+        process(inputs, outputs, parameters) {
+          return true;
+        }
+      }
+
+      window.AudioWorkletProcessor = AudioWorkletProcessor;
+    </script>
+    <div id="scripts"></div>
+    <script id="port" type="siren-init">
+      // NOTE: Safari doesn't support importing/exporting top-level awaits
+      const port = new Promise(resolve => {
+        const listener = e => {
+          window.removeEventListener('message', listener);
+          const [p] = e.ports;
+
+          resolve(p);
+        }
+
+        window.addEventListener('message', listener);
+      });
+
+      export default port;
+    </script>
+    <div id="action"></div>
+    <script id="init" type="siren-init">import port from '#port';</script>
   </body>
 </html>

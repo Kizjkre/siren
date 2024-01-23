@@ -13,7 +13,7 @@ const getToken: Token = async (): Promise<any> => {
     await (
       await fetch('/workstation/auth', {
         method: 'post',
-        body: JSON.stringify({ addr: Math.random() })
+        body: JSON.stringify({ addr: crypto.randomUUID() })
       })
     ).json()
   ).access;
