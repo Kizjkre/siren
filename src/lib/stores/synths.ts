@@ -1,10 +1,10 @@
 import { get, type Writable, writable } from 'svelte/store';
-import type { SynthStore, SynthStoreInterface } from '$lib/util/definitions/client/synths';
+import type { SynthStore, SynthStoreInterface } from '$lib/util/definitions/synths';
 // @ts-ignore
 import params from '$lib/util/sandbox/action/params?raw';
 import sandbox from '$lib/stores/sandbox';
 
-const store: Writable<SynthStore> = writable({});
+const store: Writable<SynthStore> = writable<SynthStore>({});
 
 const synths: SynthStoreInterface = {
   add: (name: string, code: string, def?: boolean): any => {
@@ -12,7 +12,7 @@ const synths: SynthStoreInterface = {
 
     sandbox
       .read(`synth-${ id }`)
-      .then((result: any): any => {
+      .then(({ payload: result }: { action: string, payload: any }): any => {
         store.update((synths: SynthStore): SynthStore => ({
           ...synths,
           [id]: { ...synths[id], parameters: result }
@@ -22,13 +22,12 @@ const synths: SynthStoreInterface = {
     // noinspection JSIgnoredPromiseFromCall
     sandbox.add(`synth-${ id }`, {
       action: params,
-      address: 'synth',
       scripts: { userscript: code }
     });
 
     store.update((synths: SynthStore): SynthStore => ({
       ...synths,
-      [id]: { name, code, parameters: { timbral: {}, time: [] }, references: writable(0) }
+      [id]: { name, code, parameters: { timbral: {}, time: [] }, references: writable<number>(0) }
     }));
   },
   remove: (id: number): any =>

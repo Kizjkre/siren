@@ -12,13 +12,11 @@
   import type { MouseEventHandler } from 'svelte/elements';
   import handleImportCSVChange from '$lib/util/import/csv';
   import timeline from '$lib/util/timeline';
-  import { get } from 'svelte/store';
+  import { get, writable } from 'svelte/store';
   import synths from '$lib/stores/synths';
   // @ts-ignore
   import action from '$lib/util/sandbox/action/export?raw';
   import download from '$lib/util/download';
-  import merge from '$lib/util/merge';
-  import tracks from '$lib/stores/tracks';
   import sandbox from '$lib/stores/sandbox';
   import save from '$lib/util/save';
 
@@ -27,25 +25,18 @@
   const handleImportCSV: MouseEventHandler<any> = (): any => csv.click();
 
   const handleExport: MouseEventHandler<any> = (): any => {
-    const t: Blob[] = [];
-    timeline((id: number, timeline: Timeline): any => {
-      sandbox
-        .read(`export-${ id }`)
-        .then(async (result: any): Promise<any> => {
-          t.push(result);
+    const t: Timeline[] = timeline();
 
-          if (t.length === Object.keys($tracks).length) {
-            const blob: Blob = await merge(t);
-            blob && download('siren.wav', blob);
-          }
-        });
+    sandbox
+      .read('export')
+      .then(async ({ payload: result }: { action: string, payload: any }): Promise<any> => {
+        download('siren.wav', result);
+      });
 
-      // sandbox.add(`export-${ id }`, {
-      //   action,
-      //   address: 'export',
-      //   data: { timeline },
-      //   scripts: { userscript: get(synths)[timeline.synth].code }
-      // });
+    sandbox.add('export', {
+      action,
+      data: writable<{ timeline: Timeline[] }>({ timeline: t }),
+      scripts: Object.fromEntries(t.map((timeline: Timeline, i: number): [string, string] => [`userscript-${ i }`, get(synths)[timeline.synth].code]))
     });
   };
 

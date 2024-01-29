@@ -1,7 +1,7 @@
 import type { DragEventHandler } from 'svelte/elements';
 import { get } from 'svelte/store';
 import tracks from '$lib/stores/tracks';
-import type { EventHandlerCreator } from '$lib/util/definitions/client/listener';
+import type { EventHandlerCreator } from '$lib/util/definitions/listener';
 import width from '$lib/stores/width';
 
 type DragStartHandlerCreator = EventHandlerCreator<[number, string], DragEventHandler<HTMLButtonElement>>;

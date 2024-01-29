@@ -35,7 +35,7 @@
         </h2>
         <!-- NOTE: auto-generated at https://zbib.org -->
         <!-- NOTE: 10.21785/icad2021.042, 10.21785/icad2023.6167 -->
-        <div class="csl-bib-body" style="line-height: 2; margin-left: 2em; text-indent:-2em;">
+        <div class="csl-bib-body" style="line-height: 1.5; margin-left: 2em; text-indent:-2em;">
           <div class="csl-entry">Peng, T., &amp; Choi, H. (2021). Siren: A case study in web audio based sonification. <i>Proceedings of the 26th International Conference on Auditory Display (ICAD 2021)</i>, 126–130. https://doi.org/10.21785/icad2021.042</div>
           <div class="csl-entry">Peng, T., Choi, H., &amp; Berger, J. (2023). Siren: Creative and extensible sonification on the web. <i>Proceedings of the 28th International Conference on Auditory Display (ICAD2023)</i>, 78–84. https://doi.org/10.21785/icad2023.6167</div>
         </div>

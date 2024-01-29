@@ -1,5 +1,5 @@
-import type { NToQ, QToN, TypeInferrer } from '$lib/util/definitions/client/types.d';
-import { Types } from '$lib/util/definitions/client/types.d';
+import type { NToQ, QToN, TypeInferrer } from '$lib/util/definitions/types.d';
+import { Types } from '$lib/util/definitions/types.d';
 
 export const ntoq: NToQ = (data: string[]): number[] => {
   const seen: string[] = [];

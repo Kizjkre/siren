@@ -1,6 +1,6 @@
 import type { Writable } from 'svelte/store';
-import type { Subscribe } from '$lib/util/definitions/client/store';
-import type { Types } from '$lib/util/definitions/client/types';
+import type { Subscribe } from '$lib/util/definitions/store';
+import type { Types } from '$lib/util/definitions/types';
 
 interface Synth {
   name: string;

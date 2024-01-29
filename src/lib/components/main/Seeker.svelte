@@ -4,7 +4,8 @@
   // @ts-ignore
   import { browser } from '$app/environment';
   import rate from '$lib/stores/rate';
-  import { Status } from '$lib/util/definitions/client/status.d';
+  import { Status } from '$lib/util/definitions/status.d';
+  import sandbox from '$lib/stores/sandbox';
 
   enum StatusTime {
     stop = -1,
@@ -33,7 +34,9 @@
       start = StatusTime.pause;
       break;
     case Status.play:
-      requestAnimationFrame(animate);
+      sandbox
+        .read('play', false)
+        .then(({ action }: { action: string, payload: any }) => action === 'start' && requestAnimationFrame(animate));
       break;
     case Status.stop:
       left = 0;

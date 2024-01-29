@@ -1,4 +1,4 @@
-import type { Types } from '$lib/util/definitions/client/types';
+import type { Types } from '$lib/util/definitions/types';
 
 interface StateData {
   [id: string]: {

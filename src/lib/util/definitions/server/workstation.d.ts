@@ -1,3 +1,0 @@
-interface Auth {
-  access: string
-}

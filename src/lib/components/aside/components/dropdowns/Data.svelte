@@ -9,12 +9,12 @@
   import { derived, type Readable } from 'svelte/store';
   import type { DragEventHandler } from 'svelte/elements';
   import Region from '$lib/components/main/track/region/Region.svelte';
-  import type { Region as RegionInterface } from '$lib/util/definitions/client/region';
+  import type { Region as RegionInterface } from '$lib/util/definitions/region';
   import width from '$lib/stores/width';
   import region from '$lib/stores/region';
-  import type { EventHandlerCreator } from '$lib/util/definitions/client/listener';
+  import type { EventHandlerCreator } from '$lib/util/definitions/listener';
   import TimeRegion from '$lib/components/main/track/region/TimeRegion.svelte';
-  import { Types } from '$lib/util/definitions/client/types.d';
+  import { Types } from '$lib/util/definitions/types.d';
   import { type } from '$lib/util/types';
 
   type StrongDragEvent = DragEvent & { currentTarget: EventTarget & HTMLButtonElement; };

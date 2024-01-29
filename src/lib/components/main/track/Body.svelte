@@ -1,10 +1,10 @@
 <script lang="ts">
   import tracks from '$lib/stores/tracks';
-  import type { Track, TrackRegionStoreInterface } from '$lib/util/definitions/client/tracks';
+  import type { Track, TrackRegionStoreInterface } from '$lib/util/definitions/tracks';
   import RegionComponent from '$lib/components/main/track/region/Region.svelte';
   import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/data';
   import TimeRegion from '$lib/components/main/track/region/TimeRegion.svelte';
-  import type { EventListenerCreator } from '$lib/util/definitions/client/listener';
+  import type { EventListenerCreator } from '$lib/util/definitions/listener';
   import type { Writable } from 'svelte/store';
   import trackSelect from '$lib/stores/trackSelect';
   import synths from '$lib/stores/synths';

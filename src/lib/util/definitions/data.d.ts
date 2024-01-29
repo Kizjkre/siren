@@ -1,6 +1,6 @@
 import type { DSVParsedArray } from 'd3-dsv';
 import type { Writable } from 'svelte/store';
-import type { Subscribe } from '$lib/util/definitions/client/store';
+import type { Subscribe } from '$lib/util/definitions/store';
 
 interface Data {
   name: string;

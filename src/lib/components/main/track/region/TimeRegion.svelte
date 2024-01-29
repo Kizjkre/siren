@@ -2,7 +2,7 @@
 
 <script lang="ts">
   import { derived, type Readable, type Writable } from 'svelte/store';
-  import type { Region } from '$lib/util/definitions/client/region';
+  import type { Region } from '$lib/util/definitions/region';
   import { type ScaleLinear, scaleLinear } from 'd3-scale';
   import data from '$lib/stores/data';
   import width from '$lib/stores/width';
@@ -15,7 +15,7 @@
   import { fade } from 'svelte/transition';
   import duration from '$lib/stores/duration';
   import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/mapping';
-  import { Types } from '$lib/util/definitions/client/types.d';
+  import { Types } from '$lib/util/definitions/types.d';
   import Alert from '$lib/components/util/Alert.svelte';
   import { ntoq } from '$lib/util/types';
 

@@ -36,12 +36,13 @@
 
         if (action !== 'init') return;
 
-        document.querySelector('#scripts').append(...Object.entries(payload.scripts).map(([id, script]) => {
+        document.querySelector('#scripts').append(...Object.entries(payload.scripts).map(([id, script], i) => {
           map[`#${ id }`] = URL.createObjectURL(new Blob([script], { type: 'application/javascript' }));
 
           const scriptEl = document.createElement('script');
           scriptEl.type = 'module';
           scriptEl.src = map[`#${ id }`];
+          scriptEl.id = `userscript-${ i }`;
           return scriptEl;
         }));
 

@@ -1,13 +1,13 @@
 import type { DragEventHandler } from 'svelte/elements';
-import type { Region } from '$lib/util/definitions/client/region';
+import type { Region } from '$lib/util/definitions/region';
 import data from '$lib/stores/data';
-import { get } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import mappings from '$lib/stores/mappings';
 // @ts-ignore
 import map from '$lib/util/sandbox/action/map?raw';
-import type { EventHandlerCreator } from '$lib/util/definitions/client/listener';
+import type { EventHandlerCreator } from '$lib/util/definitions/listener';
 import sandbox from '$lib/stores/sandbox';
-import type { DSVRowAny } from '$lib/util/definitions/client/region.d';
+import type { DSVRowAny } from '$lib/util/definitions/region';
 import { type } from '$lib/util/types';
 
 type DragStartHandlerCreator = EventHandlerCreator<[number], DragEventHandler<HTMLButtonElement>>;
@@ -59,7 +59,7 @@ export const handleDrop: DropHandlerCreator =
 
       sandbox
         .read(`mapping-${ id }`)
-        .then((result: any[]): any => {
+        .then(({ payload: result }: { action: string, payload: any[] }): any => {
           region.data.set(result);
           region.type.set(type(result));
         });
@@ -67,10 +67,9 @@ export const handleDrop: DropHandlerCreator =
       // noinspection JSIgnoredPromiseFromCall
       sandbox.add(`mapping-${ id }`,{
         action: map,
-        address: 'map',
-        data: get(data)[region.source.id].data
+        data: writable<any[]>(get(data)[region.source.id].data
           .map((row: DSVRowAny): any => row[region.source.column])
-          .filter((row: any): boolean => row !== null),
+          .filter((row: any): boolean => row !== null)),
         scripts: { userscript: get(get(mappings)[id].map) }
       });
     };

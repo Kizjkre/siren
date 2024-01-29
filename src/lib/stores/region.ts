@@ -1,5 +1,5 @@
 import { get, type Writable, writable } from 'svelte/store';
-import type { DSVRowAny, Region, RegionConstructor, RegionSource } from '$lib/util/definitions/client/region';
+import type { DSVRowAny, Region, RegionConstructor, RegionSource } from '$lib/util/definitions/region';
 import data from '$lib/stores/data';
 import { type } from '$lib/util/types';
 

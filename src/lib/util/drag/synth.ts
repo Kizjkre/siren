@@ -1,10 +1,10 @@
 import type { DragEventHandler } from 'svelte/elements';
 import { get } from 'svelte/store';
 import tracks from '$lib/stores/tracks';
-import type { TrackStore } from '$lib/util/definitions/client/tracks';
+import type { TrackStore } from '$lib/util/definitions/tracks';
 import synths from '$lib/stores/synths';
-import type { SynthStore } from '$lib/util/definitions/client/synths';
-import type { EventHandlerCreator } from '$lib/util/definitions/client/listener';
+import type { SynthStore } from '$lib/util/definitions/synths';
+import type { EventHandlerCreator } from '$lib/util/definitions/listener';
 
 type HandlerCreator = EventHandlerCreator<[number], DragEventHandler<HTMLButtonElement>>;
 

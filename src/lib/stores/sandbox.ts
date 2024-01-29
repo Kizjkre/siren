@@ -1,7 +1,7 @@
 import { type Unsubscriber, type Writable, writable } from 'svelte/store';
-import type { Sandbox, SandboxStore, SandboxStoreInterface } from '$lib/util/definitions/client/sandbox';
+import type { Sandbox, SandboxStore, SandboxStoreInterface } from '$lib/util/definitions/sandbox';
 
-const { subscribe, update }: Writable<SandboxStore> = writable({});
+const { subscribe, update }: Writable<SandboxStore> = writable<SandboxStore>({});
 
 const sandbox: SandboxStoreInterface = {
   /**
@@ -40,13 +40,14 @@ const sandbox: SandboxStoreInterface = {
    * Reads the result of a sandbox with the given ID.
    *
    * @param {string} id - The ID of the sandbox.
+   * @param {boolean} remove - Whether to remove the sandbox.
    * @return {Promise<any>} A promise that resolves with the result of the sandbox.
    */
-  read: (id: string): Promise<any> => new Promise((resolve: any): any => {
+  read: (id: string, remove: boolean = true): Promise<any> => new Promise((resolve: any): any => {
     const unsub: Unsubscriber = subscribe((sandboxes: SandboxStore): any => {
       if (sandboxes[id]?.result !== undefined) {
         const result: any = sandboxes[id].result;
-        sandbox.remove(id);
+        remove && sandbox.remove(id);
         unsub();
         resolve(result);
       }
@@ -81,7 +82,7 @@ const sandbox: SandboxStoreInterface = {
    * @return {any} The updated store.
    */
   send: (id: string, data: any): any => update((store: SandboxStore): SandboxStore => {
-    store[id].data = data;
+    store[id].data!.set(data);
     return store;
   }),
   subscribe

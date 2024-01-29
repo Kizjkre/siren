@@ -11,15 +11,11 @@
   import rate from '$lib/stores/rate';
   import { end, pause, play, record, stop } from '$lib/util/status';
   import status from '$lib/stores/status';
-  import { Status } from '$lib/util/definitions/client/status.d';
+  import { Status } from '$lib/util/definitions/status.d';
 
-  const handlePause: MouseEventHandler<HTMLButtonElement> = (): any => {
-    pause();
-  };
+  const handlePause: MouseEventHandler<HTMLButtonElement> = (): any => pause();
 
-  const handlePlay: MouseEventHandler<HTMLButtonElement> = (): any => {
-    play();
-  };
+  const handlePlay: MouseEventHandler<HTMLButtonElement> = (): any => play();
 
   const handleRecord: MouseEventHandler<HTMLButtonElement> = (): any => {
     if ($status === Status.record) {
@@ -30,9 +26,7 @@
     record();
   };
 
-  const handleStop: MouseEventHandler<HTMLButtonElement> = (): any => {
-    stop();
-  };
+  const handleStop: MouseEventHandler<HTMLButtonElement> = (): any => stop();
 </script>
 
 <footer class="flex flex-col gap-2 h-full md:flex-row w-full">

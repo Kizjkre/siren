@@ -10,7 +10,7 @@
   import data from '$lib/stores/data';
   import Data from '$lib/components/aside/components/dropdowns/Data.svelte';
   import handleImportCSVChange from '$lib/util/import/csv';
-  import type { EventListenerCreator } from '$lib/util/definitions/client/listener';
+  import type { EventListenerCreator } from '$lib/util/definitions/listener';
 
   const selected: boolean[] = [];
 

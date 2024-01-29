@@ -1,10 +1,11 @@
 import { get, type Writable, writable } from 'svelte/store';
 import track from '$lib/stores/track';
-import type { TrackRegionStore, TrackStore, TrackStoreInterface } from '$lib/util/definitions/client/tracks';
-import type { Region } from '$lib/util/definitions/client/region';
+import type { TrackRegionStore, TrackStore, TrackStoreInterface } from '$lib/util/definitions/tracks';
+import type { Region } from '$lib/util/definitions/region';
 import data from '$lib/stores/data';
+import synths from '$lib/stores/synths';
 
-const store: Writable<TrackStore> = writable({});
+const store: Writable<TrackStore> = writable<TrackStore>({});
 
 const tracks: TrackStoreInterface = {
   add: (): any =>
@@ -15,6 +16,8 @@ const tracks: TrackStoreInterface = {
         get(data)[region.source.id].references.update((refs: number): number => refs - 1)
       )
     );
+
+    get(synths)[get(tracks[id].synth)].references.update((refs: number): number => refs - 1)
 
     delete tracks[id];
     return tracks;

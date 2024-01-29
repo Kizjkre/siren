@@ -7,20 +7,21 @@ import sidebar from '$lib/stores/sidebar';
 import synths from '$lib/stores/synths';
 import tracks from '$lib/stores/tracks';
 import width from '$lib/stores/width';
-import type { Data, DataStore } from '$lib/util/definitions/client/data';
-import type { Mapping, MappingStore } from '$lib/util/definitions/client/mappings';
-import type { Synth, SynthStore } from '$lib/util/definitions/client/synths';
-import type { Track, TrackRegionStore, TrackStore } from '$lib/util/definitions/client/tracks';
-import type { Region } from '$lib/util/definitions/client/region';
+import type { Data, DataStore } from '$lib/util/definitions/data';
+import type { Mapping, MappingStore } from '$lib/util/definitions/mappings';
+import type { Synth, SynthStore } from '$lib/util/definitions/synths';
+import type { Track, TrackRegionStore, TrackStore } from '$lib/util/definitions/tracks';
+import type { Region } from '$lib/util/definitions/region';
 import download from '$lib/util/download';
 import type {
   State,
   StateData,
-  StateMap, StateRegion,
+  StateMap,
+  StateRegion,
   StateSynths,
   StateTrack,
   StateTracks
-} from '$lib/util/definitions/client/save';
+} from '$lib/util/definitions/save';
 
 const save: () => any = (): any => {
   // NOTE: Change to zip once sound files are implemented
@@ -41,7 +42,7 @@ const save: () => any = (): any => {
       return serializable;
     })(),
     duration: get(duration),
-    mappings:  (() => {
+    mappings: (() => {
       const m: MappingStore = get(mappings);
       const serializable: StateMap = {};
 

@@ -1,5 +1,5 @@
 import type { Writable } from 'svelte/store';
-import type { Types } from '$lib/util/definitions/client/types.d';
+import type { Types } from '$lib/util/definitions/types';
 
 interface DSVRowAny {
   [key: string]: any;

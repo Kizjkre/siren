@@ -1,5 +1,5 @@
 import type { Writable } from 'svelte/store';
-import type { Subscribe } from '$lib/util/definitions/client/store';
+import type { Subscribe } from '$lib/util/definitions/store';
 
 interface Mapping {
   name: Writable<string>;

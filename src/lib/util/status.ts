@@ -1,12 +1,11 @@
-import { get } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 // @ts-ignore
 import action from '$lib/util/sandbox/action/play?raw';
 import synths from '$lib/stores/synths';
 import timeline from '$lib/util/timeline';
-import tracks from '$lib/stores/tracks';
 import sandbox from '$lib/stores/sandbox';
 import status from '$lib/stores/status';
-import { Status, type StatusChange } from '$lib/util/definitions/client/status.d';
+import { Status, type StatusChange } from '$lib/util/definitions/status.d';
 import { io } from 'socket.io-client';
 import recordStore from '$lib/stores/record';
 
@@ -34,14 +33,13 @@ export const pause: StatusChange = (): any => {
  */
 export const play: StatusChange = (): any => {
   if (get(status) === Status.pause) {
-    sandbox.send('play', { action: 'resume' })
+    sandbox.send('play', { action: 'resume' });
   } else {
     const t: Timeline[] = timeline();
 
     sandbox.add('play', {
       action,
-      address: 'play',
-      data: { action: 'play', timeline: t, gain: 1 },
+      data: writable<{}>({ action: 'play', payload: { timeline: t } }),
       scripts: Object.fromEntries(t.map((timeline: Timeline, i: number): [string, string] => [`userscript-${ i }`, get(synths)[timeline.synth].code]))
     });
   }
@@ -83,10 +81,8 @@ export const record: StatusChange = async (): Promise<any> => {
  * @return {any} This function does not return anything.
  */
 export const stop: StatusChange = (): any => {
-  Object.keys(get(tracks)).forEach((id: string): any => {
-    sandbox.send('play', { action: 'stop' });
-    sandbox.remove('play');
-  });
+  sandbox.send('play', { action: 'stop' });
+  sandbox.remove('play');
 
   status.set(Status.stop);
 };

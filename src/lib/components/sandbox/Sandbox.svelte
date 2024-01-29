@@ -1,32 +1,40 @@
 <script lang="ts">
   import type { EventHandler } from 'svelte/elements';
   import sandbox from '$lib/stores/sandbox';
+  import { dev } from '$app/environment';
+  import { PUBLIC_SANDBOX as SANDBOX } from '$env/static/public';
+  import type { Writable } from 'svelte/store';
 
   export let id: string;
 
   let port: MessagePort;
+  let src: string = dev ? 'http://localhost:3000' : SANDBOX;
+  let data: Writable<any> = $sandbox[id].data!;
 
   const handleLoad: EventHandler = (e: Event): any => {
     const channel: MessageChannel = new MessageChannel();
     port = channel.port1;
 
-    port.onmessage = (e: MessageEvent): any =>
-      e.data.action === 'close' && sandbox.result(id, e.data.payload);
+    port.onmessage = (e: MessageEvent): any => sandbox.result(id, e.data);
 
-    (e.target as HTMLIFrameElement).contentWindow!.postMessage({ action: 'init', payload: $sandbox[id] }, `${ window.location.protocol }//${ window.location.hostname }:3000`, [channel.port2]);
+    const payload: {} = {
+      action: $sandbox[id].action,
+      data: $data,
+      scripts: structuredClone($sandbox[id].scripts)
+    };
+
+    (e.target as HTMLIFrameElement).contentWindow!.postMessage({ action: 'init', payload }, src, [channel.port2]);
   };
 
-  $: (port && $sandbox[id].data) && port.postMessage($sandbox[id].data);
+  $: (port && $data) && port.postMessage($data);
 </script>
 
-<!-- REF: https://stackoverflow.com/a/75529235 -->
-<svelte:options immutable />
-
+<!-- NOTE: https://developer.chrome.com/blog/autoplay/#iframe_delegation -->
 <iframe
-  allow="midi; geolocation; microphone; camera; display-capture; encrypted-media; clipboard-read; clipboard-write; notifications; payment-handler; persistent-storage; background-sync; ambient-light-sensor; accessibility-events;"
+  allow="autoplay; midi; geolocation; microphone; camera; display-capture; encrypted-media; clipboard-read; clipboard-write; notifications; payment-handler; persistent-storage; background-sync; ambient-light-sensor; accessibility-events;"
   class="hidden"
   on:load={ handleLoad }
   sandbox="allow-modals allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation allow-downloads"
-  src="http://localhost:3000"
+  { src }
   title="SIREN Sandbox"
 />

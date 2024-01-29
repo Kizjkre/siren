@@ -1,7 +1,7 @@
 import { get } from 'svelte/store';
 import tracks from '$lib/stores/tracks';
-import type { Track, TrackRegionStore } from '$lib/util/definitions/client/tracks';
-import type { Region } from '$lib/util/definitions/client/region';
+import type { Track, TrackRegionStore } from '$lib/util/definitions/tracks';
+import type { Region } from '$lib/util/definitions/region';
 import rate from '$lib/stores/rate';
 
 /**
@@ -31,6 +31,6 @@ const timeline: TimelineCreator = (): Timeline[] =>
     });
 
     return timeline;
-  });;
+  });
 
 export default timeline;
