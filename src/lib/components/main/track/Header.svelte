@@ -51,8 +51,13 @@
     (): any => $trackSelect = $trackSelect === id ? -1 : id;
 
   $: {
-    ($status === Status.play && $status === prevState) &&
+    if ($status === Status.play && $status === prevState)
       sandbox.send('play', { action: 'gain', payload: { gain: $gain, id } });
+    else if ($status === Status.play)
+      sandbox
+        .read('play', 'gain', false)
+        .then(() => sandbox.send('play', { action: 'gain', payload: { gain: $gain, id } }));
+
     prevState = $status;
   }
 </script>

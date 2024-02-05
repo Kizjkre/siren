@@ -60,31 +60,37 @@ const ids = {};
   switch (e.data.action) {
     case 'play':
       // noinspection ES6MissingAwait
-      res.forEach(async (promise, i) => {
-        const [synth, s] = await promise;
+      (async () => {
+        const task = res.map(async (promise, i) => {
+          const [synth, s] = await promise;
 
-        let current = {};
-        Object.keys(e.data.payload.timeline[i])
-          .forEach(time => {
-            current = { ...current, ...e.data.payload.timeline[i][time] };
-            const functions = new Map();
-            Object.keys(e.data.payload.timeline[i][time]).forEach(parameter =>
-              Array.from(s.updates.keys())
-                .filter(params => params.includes(parameter))
-                .forEach(params => !functions.has(params) && functions.set(params, s.updates.get(params)))
-            );
+          let current = {};
+          Object.keys(e.data.payload.timeline[i])
+            .forEach(time => {
+              current = { ...current, ...e.data.payload.timeline[i][time] };
+              const functions = new Map();
+              Object.keys(e.data.payload.timeline[i][time]).forEach(parameter =>
+                Array.from(s.updates.keys())
+                  .filter(params => params.includes(parameter))
+                  .forEach(params => !functions.has(params) && functions.set(params, s.updates.get(params)))
+              );
 
-            // if (functions.size === 0) [...s.updates.values()].forEach(fun => functions.set([undefined, time], fun)); /* NOTE: Might be hacky */
-            Array.from(functions.entries()).forEach(([params, update]) => update(...params.filter(p => !synth.parameters.time.includes(p)).map(p => current[p]), +time)); /* TODO: fix hack */
-          });
+              // if (functions.size === 0) [...s.updates.values()].forEach(fun => functions.set([undefined, time], fun)); /* NOTE: Might be hacky */
+              Array.from(functions.entries()).forEach(([params, update]) => update(...params.filter(p => !synth.parameters.time.includes(p)).map(p => current[p]), +time)); /* TODO: fix hack */
+            });
 
-        (await port).postMessage({ action: 'start', payload: null });
-        // noinspection ES6MissingAwait
-        context.resume();
-        s.start();
+          (await port).postMessage({ action: 'start', payload: null });
+          // noinspection ES6MissingAwait
+          context.resume();
+          s.start();
 
-        ids[e.data.payload.timeline[i].id] = i;
-      });
+          ids[e.data.payload.timeline[i].id] = i;
+        });
+
+        await Promise.all(task);
+
+        (await port).postMessage({ action: 'gain', payload: null });
+      })();
       break;
     case 'pause':
       // noinspection ES6MissingAwait
@@ -104,7 +110,7 @@ const ids = {};
       context.resume();
       break;
     case 'gain':
-      (await res[ids[e.data.payload.id]])[2].gain.linearRampToValueAtTime(e.data.payload.gain, context.currentTime + 0.05);
+      (await res[ids[e.data.payload.id]])[2].gain.setValueAtTime(e.data.payload.gain, context.currentTime);
       break;
   }
 };

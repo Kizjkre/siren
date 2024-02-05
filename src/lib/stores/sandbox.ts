@@ -40,16 +40,19 @@ const sandbox: SandboxStoreInterface = {
    * Reads the result of a sandbox with the given ID.
    *
    * @param {string} id - The ID of the sandbox.
+   * @param {string} action - The action to be read;
    * @param {boolean} remove - Whether to remove the sandbox.
    * @return {Promise<any>} A promise that resolves with the result of the sandbox.
    */
-  read: (id: string, remove: boolean = true): Promise<any> => new Promise((resolve: any): any => {
+  read: (id: string, action: string | undefined, remove: boolean = true): Promise<any> => new Promise((resolve: any): any => {
     const unsub: Unsubscriber = subscribe((sandboxes: SandboxStore): any => {
       if (sandboxes[id]?.result !== undefined) {
         const result: any = sandboxes[id].result;
         remove && sandbox.remove(id);
-        unsub();
-        resolve(result);
+        if (action === undefined || action === sandboxes[id].result.action) {
+          unsub();
+          resolve(result);
+        }
       }
     });
   }),

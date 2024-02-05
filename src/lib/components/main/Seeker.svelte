@@ -35,8 +35,8 @@
       break;
     case Status.play:
       sandbox
-        .read('play', false)
-        .then(({ action }: { action: string, payload: any }) => action === 'start' && requestAnimationFrame(animate));
+        .read('play', 'start', false)
+        .then(() => requestAnimationFrame(animate));
       break;
     case Status.stop:
       left = 0;
