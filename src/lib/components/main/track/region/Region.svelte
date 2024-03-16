@@ -133,6 +133,8 @@
           on:focus={ handleFocusAndMouseEnter }
           on:mouseenter={ handleFocusAndMouseEnter }
           on:mouseleave={ handleBlurAndMouseLeave }
+          role="cell"
+          tabindex="-1"
           transition:fade
           width={ $width / 4 }
           { x }
@@ -159,4 +161,4 @@
     <b><kbd>{ $data[region.source.id].name }</kbd></b> in a { type } parameter.
     The data has been automatically casted to a { type } type.
   </Alert>
-{ /if    }
+{ /if }

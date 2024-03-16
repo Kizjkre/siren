@@ -35,7 +35,7 @@
 
     sandbox.add('export', {
       action,
-      data: writable<{ timeline: Timeline[] }>({ timeline: t }),
+      data: writable<{ payload: { timeline: Timeline[] } }>({ payload: { timeline: t } }),
       scripts: Object.fromEntries(t.map((timeline: Timeline, i: number): [string, string] => [`userscript-${ i }`, get(synths)[timeline.synth].code]))
     });
   };

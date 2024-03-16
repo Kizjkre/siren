@@ -22,7 +22,7 @@
   </div>
   <div class="basis-1/2 bg-[#173740] flex flex-col grow px-8 py-4 text-white">
     <main class="flex flex-col justify-around grow">
-      <a class="after:border-b-white flex items-center link md:text-5xl pb-2 text-2xl" href="/workstation">
+      <a class="after:border-b-white flex items-center link md:text-5xl pb-2 text-2xl" href="workstation.html">
         <IconAppWindow class="h-12 w-12" />
         &nbsp;
         Go to Workstation

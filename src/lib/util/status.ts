@@ -48,31 +48,31 @@ export const play: StatusChange = (): any => {
 };
 
 export const record: StatusChange = async (): Promise<any> => {
-  const jwt: string = localStorage.getItem('access') ?? await (async (): Promise<string> => {
-    const token = (
-      await (
-        await fetch('/workstation/auth', {
-          method: 'post',
-          body: JSON.stringify({ addr: Math.random() })
-        })
-      ).json()
-    ).access;
-
-    localStorage.setItem('access', token);
-
-    return token;
-  })();
-
-  recordStore.set(
-    io(`${ window.location.protocol === 'https:' ? 'wss' : 'ws' }://${ window.location.hostname }:3001`)
-  );
-
-  get(recordStore).emit('access', jwt);
-  get(recordStore).on(`/${ jwt }`, (message: string): any => {
-    console.log(message);
-  });
-
-  status.set(Status.record);
+  // const jwt: string = localStorage.getItem('access') ?? await (async (): Promise<string> => {
+  //   const token = (
+  //     await (
+  //       await fetch('/workstation/auth', {
+  //         method: 'post',
+  //         body: JSON.stringify({ addr: Math.random() })
+  //       })
+  //     ).json()
+  //   ).access;
+  //
+  //   localStorage.setItem('access', token);
+  //
+  //   return token;
+  // })();
+  //
+  // recordStore.set(
+  //   io(`${ window.location.protocol === 'https:' ? 'wss' : 'ws' }://${ window.location.hostname }:3001`)
+  // );
+  //
+  // get(recordStore).emit('access', jwt);
+  // get(recordStore).on(`/${ jwt }`, (message: string): any => {
+  //   console.log(message);
+  // });
+  //
+  // status.set(Status.record);
 };
 
 /**
@@ -80,9 +80,9 @@ export const record: StatusChange = async (): Promise<any> => {
  *
  * @return {any} This function does not return anything.
  */
-export const stop: StatusChange = (): any => {
+export const stop: StatusChange = async (): Promise<any> => {
   sandbox.send('play', { action: 'stop' });
-  sandbox.remove('play');
+  await sandbox.read('play', 'close', true);
 
   status.set(Status.stop);
 };

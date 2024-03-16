@@ -8,8 +8,9 @@
   export let id: string;
 
   let port: MessagePort;
-  let src: string = dev ? 'http://localhost:3000' : SANDBOX;
-  let data: Writable<any> = $sandbox[id].data!;
+  // const src: string = dev ? 'http://localhost:3000' : SANDBOX;
+  const src = SANDBOX;
+  const data: Writable<any> = $sandbox[id].data!;
 
   const handleLoad: EventHandler = (e: Event): any => {
     const channel: MessageChannel = new MessageChannel();

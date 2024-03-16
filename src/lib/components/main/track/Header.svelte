@@ -42,7 +42,7 @@
       action: demo,
       scripts: { userscript: $synths[$synth].code }
     });
-    sandbox.read(`demo-${ id }`);
+    sandbox.read(`demo-${ id }`, undefined);
   };
 
   const handleGain: MouseEventHandler<HTMLButtonElement> = (): any => $gain = $gain === 0 ? 1 : 0;

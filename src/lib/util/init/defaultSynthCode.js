@@ -4,12 +4,12 @@ export const parameters = Object.freeze({
   timbral: { Frequency: 'quantitative', Gain: 'quantitative', Pan: 'quantitative' }
 });
 
-const defaultSynth = context => {
+const defaultSynth = (context, destination) => {
   const osc = new OscillatorNode(context);
   const gain = new GainNode(context);
   const pan = new StereoPannerNode(context);
 
-  osc.connect(pan).connect(gain).connect(context.destination);
+  osc.connect(pan).connect(gain).connect(destination);
 
   return ({
     updates: new Map()

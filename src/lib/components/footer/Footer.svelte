@@ -32,21 +32,21 @@
 <footer class="flex flex-col gap-2 h-full md:flex-row w-full">
   <div class="basis-1/4 flex relative" id="alert-container"></div>
   <div class="basis-1/2 flex gap-2 items-center justify-center">
-    <button
-      class="border flex h-6 items-center justify-center md:h-12 rounded-full transition w-12"
-      class:bg-gray-100={ $status === Status.stop || $status === Status.record }
-      class:border-red-600={ $status === Status.stop || $status === Status.record }
-      class:text-red-600={ $status === Status.stop || $status === Status.record }
-      class:text-gray-100={ $status !== Status.stop && $status !== Status.record }
-      disabled={ $status !== Status.stop && $status !== Status.record }
-      on:click={ handleRecord }
-    >
-      { #if $status === Status.record }
-        <IconPlayerStop />
-      { :else }
-        <IconPlayerRecord />
-      { /if }
-    </button>
+<!--    <button-->
+<!--      class="border flex h-6 items-center justify-center md:h-12 rounded-full transition w-12"-->
+<!--      class:bg-gray-100={ $status === Status.stop || $status === Status.record }-->
+<!--      class:border-red-600={ $status === Status.stop || $status === Status.record }-->
+<!--      class:text-red-600={ $status === Status.stop || $status === Status.record }-->
+<!--      class:text-gray-100={ $status !== Status.stop && $status !== Status.record }-->
+<!--      disabled={ $status !== Status.stop && $status !== Status.record }-->
+<!--      on:click={ handleRecord }-->
+<!--    >-->
+<!--      { #if $status === Status.record }-->
+<!--        <IconPlayerStop />-->
+<!--      { :else }-->
+<!--        <IconPlayerRecord />-->
+<!--      { /if }-->
+<!--    </button>-->
     <button
       class="border flex h-6 items-center justify-center md:h-12 rounded-full transition w-12"
       class:bg-gray-100={ $status !== Status.stop && $status !== Status.record }

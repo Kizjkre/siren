@@ -1,7 +1,6 @@
 import port from '#port';
 
 const context = new AudioContext();
-context.suspend();
 
 const synths = await Promise.all(
   [...document.getElementsByTagName('script')]
@@ -9,20 +8,7 @@ const synths = await Promise.all(
     .map(async e => await import(e.src))
 );
 
-const graph = new Set();
-
-const connect = AudioNode.prototype.connect;
-const disconnect = AudioNode.prototype.disconnect;
 const addModule = AudioWorklet.prototype.addModule;
-
-AudioNode.prototype.connect = function () {
-  graph.add([this, arguments[0]]);
-  return connect.apply(this, arguments);
-};
-AudioNode.prototype.disconnect = function () {
-  graph.delete([this, arguments[0]]);
-  return disconnect.apply(this, arguments);
-};
 
 const res = synths.map(async synth => {
   const urls = Object.fromEntries(Object.entries(synth.worklets ?? {}).map(([name, worklet]) => {
@@ -37,18 +23,10 @@ const res = synths.map(async synth => {
 
   const gain = new GainNode(context);
   const control = new GainNode(context);
-  connect.call(gain, control);
-  connect.call(control, context.destination);
+  gain.connect(control).connect(context.destination);
   control.gain.value = 1 / synths.length;
 
-  const s = await synth.default(context);
-  graph.forEach(([from, to]) => {
-    if (to instanceof AudioDestinationNode) {
-      disconnect.call(from, to);
-      connect.call(from, gain);
-    }
-  });
-  graph.clear();
+  const s = await synth.default(context, gain);
 
   return [synth, await s, gain];
 });
@@ -75,8 +53,10 @@ const ids = {};
                   .forEach(params => !functions.has(params) && functions.set(params, s.updates.get(params)))
               );
 
+              const now = context.currentTime;
+
               // if (functions.size === 0) [...s.updates.values()].forEach(fun => functions.set([undefined, time], fun)); /* NOTE: Might be hacky */
-              Array.from(functions.entries()).forEach(([params, update]) => update(...params.filter(p => !synth.parameters.time.includes(p)).map(p => current[p]), +time)); /* TODO: fix hack */
+              Array.from(functions.entries()).forEach(([params, update]) => update(...params.filter(p => !synth.parameters.time.includes(p)).map(p => current[p]), now + +time)); /* TODO: fix hack */
             });
 
           (await port).postMessage({ action: 'start', payload: null });
@@ -89,7 +69,7 @@ const ids = {};
 
         await Promise.all(task);
 
-        (await port).postMessage({ action: 'gain', payload: null });
+        Object.keys(ids).forEach(async () => (await port).postMessage({ action: 'gain', payload: null }));
       })();
       break;
     case 'pause':
@@ -108,6 +88,7 @@ const ids = {};
     case 'resume':
       // noinspection ES6MissingAwait
       context.resume();
+      (await port).postMessage({ action: 'start', payload: null });
       break;
     case 'gain':
       (await res[ids[e.data.payload.id]])[2].gain.setValueAtTime(e.data.payload.gain, context.currentTime);

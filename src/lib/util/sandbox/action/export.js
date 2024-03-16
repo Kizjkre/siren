@@ -155,7 +155,7 @@ const audioBufferToWav = (audioBuffer, as32BitFloat) => {
 const sampleRate = 44100;
 const context = new OfflineAudioContext({
   numberOfChannels: 2,
-  length: 50 * sampleRate, // NOTE: Hacky
+  length: 8 * sampleRate, // NOTE: Hacky
   sampleRate
 });
 
@@ -165,20 +165,7 @@ const synths = await Promise.all(
     .map(async e => await import(e.src))
 );
 
-const graph = new Set();
-
-const connect = AudioNode.prototype.connect;
-const disconnect = AudioNode.prototype.disconnect;
 const addModule = AudioWorklet.prototype.addModule;
-
-AudioNode.prototype.connect = function () {
-  graph.add([this, arguments[0]]);
-  return connect.apply(this, arguments);
-};
-AudioNode.prototype.disconnect = function () {
-  graph.delete([this, arguments[0]]);
-  return disconnect.apply(this, arguments);
-};
 
 const res = synths.map(async synth => {
   const urls = Object.fromEntries(Object.entries(synth.worklets ?? {}).map(([name, worklet]) => {
@@ -193,45 +180,40 @@ const res = synths.map(async synth => {
 
   const gain = new GainNode(context);
   const control = new GainNode(context);
-  connect.call(gain, control);
-  connect.call(control, context.destination);
+  gain.connect(control).connect(context.destination);
   control.gain.value = 1 / synths.length;
 
-  const s = await synth.default(context);
-  graph.forEach(([from, to]) => {
-    if (to instanceof AudioDestinationNode) {
-      disconnect.call(from, to);
-      connect.call(from, gain);
-    }
-  });
-  graph.clear();
+  const s = await synth.default(context, gain);
 
   return [synth, await s, gain];
 });
 
 // NOTE: Safari doesn't support importing/exporting top-level awaits
 (await port).onmessage = async e => {
-  // noinspection ES6MissingAwait
-  res.forEach(async (promise, i) => {
+  const task = res.map(async (promise, i) => {
     const [synth, s] = await promise;
 
     let current = {};
-    const timeline = Object.fromEntries(
-      Object.entries(e.data.timeline).map(([key, value]) => [+key, value])
-    );
-    Object.keys(timeline).forEach(time => {
-      current = { ...current, ...timeline[time] };
-      const functions = new Map();
-      Object.keys(timeline[time]).forEach(parameter =>
-        Array.from(s.updates.keys())
-          .filter(params => params.includes(parameter))
-          .forEach(params => !functions.has(params) && functions.set(params, s.updates.get(params)))
-      );
-      Array.from(functions.entries()).forEach(([params, update]) => update(...params.filter(p => !synth.parameters.time.includes(p)).map(p => current[p]), time)); /* TODO: fix hack */
-    });
+    Object.keys(e.data.payload.timeline[i])
+      .forEach(time => {
+        current = { ...current, ...e.data.payload.timeline[i][time] };
+        const functions = new Map();
+        Object.keys(e.data.payload.timeline[i][time]).forEach(parameter =>
+          Array.from(s.updates.keys())
+            .filter(params => params.includes(parameter))
+            .forEach(params => !functions.has(params) && functions.set(params, s.updates.get(params)))
+        );
+
+        const now = context.currentTime;
+
+        // if (functions.size === 0) [...s.updates.values()].forEach(fun => functions.set([undefined, time], fun)); /* NOTE: Might be hacky */
+        Array.from(functions.entries()).forEach(([params, update]) => update(...params.filter(p => !synth.parameters.time.includes(p)).map(p => current[p]), now + +time)); /* TODO: fix hack */
+      });
 
     s.start();
   });
+
+  await Promise.all(task);
 
   const buf = await context.startRendering();
   // NOTE: Safari doesn't support importing/exporting top-level awaits

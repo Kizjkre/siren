@@ -17,7 +17,7 @@ interface SandboxStoreInterface {
     (id: string, sandbox: Sandbox): SandboxStoreInterface;
     (sandbox: Sandbox): SandboxStoreInterface;
   };
-  read: (id: string, action: string | undefined, remove: boolean = true) => Promise<any>;
+  read: (id: string, action: string | undefined = undefined, remove: boolean = true) => Promise<any>;
   remove: (id: string) => any;
   result: (id: string, result: any) => any;
   send: (id: string, data: any) => any;
