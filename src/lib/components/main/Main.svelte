@@ -8,11 +8,23 @@
   import Timeline from '$lib/components/main/Timeline.svelte';
   import width from '$lib/stores/width';
   import Seeker from '$lib/components/main/Seeker.svelte';
+  import type { Track, TrackRegionStore } from '$lib/util/definitions/tracks';
+  import { get } from 'svelte/store';
+  import type { Region } from '$lib/util/definitions/region';
 
   const handleDblClick: MouseEventHandler<HTMLElement> = (): any => tracks.add();
+
+  const handleMouseUp: MouseEventHandler<HTMLElement> = (): any =>
+    Object.values($tracks).forEach((track: Track) => {
+      const regions = [
+        ...Object.values(get<Region[]>(track.regions.timbral)).flatMap((t: TrackRegionStore): Region => Object.values(t)),
+        ...Object.values(get<Region[]>(track.regions.time)).flatMap((t: TrackRegionStore): Region => Object.values(t))
+      ];
+      $duration = regions.reduce((a: number, b: Region) => Math.max(a, Math.ceil(get(b.data).length / 4 + get(b.offset))), 128);
+    });
 </script>
 
-<main class="flex flex-col h-full overflow-scroll relative">
+<main class="flex flex-col h-full overflow-scroll relative" on:mouseup={ handleMouseUp }>
   <div class="relative" style:width="{ $width * $duration + 200 }px">
     <Seeker />
     <Timeline />
