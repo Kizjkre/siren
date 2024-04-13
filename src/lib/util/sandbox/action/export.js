@@ -152,44 +152,44 @@ const audioBufferToWav = (audioBuffer, as32BitFloat) => {
   });
 };
 
-const sampleRate = 44100;
-const context = new OfflineAudioContext({
-  numberOfChannels: 2,
-  length: 8 * sampleRate, // NOTE: Hacky
-  sampleRate
-});
-
-const synths = await Promise.all(
-  [...document.getElementsByTagName('script')]
-    .filter(e => e.id.includes('userscript-'))
-    .map(async e => await import(e.src))
-);
-
-const addModule = AudioWorklet.prototype.addModule;
-
-const res = synths.map(async synth => {
-  const urls = Object.fromEntries(Object.entries(synth.worklets ?? {}).map(([name, worklet]) => {
-    const blob = new Blob([`registerProcessor('${ name }', ${ worklet.toString() });`], { type: 'application/javascript' });
-    return [name, URL.createObjectURL(blob)];
-  }));
-
-  AudioWorklet.prototype.addModule = async function () {
-    arguments[0] = urls[arguments[0]];
-    return await addModule.apply(this, arguments);
-  };
-
-  const gain = new GainNode(context);
-  const control = new GainNode(context);
-  gain.connect(control).connect(context.destination);
-  control.gain.value = 1 / synths.length;
-
-  const s = await synth.default(context, gain);
-
-  return [synth, await s, gain];
-});
-
 // NOTE: Safari doesn't support importing/exporting top-level awaits
 (await port).onmessage = async e => {
+  const sampleRate = 44100;
+  const context = new OfflineAudioContext({
+    numberOfChannels: 2,
+    length: sampleRate * (0.25 + Math.max(...e.data.payload.timeline.map(t => Math.max(...Object.keys(t).map(k => +k).filter(k => !isNaN(k)))))),
+    sampleRate
+  });
+
+  const synths = await Promise.all(
+    [...document.getElementsByTagName('script')]
+      .filter(e => e.id.includes('userscript-'))
+      .map(async e => await import(e.src))
+  );
+
+  const addModule = AudioWorklet.prototype.addModule;
+
+  const res = synths.map(async synth => {
+    const urls = Object.fromEntries(Object.entries(synth.worklets ?? {}).map(([name, worklet]) => {
+      const blob = new Blob([`registerProcessor('${ name }', ${ worklet.toString() });`], { type: 'application/javascript' });
+      return [name, URL.createObjectURL(blob)];
+    }));
+
+    AudioWorklet.prototype.addModule = async function () {
+      arguments[0] = urls[arguments[0]];
+      return await addModule.apply(this, arguments);
+    };
+
+    const gain = new GainNode(context);
+    const control = new GainNode(context);
+    gain.connect(control).connect(context.destination);
+    control.gain.value = 1 / synths.length;
+
+    const s = await synth.default(context, gain);
+
+    return [synth, await s, gain];
+  });
+
   const task = res.map(async (promise, i) => {
     const [synth, s] = await promise;
 

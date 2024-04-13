@@ -6,7 +6,7 @@
   import { type ScaleLinear, scaleLinear } from 'd3-scale';
   import data from '$lib/stores/data';
   import width from '$lib/stores/width';
-  import type { MouseEventHandler } from 'svelte/elements';
+  import type { FocusEventHandler, MouseEventHandler } from 'svelte/elements';
   import displacement from '$lib/util/drag/displacement';
   import round from '$lib/util/drag/round';
   // noinspection TypeScriptCheckImport
@@ -27,6 +27,10 @@
   const column: Writable<any[]> = region.data;
   const rtype: Writable<Types> = region.type;
 
+  let popover: HTMLSpanElement;
+  let position: [number, number] = [0, 0];
+  let text: string;
+
   let alert: boolean = false;
 
   const rects: RegionPoint[] = [];
@@ -38,6 +42,21 @@
   );
 
   const dispatch: EventDispatcher<None> = createEventDispatcher();
+
+  const handleBlurAndMouseLeave: MouseEventHandler<SVGRectElement> & FocusEventHandler<SVGRectElement> = (): any =>
+    popover.hidePopover();
+
+  const handleFocusAndMouseEnter: MouseEventHandler<SVGRectElement> & FocusEventHandler<SVGRectElement> = (e: Event): any => {
+    const target: HTMLElement = e.target as HTMLElement;
+
+    const { left, top }: DOMRect = target.getBoundingClientRect();
+
+    position[0] = left;
+    position[1] = top - 30;
+
+    text = $column[+target.getAttribute('data-index')!];
+    popover.showPopover();
+  };
 
   const forward: MouseEventHandler<HTMLButtonElement> = (): any => dispatch('remove');
 
@@ -99,11 +118,18 @@
     <span class="text-blue-900">{ $data[region.source.id].name } / { region.source.column }</span>
   </span>
   <svg class="h-full" width={ $w }>
-    { #each rects as { x, y, d } }
+    { #each rects as { x, y, d }, i }
       { #key y }
         <rect
           class="cursor-pointer fill-blue-900 hover:fill-blue-600"
+          data-index={ i }
           height="2.5"
+          on:blur={ handleBlurAndMouseLeave }
+          on:focus={ handleFocusAndMouseEnter }
+          on:mouseenter={ handleFocusAndMouseEnter }
+          on:mouseleave={ handleBlurAndMouseLeave }
+          role="cell"
+          tabindex="-1"
           transition:fade
           width={ (d || 0) * $width }
           { x }
@@ -113,6 +139,16 @@
     { /each }
   </svg>
 </button>
+
+<span
+  bind:this={ popover }
+  class="bg-blue-900 m-0 px-2 py-1 rounded text-blue-100 text-xs"
+  popover
+  style:left={ `${ position[0] }px` }
+  style:top={ `${ position[1] }px` }
+>
+  { text }
+</span>
 
 { #if alert }
   <Alert>

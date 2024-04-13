@@ -24,11 +24,11 @@
     });
 </script>
 
-<main class="flex flex-col h-full overflow-scroll relative" on:mouseup={ handleMouseUp }>
+<main class="flex flex-col h-full overflow-scroll relative">
   <div class="relative" style:width="{ $width * $duration + 200 }px">
     <Seeker />
     <Timeline />
-    <div>
+    <div on:mouseup={ handleMouseUp } role="button" tabindex="-1">
       { #each Object.keys($tracks) as id (id) }
         <TrackComponent id={ +id } />
       { /each }
