@@ -1,7 +1,7 @@
 import { get, type Writable, writable } from 'svelte/store';
 import type { SynthStore, SynthStoreInterface } from '$lib/util/definitions/synths';
 // @ts-ignore
-import params from '$lib/util/sandbox/action/params?raw';
+import params from '$lib/util/sandbox/params?raw';
 import sandbox from '$lib/stores/sandbox';
 
 const store: Writable<SynthStore> = writable<SynthStore>({});

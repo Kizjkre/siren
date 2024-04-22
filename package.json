@@ -3,9 +3,7 @@
   "version": "0.4.0",
   "private": true,
   "scripts": {
-    "dev:app": "vite dev",
-    "dev:osc": "wrangler dev workers/",
-    "dev": "concurrently \"npm:dev:*\"",
+    "dev": "vite dev",
     "host": "vite --host",
     "build": "vite build",
     "preview": "vite preview",

@@ -11,7 +11,7 @@
   import handleImportSynthChange from '$lib/util/import/synth';
   import { handleDragStart } from '$lib/util/drag/synth';
   // @ts-ignore
-  import demo from '$lib/util/sandbox/action/demo?raw';
+  import demo from '$lib/util/sandbox/demo?raw';
   import sandbox from '$lib/stores/sandbox';
 
   let js: HTMLInputElement;

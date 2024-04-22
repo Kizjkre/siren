@@ -4,7 +4,7 @@ import data from '$lib/stores/data';
 import { get, writable } from 'svelte/store';
 import mappings from '$lib/stores/mappings';
 // @ts-ignore
-import map from '$lib/util/sandbox/action/map?raw';
+import map from '$lib/util/sandbox/map?raw';
 import type { EventHandlerCreator } from '$lib/util/definitions/listener';
 import sandbox from '$lib/stores/sandbox';
 import type { DSVRowAny } from '$lib/util/definitions/region';

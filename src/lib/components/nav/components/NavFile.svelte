@@ -15,7 +15,7 @@
   import { get, writable } from 'svelte/store';
   import synths from '$lib/stores/synths';
   // @ts-ignore
-  import action from '$lib/util/sandbox/action/export?raw';
+  import action from '$lib/util/sandbox/export?raw';
   import download from '$lib/util/download';
   import sandbox from '$lib/stores/sandbox';
   import save from '$lib/util/save';

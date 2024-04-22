@@ -1,6 +1,6 @@
 import { get, writable } from 'svelte/store';
 // @ts-ignore
-import action from '$lib/util/sandbox/action/play?raw';
+import action from '$lib/util/sandbox/play?raw';
 import synths from '$lib/stores/synths';
 import timeline from '$lib/util/timeline';
 import sandbox from '$lib/stores/sandbox';
@@ -48,31 +48,31 @@ export const play: StatusChange = (): any => {
 };
 
 export const record: StatusChange = async (): Promise<any> => {
-  // const jwt: string = localStorage.getItem('access') ?? await (async (): Promise<string> => {
-  //   const token = (
-  //     await (
-  //       await fetch('/workstation/auth', {
-  //         method: 'post',
-  //         body: JSON.stringify({ addr: Math.random() })
-  //       })
-  //     ).json()
-  //   ).access;
-  //
-  //   localStorage.setItem('access', token);
-  //
-  //   return token;
-  // })();
-  //
-  // recordStore.set(
-  //   io(`${ window.location.protocol === 'https:' ? 'wss' : 'ws' }://${ window.location.hostname }:3001`)
-  // );
-  //
-  // get(recordStore).emit('access', jwt);
-  // get(recordStore).on(`/${ jwt }`, (message: string): any => {
-  //   console.log(message);
-  // });
-  //
-  // status.set(Status.record);
+  const jwt: string = localStorage.getItem('access') ?? await (async (): Promise<string> => {
+    const token = (
+      await (
+        await fetch('/workstation/auth', {
+          method: 'post',
+          body: JSON.stringify({ addr: Math.random() })
+        })
+      ).json()
+    ).access;
+
+    localStorage.setItem('access', token);
+
+    return token;
+  })();
+
+  recordStore.set(
+    io(`${ window.location.protocol === 'https:' ? 'wss' : 'ws' }://${ window.location.hostname }:3001`)
+  );
+
+  get(recordStore).emit('access', jwt);
+  get(recordStore).on(`/${ jwt }`, (message: string): any => {
+    console.log(message);
+  });
+
+  status.set(Status.record);
 };
 
 /**

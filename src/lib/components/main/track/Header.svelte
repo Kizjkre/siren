@@ -18,7 +18,7 @@
   import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/synth';
   import synths from '$lib/stores/synths';
   // @ts-ignore
-  import demo from '$lib/util/sandbox/action/demo?raw';
+  import demo from '$lib/util/sandbox/demo?raw';
   import status from '$lib/stores/status';
   import sandbox from '$lib/stores/sandbox';
   import trackSelect from '$lib/stores/trackSelect';

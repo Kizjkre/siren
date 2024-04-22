@@ -2,14 +2,14 @@
   import type { EventHandler } from 'svelte/elements';
   import sandbox from '$lib/stores/sandbox';
   import { dev } from '$app/environment';
+  // noinspection TypeScriptCheckImport
   import { PUBLIC_SANDBOX as SANDBOX } from '$env/static/public';
   import type { Writable } from 'svelte/store';
 
   export let id: string;
 
   let port: MessagePort;
-  // const src: string = dev ? 'http://localhost:3000' : SANDBOX;
-  const src = SANDBOX;
+  const src: string = dev ? 'http://localhost:3000' : SANDBOX;
   const data: Writable<any> = $sandbox[id].data!;
 
   const handleLoad: EventHandler = (e: Event): any => {
