@@ -4,7 +4,7 @@ import data from '$lib/stores/data';
 import { type } from '$lib/util/types';
 
 const region: RegionConstructor =
-  ({ source = { id: -1, column: '' }, offset }: RegionSource): Region => {
+  ({ link, offset, source = { id: -1, column: '' } }: RegionSource): Region => {
     const o: Writable<number> = writable(!offset || (isNaN(offset) || offset < 0) ? 0 : offset);
     const d: Writable<any[]> = writable(
       get(data)[source.id].data
@@ -13,6 +13,7 @@ const region: RegionConstructor =
     );
     return {
       data: d,
+      link: writable(link || -1),
       offset: o,
       source,
       type: writable(type(get(d)))

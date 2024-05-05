@@ -5,7 +5,7 @@
   import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/data';
   import TimeRegion from '$lib/components/main/track/region/TimeRegion.svelte';
   import type { EventListenerCreator } from '$lib/util/definitions/listener';
-  import type { Writable } from 'svelte/store';
+  import { get, type Writable } from 'svelte/store';
   import trackSelect from '$lib/stores/trackSelect';
   import synths from '$lib/stores/synths';
 
@@ -18,9 +18,17 @@
   const synth: Writable<number> = track.synth;
 
   const onTimbralRemove: EventListenerCreator<[number]> =
-    (id: number): EventListener => (): void => timbral.remove($view, id);
+    (id: number): EventListener => (): void => {
+      const link: number = get(get(timbral)[$view][id].link);
+      link > -1 && time.remove($view, link);
+      timbral.remove($view, id);
+    };
   const onTimeRemove: EventListenerCreator<[number]> =
-    (id: number): EventListener => (): void => time.remove($view, id);
+    (id: number): EventListener => (): void => {
+      const link: number = get(get(time)[$view][id].link);
+      get(timbral)[$view][link].link.set(-1);
+      time.remove($view, id);
+    }
 </script>
 
 <div class="flex flex-col h-full transition w-full" class:bg-gray-100={ $trackSelect === id }>
@@ -33,21 +41,30 @@
     on:drop|preventDefault={ handleDrop(id, $view, false) }
     role="region"
   >
-    { #each Object.entries($timbral[$view]) as [id, region] (id) }
-      <RegionComponent on:remove={ onTimbralRemove(+id) } { region } type={ $synths[$synth].parameters.timbral[$view] } />
+    { #each Object.entries($timbral[$view]) as [regionId, region] (id) }
+      <RegionComponent
+        id={ regionId }
+        on:remove={ onTimbralRemove(+regionId) }
+        { region }
+        trackId={ id }
+        type={ $synths[$synth].parameters.timbral[$view] }
+        view={ $view }
+      />
     { /each }
   </div>
   <div
     class="border-t h-time relative w-full"
     data-accept="siren/region"
     data-type="time"
-    on:dragleave|preventDefault={ handleDragLeave }
-    on:dragover|preventDefault={ handleDragOver }
-    on:drop|preventDefault={ handleDrop(id, $view, true) }
     role="region"
   >
-    { #each Object.entries($time[$view]) as [id, region] (id) }
-      <TimeRegion on:remove={ onTimeRemove(+id) } { region } />
+    { #each Object.entries($time[$view]) as [regionId, region] (id) }
+      <TimeRegion
+        on:remove={ onTimeRemove(+regionId) }
+        trackId={ id }
+        { region }
+        view={ $view }
+      />
     { /each }
   </div>
 </div>

@@ -3,9 +3,10 @@ import { get } from 'svelte/store';
 import tracks from '$lib/stores/tracks';
 import type { EventHandlerCreator } from '$lib/util/definitions/listener';
 import width from '$lib/stores/width';
+import type { Track } from '$lib/util/definitions/tracks';
 
 type DragStartHandlerCreator = EventHandlerCreator<[number, string], DragEventHandler<HTMLButtonElement>>;
-type DropHandlerCreator = EventHandlerCreator<[number, string, boolean], DragEventHandler<HTMLDivElement>>
+type DropHandlerCreator = EventHandlerCreator<[number, string], DragEventHandler<HTMLDivElement>>
 
 export const handleDragLeave: DragEventHandler<HTMLDivElement> = (e: DragEvent): any =>
   e.dataTransfer!.types.includes('siren/region') && (e.target as HTMLDivElement).classList.remove('bg-gray-100');
@@ -22,13 +23,14 @@ export const handleDragStart: DragStartHandlerCreator =
       e.dataTransfer!.setData('siren/region', JSON.stringify({ id, column }));
 
 export const handleDrop: DropHandlerCreator =
-  (trackId: number, parameter: string, time?: boolean) =>
+  (trackId: number, parameter: string) =>
     (e: DragEvent): void => {
       if (!e.dataTransfer!.types.includes('siren/region')) return;
       const { id, column }: { id: number, column: string } = JSON.parse(e.dataTransfer!.getData('siren/region'));
       (e.target as HTMLButtonElement)?.classList.remove('bg-gray-100');
-      get(tracks)[trackId].regions[time ? 'time' : 'timbral'].add(parameter, {
-        source: { id, column },
-        offset: (e.clientX - 50 - (e.target as HTMLButtonElement).getBoundingClientRect().left) / get(width)
+      const track: Track = get(tracks)[trackId];
+      track.regions.timbral.add(parameter, {
+        offset: (e.clientX - 50 - (e.target as HTMLButtonElement).getBoundingClientRect().left) / get(width),
+        source: { id, column }
       });
     };

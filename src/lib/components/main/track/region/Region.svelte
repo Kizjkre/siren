@@ -1,12 +1,12 @@
 <!-- TODO: Hitbox -->
 
 <script lang="ts">
-  import { derived, type Readable, type Writable } from 'svelte/store';
+  import { derived, get, type Readable, type Writable } from 'svelte/store';
   import type { Region } from '$lib/util/definitions/region';
   import { type ScaleBand, scaleBand, type ScaleLinear, scaleLinear } from 'd3-scale';
   import data from '$lib/stores/data';
   import width from '$lib/stores/width';
-  import type { FocusEventHandler, MouseEventHandler } from 'svelte/elements';
+  import type { DragEventHandler, FocusEventHandler, MouseEventHandler } from 'svelte/elements';
   import displacement from '$lib/util/drag/displacement';
   import round from '$lib/util/drag/round';
   // noinspection TypeScriptCheckImport
@@ -14,13 +14,29 @@
   import { createEventDispatcher, type EventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
   import duration from '$lib/stores/duration';
-  import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/mapping';
+  import {
+    handleDragLeave as handleMappingDragLeave,
+    handleDragOver as handleMappingDragOver,
+    handleDrop as handleMappingDrop
+  } from '$lib/util/drag/mapping';
+  import {
+    handleDragLeave as handleTimeDragLeave,
+    handleDragOver as handleTimeDragOver,
+    handleDrop as handleTimeDrop
+  } from '$lib/util/drag/time';
   import Alert from '$lib/components/util/Alert.svelte';
   import { ntoq, qton, type as getType } from '$lib/util/types';
   import { Types } from '$lib/util/definitions/types.d';
+  import type { EventHandlerCreator } from '$lib/util/definitions/listener';
+  import tracks from '$lib/stores/tracks';
 
+  type CustomScaleLinear<T, U> = (d: T) => U;
+
+  export let id: number | undefined = undefined;
   export let region: Region;
+  export let trackId: number | undefined = undefined;
   export let type: Types | undefined = undefined;
+  export let view: string | undefined = undefined;
 
   let popover: HTMLSpanElement;
   let position: [number, number] = [0, 0];
@@ -31,17 +47,37 @@
 
   let autoConvert: boolean = false;
 
+  const link: Writable<number> = region.link;
+  let time: number[];
+
   const rects: RegionPoint[] = [];
 
   const offset: Writable<number> = region.offset;
   const w: Readable<number> = derived<[Writable<number>, Writable<any[]>], number>(
     [width, column],
-    ([width, column]: [number, any[]]): number => column.length * width / 4
+    ([width, column]: [number, any[]]): number => $link < 0 ? column.length * width / 4 : time?.reduce((a: number, v: number): number => a + v) * width
   );
 
   const dispatch: EventDispatcher<None> = createEventDispatcher();
 
   const forward: MouseEventHandler<HTMLButtonElement> = (): any => dispatch('remove');
+
+  const handleDragLeave: DragEventHandler<HTMLButtonElement> = (e: DragEvent): any => {
+    handleMappingDragLeave(e);
+    handleTimeDragLeave(e);
+  };
+
+  const handleDragOver: DragEventHandler<HTMLButtonElement> = (e: DragEvent): any => {
+    handleMappingDragOver(e);
+    handleTimeDragOver(e);
+  };
+
+  const handleDrop: EventHandlerCreator<[Region], DragEventHandler<HTMLButtonElement>> =
+    (region: Region): any =>
+      (e: DragEvent): void => {
+        handleMappingDrop(region)(e);
+        handleTimeDrop(trackId, view, id)(e);
+      };
 
   const handleBlurAndMouseLeave: MouseEventHandler<SVGRectElement> & FocusEventHandler<SVGRectElement> = (): any =>
     popover.hidePopover();
@@ -67,6 +103,8 @@
     $offset = Math.max(0, $offset + e.movementX / $width);
     if (displacement($offset, 1) < 0.03) $offset = round($offset, 1);
     else if (displacement($offset, 1 / 4) < 0.02) $offset = round($offset, 1 / 4);
+
+    get(get(tracks)[trackId!]?.regions.time)[view][$link]?.offset.set($offset);
   };
 
   const handleMouseUp: MouseEventHandler<any> = (): any => {
@@ -75,6 +113,13 @@
   };
 
   $: {
+    let dist: number = 0;
+    const linkX: CustomScaleLinear<any, number> = (d: any): number => {
+      const pos: number = dist * $width;
+      dist += d;
+      return pos;
+    };
+
     const x: ScaleLinear<number, number> = scaleLinear<number, number>()
       .domain([0, $column.length])
       .range([0, $column.length * $width / 4]);
@@ -88,11 +133,11 @@
         .range([100 - 2.5, 25]);
 
     rects.splice(0, rects.length);
-    $column.forEach((d: any, i: number): RegionPoint => rects[i] = { x: x(i), y: y(d)! });
+    $column.forEach((d: any, i: number): RegionPoint => rects[i] = { x: $link < 0 ? x(i) : linkX(time[i]), y: y(d)! });
   }
 
-  $: if ($column.length + $offset * 4 > $duration * 4)
-    $duration = round($column.length / 4 + $offset, 4) + 4;
+  $: ($column.length + $offset * 4 > $duration * 4) &&
+    ($duration = round($column.length / 4 + $offset, 4) + 4);
 
   $: {
     if (type && $rtype !== type) {
@@ -104,6 +149,8 @@
 
     $rtype = getType($column);
   }
+
+  $: $link > -1 && (time = get(get(get(tracks)[trackId!]?.regions.time)[view][$link].data));
 </script>
 
 <button
@@ -136,8 +183,8 @@
           role="cell"
           tabindex="-1"
           transition:fade
-          width={ $width / 4 }
-          { x }
+          width={ $link < 0 || i >= time?.length ? $width / 4 : $width * time[i] }
+          x={ x }
           y={ y - 2.5 }
         />
       { /key }

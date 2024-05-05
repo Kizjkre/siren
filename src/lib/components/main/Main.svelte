@@ -24,22 +24,20 @@
     });
 </script>
 
-<main class="flex flex-col h-full relative">
-  <Timeline />
-  <section class="flex flex-col h-full overflow-scroll">
-    <div class="relative" style:width="{ $width * $duration + 200 }px">
-      <Seeker />
-      <div on:mouseup={ handleMouseUp } role="button" tabindex="-1">
-        { #each Object.keys($tracks) as id (id) }
+<main class="flex flex-col h-full overflow-scroll relative">
+  <div class="relative" style:width="{ $width * $duration + 200 }px">
+    <Seeker />
+    <Timeline />
+    <div on:mouseup={ handleMouseUp } role="button" tabindex="-1">
+      { #each Object.keys($tracks) as id (id) }
         <TrackComponent id={ +id } />
       { /each }
-      </div>
     </div>
-    <button
-      class="cursor-pointer grid grow items-center justify-center min-h-24 transition"
-      on:dblclick={ handleDblClick }
-    >
-      <IconCircleX class="grow h-12 rotate-45 w-12" /> <!-- NOTE: Circle plus icon -->
-    </button>
-  </section>
+  </div>
+  <button
+    class="cursor-pointer grid grow items-center justify-center min-h-24 transition"
+    on:dblclick={ handleDblClick }
+  >
+    <IconCircleX class="grow h-12 rotate-45 w-12" /> <!-- NOTE: Circle plus icon -->
+  </button>
 </main>

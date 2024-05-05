@@ -17,14 +17,17 @@ const store: (dict: DefaultDict<TrackRegionStore>) => TrackRegionStoreInterface 
     const { subscribe, update }: Writable<DefaultDict<TrackRegionStore>> = writable(dict);
 
     return {
-      add: (parameter: string, config: RegionSource): any => {
+      add: (parameter: string, config: RegionSource): number => {
+        const id: number = new Date().getTime();
         update((store: DefaultDict<TrackRegionStore>): DefaultDict<TrackRegionStore> => {
-          store[parameter][new Date().getTime()] = region(config);
+          store[parameter][id] = region(config);
           return store;
         });
         get(data)[config.source.id].references.update(
           (ref: number): number => ref + 1
         );
+
+        return id;
       },
       remove: (parameter: string, id: number): any =>
         update((store: DefaultDict<TrackRegionStore>): DefaultDict<TrackRegionStore> => {

@@ -7,14 +7,16 @@ interface DSVRowAny {
 
 interface Region {
   data: Writable<any[]>;
+  link?: Writable<number>;
   offset: Writable<number>;
   source: { id: number, column: string };
   type: Writable<Types>;
 }
 
 interface RegionSource {
-  source: { id: number, column: string };
+  link?: number;
   offset?: number;
+  source: { id: number, column: string };
 }
 
 type RegionConstructor = ({ source }: RegionSource) => Region;

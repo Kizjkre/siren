@@ -1,60 +1,20 @@
 <script lang="ts">
-  import duration from '$lib/stores/duration';
+  import duration from '$lib/stores/duration.js';
   import width from '$lib/stores/width';
   // noinspection TypeScriptCheckImport
   import IconZoomIn from '~icons/tabler/zoom-in';
   // noinspection TypeScriptCheckImport
   import IconZoomOut from '~icons/tabler/zoom-out';
   import type { MouseEventHandler } from 'svelte/elements';
-  import { onMount, tick } from 'svelte';
-
-  let canvas: HTMLCanvasElement;
-  let ctx: CanvasRenderingContext2D;
-  let cWidth: number = 1;
-  let dpr: number = 1;
-  let wrap: HTMLDivElement;
-
-  onMount(async () => {
-    cWidth = wrap.getBoundingClientRect().width;
-
-    await tick();
-
-    ctx = canvas.getContext('2d')!;
-    dpr = window.devicePixelRatio;
-    ctx.scale(dpr, dpr);
-
-    const rect = canvas.getBoundingClientRect();
-    canvas.style.width = `100%`;
-    canvas.style.height = `${ rect.height }px`;
-  });
 
   const handleZoomIn: MouseEventHandler<HTMLButtonElement> = (): any => $width = Math.min(300, $width + 10);
   const handleZoomOut: MouseEventHandler<HTMLButtonElement> = (): any => $width = Math.max(20, $width - 10);
 
-  let tickLength = 20;
-
-  $: if (ctx) {
-    (async () => {
-      cWidth = wrap.getBoundingClientRect().width;
-
-      await tick();
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (let i = 0, j = 0; i <= cWidth * dpr; i += $width / 4, j++) {
-        ctx.beginPath();
-        ctx.moveTo(i, canvas.height - tickLength * (!(j % 4) * 2 + !!(j % 4)));
-        ctx.lineTo(i, canvas.height + tickLength * (!(j % 4) * 2 + !!(j % 4)));
-        ctx.stroke();
-
-        !(j % 4) && ctx.fillText(j / 4, i + $width / 12, canvas.height / 2);
-      }
-    })();
-  }
+  $: ($width < 50 && $duration < 40) && ($duration = 48);
 </script>
 
 <div class="border-b box-border flex">
-  <div class="bg-white flex gap-2 items-center justify-center left-0 px-2 w-track-header z-[1]">
+  <div class="bg-white flex gap-2 items-center justify-center left-0 px-2 sticky w-track-header z-[1]">
     <button class="cursor-zoom-out h-5 w-5" on:click={ handleZoomOut }>
       <IconZoomOut class="h-5 w-5" />
     </button>
@@ -63,7 +23,14 @@
       <IconZoomIn class="h-5 w-5" />
     </button>
   </div>
-  <div bind:this={ wrap } class="grow">
-    <canvas bind:this={ canvas } height={ 25 * dpr } width={ cWidth * dpr }></canvas>
+  <div class="flex grow">
+    { #each Array($duration).fill(null) as _, i }
+      <div class="border-l flex items-end relative h-8" style:width="{ $width }px">
+        { #each Array(4).fill(null) as _ }
+        	<div class="border-l first:border-l-0 h-4" style:width="{ $width / 4 }px" />
+        { /each }
+        <p class="absolute ml-1 top-0" class:text-xs={ $width < 50 }>{ i }</p>
+      </div>
+    { /each }
   </div>
 </div>

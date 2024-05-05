@@ -1,7 +1,7 @@
 <!-- TODO: Hitbox -->
 
 <script lang="ts">
-  import { derived, type Readable, type Writable } from 'svelte/store';
+  import { derived, get, type Readable, type Writable } from 'svelte/store';
   import type { Region } from '$lib/util/definitions/region';
   import { type ScaleLinear, scaleLinear } from 'd3-scale';
   import data from '$lib/stores/data';
@@ -18,11 +18,14 @@
   import { Types } from '$lib/util/definitions/types.d';
   import Alert from '$lib/components/util/Alert.svelte';
   import { ntoq } from '$lib/util/types';
+  import tracks from '$lib/stores/tracks';
 
   type CustomScaleLinear<T, U> = (d: T) => U;
 
-  export let region: Region;
   export let hovering: boolean = false;
+  export let region: Region;
+  export let trackId: number | undefined = undefined;
+  export let view: string | undefined = undefined;
 
   const column: Writable<any[]> = region.data;
   const rtype: Writable<Types> = region.type;
@@ -40,6 +43,8 @@
     [width, column],
     ([width, column]: [number, any[]]): number => column.reduce((a: number, v: number): number => a + v) * width
   );
+
+  const link: Writable<number> = region.link;
 
   const dispatch: EventDispatcher<None> = createEventDispatcher();
 
@@ -69,6 +74,8 @@
     $offset = Math.max(0, $offset + e.movementX / $width);
     if (displacement($offset, 1) < 0.03) $offset = round($offset, 1);
     else if (displacement($offset, 1 / 4) < 0.02) $offset = round($offset, 1 / 4);
+
+    get(get(tracks)[trackId!]?.regions.timbral)[view][$link]?.offset.set($offset);
   }
 
   const handleMouseUp: MouseEventHandler<any> = (): any => {
