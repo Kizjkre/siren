@@ -1,7 +1,7 @@
 <!-- TODO: Hitbox -->
 
 <script lang="ts">
-  import { derived, get, type Readable, type Writable } from 'svelte/store';
+  import { get, type Writable } from 'svelte/store';
   import type { Region } from '$lib/util/definitions/region';
   import { type ScaleBand, scaleBand, type ScaleLinear, scaleLinear } from 'd3-scale';
   import data from '$lib/stores/data';
@@ -53,10 +53,11 @@
   const rects: RegionPoint[] = [];
 
   const offset: Writable<number> = region.offset;
-  const w: Readable<number> = derived<[Writable<number>, Writable<any[]>], number>(
-    [width, column],
-    ([width, column]: [number, any[]]): number => $link < 0 ? column.length * width / 4 : time?.reduce((a: number, v: number): number => a + v) * width
-  );
+  // const w: Readable<number> = derived<[Writable<number>, Writable<any[]>], number>(
+  //   [width, column],
+  //   ([width, column]: [number, any[]]): number => column.length * width / 4
+  // );
+  let w: number = 0;
 
   const dispatch: EventDispatcher<None> = createEventDispatcher();
 
@@ -133,7 +134,11 @@
         .range([100 - 2.5, 25]);
 
     rects.splice(0, rects.length);
-    $column.forEach((d: any, i: number): RegionPoint => rects[i] = { x: $link < 0 ? x(i) : linkX(time[i]), y: y(d)! });
+    $column.forEach((d: any, i: number): RegionPoint =>
+      rects[i] = { x: $link < 0 || i >= time?.length ? x(i - (time?.length || 0)) + dist * $width : linkX(time[i]), y: y(d)! }
+    );
+
+    w = rects.at(-1).x + (time?.length >= $column.length ? time[$column.length - 1] * $width : $width / 4);
   }
 
   $: ($column.length + $offset * 4 > $duration * 4) &&
@@ -151,6 +156,7 @@
   }
 
   $: $link > -1 && (time = get(get(get(tracks)[trackId!]?.regions.time)[view][$link].data));
+  $: $link < 0 && (time = undefined);
 </script>
 
 <button
@@ -160,7 +166,7 @@
   on:drop|capture|preventDefault|stopPropagation={ handleDrop(region) }
   on:mousedown={ handleMouseDown }
   style:left="{ $offset * $width }px"
-  style:width="{ $w }px"
+  style:width="{ w }px"
   transition:fade={ { duration: 100 } }
 >
   <span class="absolute flex gap-2 items-center left-2 text-xs">
@@ -169,7 +175,7 @@
     </button>
     <span class="text-blue-900">{ $data[region.source.id].name } / { region.source.column }</span>
   </span>
-  <svg class="h-full" width={ $w }>
+  <svg class="h-full" width={ w }>
     { #each rects as { x, y }, i }
       { #key y }
         <rect

@@ -19,7 +19,7 @@ export const handleDragOver: DragEventHandler<HTMLDivElement> = (e: DragEvent): 
 export const handleDrop: DropHandlerCreator =
   (trackId: number, parameter: string, regionId: number) =>
     (e: DragEvent): void => {
-      if (!e.dataTransfer!.types.includes('siren/region')) return;
+      if (!e.dataTransfer!.types.includes('siren/region') || get(get(get(tracks)[trackId].regions.timbral)[parameter][regionId].link) !== -1) return;
       const { id, column }: { id: number, column: string } = JSON.parse(e.dataTransfer!.getData('siren/region'));
       (e.target as HTMLButtonElement)?.classList.remove('bg-gray-100');
       const track: Track = get(tracks)[trackId];
