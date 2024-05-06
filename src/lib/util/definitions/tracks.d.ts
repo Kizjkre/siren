@@ -2,12 +2,21 @@ import type { Writable } from 'svelte/store';
 import type { Region, RegionSource } from '$lib/util/definitions/region';
 import type { Subscribe } from '$lib/util/definitions/store';
 
+interface RecordMetadata {
+  id: number;
+  timeId: number;
+  columnTimbral: string;
+  columnTime: string;
+  customData: number;
+}
+
 interface TrackRegionStore {
   [id: number]: Region;
 }
 
 interface TrackRegionStoreInterface {
-  add: (parameter: string, config: RegionSource) => any;
+  add: (parameter: string, config: RegionSource) => number;
+  record: (parameter: string) => RecordMetadata;
   remove: (parameter: string, id: number) => any;
   subscribe: Subscribe<DefaultDict<TrackRegionStore>>;
 }

@@ -17,15 +17,21 @@ const timeline: TimelineCreator = (): Timeline[] =>
     // Iterate over each timbral region
     Object.entries(get(regions.timbral)).forEach(([parameter, region]: [string, TrackRegionStore]): any => {
       // Iterate over each region data
-      Object.values(region).forEach(({ data, offset }: Region): any => {
+      Object.values(region).forEach(({ data, link, offset }: Region): any => {
         const o: number = get(offset);
         let next: number = 0;
 
+        let time: any[] = get(link!) < 0 ? [] : get(get(regions.time)[parameter][get(link!)].data);
+
         // Iterate over each data point in the region
-        get(data).forEach((datum: number): any => {
+        get(data).forEach((datum: number, i: number): any => {
           // Add the parameter value to the timeline at the calculated offset
           timeline[o + next] = { ...(timeline[o + next] || {}), [parameter]: datum };
-          next += 0.25 / get(rate); // NOTE: Temporary
+
+          let length: number = 0.25;
+          i < time.length && (length = get(get(regions.time)[parameter][get(link!)].data)[i]);
+
+          next += length / get(rate); // NOTE: Temporary
         });
       });
     });

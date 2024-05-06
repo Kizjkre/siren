@@ -41,7 +41,7 @@
   const offset: Writable<number> = region.offset;
   const w: Readable<number> = derived<[Writable<number>, Writable<any[]>], number>(
     [width, column],
-    ([width, column]: [number, any[]]): number => column.reduce((a: number, v: number): number => a + v) * width
+    ([width, column]: [number, any[]]): number => column.reduce((a: number, v: number): number => a + v, 0) * width
   );
 
   const link: Writable<number> = region.link;
@@ -104,7 +104,7 @@
   }
 
   let sum: number = -1;
-  $: if ((sum = $column.reduce((a: number, v: number): number => a + v) + $offset + 4) > $duration)
+  $: if ((sum = $column.reduce((a: number, v: number): number => a + v, 0) + $offset + 4) > $duration)
     $duration = round(sum, 4);
 </script>
 

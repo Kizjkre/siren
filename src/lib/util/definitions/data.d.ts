@@ -16,4 +16,5 @@ interface DataStoreInterface {
   add: (name: string, map: string) => any;
   remove: (id: number) => any;
   subscribe: Subscribe<DataStore>;
+  update: (id: number, data: any) => any;
 }

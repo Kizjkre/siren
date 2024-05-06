@@ -7,6 +7,7 @@ interface DSVRowAny {
 
 interface Region {
   data: Writable<any[]>;
+  length: Writable<number>;
   link?: Writable<number>;
   offset: Writable<number>;
   source: { id: number, column: string };

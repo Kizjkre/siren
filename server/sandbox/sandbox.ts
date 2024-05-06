@@ -11,6 +11,8 @@ const sandbox = {
     const app: Express = express();
     const port: 3000 = 3000;
 
+    let listening: boolean = false;
+
     app.use(express.json());
 
     app.use((_: Request, res: Response, next: NextFunction): any => {
@@ -23,7 +25,8 @@ const sandbox = {
       res.send(readFileSync(__dirname + '/sandbox.html', 'utf8'))
     );
 
-    app.listen(port, (): any => {
+    !listening && app.listen(port, (): any => {
+      listening = true;
       console.log('\x1b[32m%s\x1b[0m', `Sandbox listening on port ${ port }.`);
     });
   }

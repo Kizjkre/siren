@@ -1,20 +1,30 @@
 import { get, type Writable, writable } from 'svelte/store';
 import type {
+  RecordMetadata,
   Track,
+  TrackInit,
   TrackRegion,
-  TrackRegionStoreInterface,
   TrackRegionStore,
-  TrackInit
+  TrackRegionStoreInterface
 } from '$lib/util/definitions/tracks';
 import defaultdict from '$lib/util/defaultdict';
-import type { RegionSource } from '$lib/util/definitions/region';
+import type { DSVRowAny, RegionSource } from '$lib/util/definitions/region';
 import region from '$lib/stores/region';
 import data from '$lib/stores/data';
 import synths from '$lib/stores/synths';
+import type { DataStore } from '$lib/util/definitions/data';
+import tracks from '$lib/stores/tracks';
+import trackSelect from '$lib/stores/trackSelect';
+import status from '$lib/stores/status';
+import { Status } from '$lib/util/definitions/status.d';
 
 const store: (dict: DefaultDict<TrackRegionStore>) => TrackRegionStoreInterface =
   (dict: DefaultDict<TrackRegionStore>): TrackRegionStoreInterface => {
     const { subscribe, update }: Writable<DefaultDict<TrackRegionStore>> = writable(dict);
+
+    let customData: number = -1;
+
+    data.subscribe((d: DataStore) => !(customData in d) && (customData = -1));
 
     return {
       add: (parameter: string, config: RegionSource): number => {
@@ -28,6 +38,66 @@ const store: (dict: DefaultDict<TrackRegionStore>) => TrackRegionStoreInterface 
         );
 
         return id;
+      },
+      record: (parameter: string): RecordMetadata => {
+        customData === -1 && (customData = data.add('Recorded Dataset', ''));
+        const columnTimbral: string = 'Timbral-' + new Date().getTime();
+        const columnTime: string = 'Time-' + new Date().getTime();
+        const d: any = get(data)[customData].data;
+        !('columns' in d) && (d.columns = []);
+        d.columns.push(columnTimbral, columnTime);
+        data.update(customData, d);
+
+        const id: number = new Date().getTime();
+
+        const timeId: number = get(tracks)[get(trackSelect)].regions.time.add(parameter, {
+          source: {
+            id: customData,
+            column: columnTime
+          },
+          link: id
+        });
+
+        update((store: DefaultDict<TrackRegionStore>): DefaultDict<TrackRegionStore> => {
+          store[parameter][id] = region({
+            source: {
+              id: customData,
+              column: columnTimbral
+            },
+            link: timeId
+          });
+          return store;
+        });
+
+        get(data)[customData].references.update(
+          (ref: number): number => ref + 1
+        );
+
+        // let start: number | undefined;
+        // const u = (time: number) => {
+        //   start === undefined && (start = time);
+        //
+        //   d[0][columnTime] = (time - start) / 1000;
+        //   data.update(customData, d);
+        //
+        //   get(get(tracks)[get(trackSelect)].regions.timbral)[parameter][id].data.set(
+        //     d
+        //       .map((row: DSVRowAny): any => row[columnTimbral])
+        //       .filter((row: any): boolean => row !== null)
+        //   );
+        //
+        //   get(get(tracks)[get(trackSelect)].regions.time)[parameter][timeId].data.set(
+        //     d
+        //       .map((row: DSVRowAny): any => row[columnTime])
+        //       .filter((row: any): boolean => row !== null)
+        //   );
+        //
+        //   get(status) === Status.record && requestAnimationFrame(u);
+        // };
+        //
+        // requestAnimationFrame(u);
+
+        return { id, timeId, columnTimbral, columnTime, customData };
       },
       remove: (parameter: string, id: number): any =>
         update((store: DefaultDict<TrackRegionStore>): DefaultDict<TrackRegionStore> => {

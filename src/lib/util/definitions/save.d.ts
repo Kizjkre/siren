@@ -34,6 +34,8 @@ interface StateSynths {
 
 interface StateRegion {
   data: any[];
+  length: number;
+  link?: number;
   offset: number;
   source: { id: number, column: string };
   type: Types;

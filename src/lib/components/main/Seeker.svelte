@@ -20,7 +20,7 @@
   // @ts-ignore
   !animate && browser && (
     animate = (time: DOMHighResTimeStamp): any => {
-      if ($status !== Status.play) return;
+      if ($status !== Status.play && $status !== Status.record) return;
       if (start === StatusTime.stop) start = time;
       else if (start === StatusTime.pause) start = time - elapsed;
       elapsed = time - start;
@@ -41,6 +41,9 @@
     case Status.stop:
       left = 0;
       start = StatusTime.stop;
+      break;
+    case Status.record:
+      requestAnimationFrame(animate);
       break;
   }
 </script>

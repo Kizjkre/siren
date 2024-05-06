@@ -12,6 +12,7 @@
   import { end, pause, play, record, stop } from '$lib/util/status';
   import status from '$lib/stores/status';
   import { Status } from '$lib/util/definitions/status.d';
+  import trackSelect from '$lib/stores/trackSelect';
 
   const handlePause: MouseEventHandler<HTMLButtonElement> = (): any => pause();
 
@@ -34,11 +35,11 @@
   <div class="basis-1/2 flex gap-2 items-center justify-center">
     <button
       class="border flex h-6 items-center justify-center md:h-12 rounded-full transition w-12"
-      class:bg-gray-100={ $status === Status.stop || $status === Status.record }
-      class:border-red-600={ $status === Status.stop || $status === Status.record }
-      class:text-red-600={ $status === Status.stop || $status === Status.record }
-      class:text-gray-100={ $status !== Status.stop && $status !== Status.record }
-      disabled={ $status !== Status.stop && $status !== Status.record }
+      class:bg-gray-100={ $trackSelect !== -1 && ($status === Status.stop || $status === Status.record) }
+      class:border-red-600={ $trackSelect !== -1 && ($status === Status.stop || $status === Status.record) }
+      class:text-gray-100={ $trackSelect === -1 || ($status !== Status.stop && $status !== Status.record) }
+      class:text-red-600={ $trackSelect !== -1 && ($status === Status.stop || $status === Status.record) }
+      disabled={ $trackSelect === -1 || ($status !== Status.stop && $status !== Status.record) }
       on:click={ handleRecord }
     >
       { #if $status === Status.record }
@@ -91,6 +92,7 @@
         disabled={ $status !== Status.stop }
         id="rate"
         min="0.1"
+        on:keydown|stopPropagation
         step="any"
         type="number"
       />

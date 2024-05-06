@@ -92,6 +92,8 @@ const save: () => any = (): any => {
           Object.entries(value2).forEach(([key3, value3]: [string, Region]): any => {
             serializable[key].regions.time[key2][key3] = {} as unknown as StateRegion;
             serializable[key].regions.time[key2][key3].data = get(value3.data);
+            serializable[key].regions.time[key2][key3].length = get(value3.length);
+            serializable[key].regions.time[key2][key3].link = 'link' in value3 ? get(value3.link) : undefined;
             serializable[key].regions.time[key2][key3].offset = get(value3.offset);
             serializable[key].regions.time[key2][key3].source = structuredClone(value3.source);
             serializable[key].regions.time[key2][key3].type = get(value3.type);
@@ -103,6 +105,8 @@ const save: () => any = (): any => {
           Object.entries(value2).forEach(([key3, value3]: [string, Region]): any => {
             serializable[key].regions.timbral[key2][key3] = {} as unknown as StateRegion;
             serializable[key].regions.timbral[key2][key3].data = get(value3.data);
+            serializable[key].regions.timbral[key2][key3].length = get(value3.length);
+            serializable[key].regions.timbral[key2][key3].link = 'link' in value3 ? get(value3.link) : undefined;
             serializable[key].regions.timbral[key2][key3].offset = get(value3.offset);
             serializable[key].regions.timbral[key2][key3].source = structuredClone(value3.source);
             serializable[key].regions.timbral[key2][key3].type = get(value3.type);

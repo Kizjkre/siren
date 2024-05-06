@@ -13,7 +13,7 @@
   // noinspection TypeScriptCheckImport
   import IconWaveSine from '~icons/tabler/wave-sine';
   import type { KeyboardEventHandler, MouseEventHandler } from 'svelte/elements';
-  import type { Writable } from 'svelte/store';
+  import { get, type Writable } from 'svelte/store';
   import type { Track } from '$lib/util/definitions/tracks';
   import { handleDragLeave, handleDragOver, handleDrop } from '$lib/util/drag/synth';
   import synths from '$lib/stores/synths';
@@ -48,7 +48,7 @@
   const handleGain: MouseEventHandler<HTMLButtonElement> = (): any => $gain = $gain === 0 ? 1 : 0;
 
   const handleSelect: MouseEventHandler<HTMLDivElement> & KeyboardEventHandler<HTMLDivElement> =
-    (): any => $trackSelect = $trackSelect === id ? -1 : id;
+    (): any => get(status) !== Status.record && ($trackSelect = $trackSelect === id ? -1 : id);
 
   $: {
     if ($status === Status.play && $status === prevState)

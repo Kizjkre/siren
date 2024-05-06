@@ -21,10 +21,8 @@ const oscServer: Object = {
       let token: string;
 
       socket.on('access', (t: string): any => {
-        try {
-          connections.add(`/${ t }`);
-          token = t;
-        } catch {}
+        connections.add(`/${ t }`);
+        token = t;
       });
 
       socket.on('disconnect', () => {

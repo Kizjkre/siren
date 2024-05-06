@@ -13,6 +13,7 @@ const region: RegionConstructor =
     );
     return {
       data: d,
+      length: writable(get(d).length / 4),
       link: writable(link || -1),
       offset: o,
       source,

@@ -1,7 +1,5 @@
-<!-- TODO: Hitbox -->
-
 <script lang="ts">
-  import { derived, get, type Readable, type Writable } from 'svelte/store';
+  import { get, type Writable } from 'svelte/store';
   import type { Region } from '$lib/util/definitions/region';
   import { type ScaleBand, scaleBand, type ScaleLinear, scaleLinear } from 'd3-scale';
   import data from '$lib/stores/data';
@@ -47,16 +45,14 @@
 
   let autoConvert: boolean = false;
 
+  const length: Writable<number> = region.length;
   const link: Writable<number> = region.link;
-  let time: number[];
+  let time: Writable<number[]> | undefined;
 
   const rects: RegionPoint[] = [];
 
   const offset: Writable<number> = region.offset;
-  const w: Readable<number> = derived<[Writable<number>, Writable<any[]>], number>(
-    [width, column],
-    ([width, column]: [number, any[]]): number => $link < 0 ? column.length * width / 4 : time?.reduce((a: number, v: number): number => a + v) * width
-  );
+  let w: number = 0;
 
   const dispatch: EventDispatcher<None> = createEventDispatcher();
 
@@ -100,7 +96,15 @@
   };
 
   const handleMouseMove: MouseEventHandler<any> = (e: MouseEvent): any => {
-    $offset = Math.max(0, $offset + e.movementX / $width);
+    const off: number = Math.max(0, $offset + e.movementX / $width);
+    if (Object.entries(get(get(tracks)[trackId!]?.regions.timbral)[view]).some(([i, region]: [number, Region]): boolean => {
+      return i !== id && (
+        (off > get(region.offset) && off < get(region.offset) + get(region.length)) ||
+        (off + $length > get(region.offset) && off + $length < get(region.offset) + get(region.length))
+      );
+    })) return;
+
+    $offset = off;
     if (displacement($offset, 1) < 0.03) $offset = round($offset, 1);
     else if (displacement($offset, 1 / 4) < 0.02) $offset = round($offset, 1 / 4);
 
@@ -133,7 +137,12 @@
         .range([100 - 2.5, 25]);
 
     rects.splice(0, rects.length);
-    $column.forEach((d: any, i: number): RegionPoint => rects[i] = { x: $link < 0 ? x(i) : linkX(time[i]), y: y(d)! });
+    $column.forEach((d: any, i: number): RegionPoint =>
+      rects[i] = { x: $link < 0 || i >= $time?.length ? x(i - ($time?.length || 0)) + dist * $width : linkX($time[i]), y: y(d)! }
+    );
+
+    w = rects.length === 0 ? 100 : rects.at(-1).x + ($time?.length >= $column.length ? $time[$column.length - 1] * $width : $width / 4);
+    $length = w / $width;
   }
 
   $: ($column.length + $offset * 4 > $duration * 4) &&
@@ -150,7 +159,8 @@
     $rtype = getType($column);
   }
 
-  $: $link > -1 && (time = get(get(get(tracks)[trackId!]?.regions.time)[view][$link].data));
+  $: $link > -1 && (time = get(get(tracks)[trackId!]?.regions.time)[view][$link].data);
+  $: $link < 0 && (time = undefined);
 </script>
 
 <button
@@ -160,7 +170,7 @@
   on:drop|capture|preventDefault|stopPropagation={ handleDrop(region) }
   on:mousedown={ handleMouseDown }
   style:left="{ $offset * $width }px"
-  style:width="{ $w }px"
+  style:width="{ w }px"
   transition:fade={ { duration: 100 } }
 >
   <span class="absolute flex gap-2 items-center left-2 text-xs">
@@ -169,7 +179,7 @@
     </button>
     <span class="text-blue-900">{ $data[region.source.id].name } / { region.source.column }</span>
   </span>
-  <svg class="h-full" width={ $w }>
+  <svg class="h-full" width={ w }>
     { #each rects as { x, y }, i }
       { #key y }
         <rect
@@ -183,7 +193,7 @@
           role="cell"
           tabindex="-1"
           transition:fade
-          width={ $link < 0 || i >= time?.length ? $width / 4 : $width * time[i] }
+          width={ $link < 0 || i >= $time?.length ? $width / 4 : $width * $time[i] }
           x={ x }
           y={ y - 2.5 }
         />
@@ -192,6 +202,7 @@
   </svg>
 </button>
 
+<!--suppress HtmlUnknownAttribute -->
 <span
   bind:this={ popover }
   class="bg-blue-900 m-0 px-2 py-1 rounded text-blue-100 text-xs"

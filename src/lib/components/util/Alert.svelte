@@ -14,7 +14,7 @@
 </script>
 
 <section
-  class="absolute border border-red-400 bg-red-100 flex flex-col gap-2 justify-center mx-4 my-2 px-4 py-2 rounded text-red-700 text-sm w-full"
+  class="absolute border border-red-400 bg-red-100 flex flex-col gap-2 justify-center mx-4 my-2 px-4 py-2 rounded text-red-700 text-xs w-full"
   transition:fade
   use:portal={ container }
 >

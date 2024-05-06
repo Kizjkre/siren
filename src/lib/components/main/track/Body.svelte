@@ -38,10 +38,10 @@
     data-type="timbral"
     on:dragleave|preventDefault={ handleDragLeave }
     on:dragover|preventDefault={ handleDragOver }
-    on:drop|preventDefault={ handleDrop(id, $view, false) }
+    on:drop|preventDefault={ handleDrop(id, $view) }
     role="region"
   >
-    { #each Object.entries($timbral[$view]) as [regionId, region] (id) }
+    { #each Object.entries($timbral[$view]) as [regionId, region] (regionId) }
       <RegionComponent
         id={ regionId }
         on:remove={ onTimbralRemove(+regionId) }
@@ -58,7 +58,7 @@
     data-type="time"
     role="region"
   >
-    { #each Object.entries($time[$view]) as [regionId, region] (id) }
+    { #each Object.entries($time[$view]) as [regionId, region] (regionId) }
       <TimeRegion
         on:remove={ onTimeRemove(+regionId) }
         trackId={ id }

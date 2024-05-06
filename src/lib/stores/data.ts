@@ -25,7 +25,14 @@ const data: DataStoreInterface = {
       delete data[id];
       return data;
     }),
-  subscribe: store.subscribe
+  subscribe: store.subscribe,
+  update: (id: number, data: any): any =>
+    store.update((d: DataStore): DataStore => ({
+      ...d, [id]: {
+        ...d[id],
+        data
+      }
+    }))
 };
 
 export default data;
