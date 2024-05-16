@@ -8,15 +8,13 @@ import type {
   TrackRegionStoreInterface
 } from '$lib/util/definitions/tracks';
 import defaultdict from '$lib/util/defaultdict';
-import type { DSVRowAny, RegionSource } from '$lib/util/definitions/region';
+import type { RegionSource } from '$lib/util/definitions/region';
 import region from '$lib/stores/region';
 import data from '$lib/stores/data';
 import synths from '$lib/stores/synths';
 import type { DataStore } from '$lib/util/definitions/data';
 import tracks from '$lib/stores/tracks';
 import trackSelect from '$lib/stores/trackSelect';
-import status from '$lib/stores/status';
-import { Status } from '$lib/util/definitions/status.d';
 
 const store: (dict: DefaultDict<TrackRegionStore>) => TrackRegionStoreInterface =
   (dict: DefaultDict<TrackRegionStore>): TrackRegionStoreInterface => {

@@ -147,6 +147,7 @@
   </svg>
 </button>
 
+<!--suppress HtmlUnknownAttribute -->
 <span
   bind:this={ popover }
   class="bg-blue-900 m-0 px-2 py-1 rounded text-blue-100 text-xs"
