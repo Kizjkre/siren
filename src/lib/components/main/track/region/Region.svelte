@@ -116,6 +116,9 @@
     document.removeEventListener('mouseup', handleMouseUp);
   };
 
+  $: $link > -1 && (time = get(get(tracks)[trackId!]?.regions.time)[view][$link].data);
+  $: $link < 0 && (time = undefined);
+
   $: {
     let dist: number = 0;
     const linkX: CustomScaleLinear<any, number> = (d: any): number => {
@@ -137,6 +140,7 @@
         .range([100 - 2.5, 25]);
 
     rects.splice(0, rects.length);
+    console.log($time);
     $column.forEach((d: any, i: number): RegionPoint =>
       rects[i] = { x: $link < 0 || i >= $time?.length ? x(i - ($time?.length || 0)) + dist * $width : linkX($time[i]), y: y(d)! }
     );
@@ -158,9 +162,6 @@
 
     $rtype = getType($column);
   }
-
-  $: $link > -1 && (time = get(get(tracks)[trackId!]?.regions.time)[view][$link].data);
-  $: $link < 0 && (time = undefined);
 </script>
 
 <button
